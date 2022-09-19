@@ -9,8 +9,5 @@
         <module name="rimor" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="rimor" target="11" />
-    </bytecodeTargetLevel>
   </component>
 </project>
