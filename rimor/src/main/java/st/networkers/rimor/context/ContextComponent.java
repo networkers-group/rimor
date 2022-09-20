@@ -1,5 +1,6 @@
 package st.networkers.rimor.context;
 
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 import st.networkers.rimor.internal.reflect.CachedParameter;
 
@@ -10,17 +11,37 @@ public class ContextComponent {
     @Nullable private final Annotation annotation;
     @Nullable private final Class<? extends Annotation> annotationClass;
 
-    private final Class<?> type;
-    private final Object object;
+    @Getter private final Class<?> type;
+    @Getter private final Object object;
 
+    /**
+     * Constructs a ContextComponent that needs no annotations to be injected
+     *
+     * @param type   the type to inject
+     * @param object the instance to inject
+     */
     public ContextComponent(Class<?> type, Object object) {
         this(null, null, type, object);
     }
 
+    /**
+     * Constructs a ContextComponent that needs the given annotation to be present to be injected
+     *
+     * @param annotationClass the annotation that needs to be present
+     * @param type            the type to inject
+     * @param object          the instance to inject
+     */
     public ContextComponent(Class<? extends Annotation> annotationClass, Class<?> type, Object object) {
         this(null, annotationClass, type, object);
     }
 
+    /**
+     * Constructs a ContextComponent that needs the given annotation to be present to be injected
+     *
+     * @param annotation the annotation that needs to be present
+     * @param type       the type to inject
+     * @param object     the instance to inject
+     */
     public ContextComponent(Annotation annotation, Class<?> type, Object object) {
         this(annotation, null, type, object);
     }
@@ -33,14 +54,6 @@ public class ContextComponent {
         this.annotationClass = annotationClass;
         this.type = type;
         this.object = object;
-    }
-
-    public Class<?> getType() {
-        return type;
-    }
-
-    public Object getObject() {
-        return object;
     }
 
     public boolean canProvide(CachedParameter parameter) {

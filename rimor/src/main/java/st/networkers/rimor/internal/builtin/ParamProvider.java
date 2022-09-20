@@ -1,4 +1,4 @@
-package st.networkers.rimor.internal.command.parameter;
+package st.networkers.rimor.internal.builtin;
 
 import st.networkers.rimor.provide.RequireAnnotations;
 import st.networkers.rimor.command.parameter.Param;
