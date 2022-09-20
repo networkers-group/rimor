@@ -19,11 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ParameterProviderTest {
 
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.METHOD, ElementType.PARAMETER})
-    private @interface Annotation {
-    }
-
     public static class Providers {
         @ProvidesParameter
         public int provideInt() {
