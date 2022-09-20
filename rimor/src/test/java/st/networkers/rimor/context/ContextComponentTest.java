@@ -13,13 +13,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ContextComponentTest {
 
+    public void test(String string, Integer integer, @Param(0) String paramString) {
+    }
+
     private static CachedParameter stringParameter;
     private static CachedParameter integerParameter;
     private static CachedParameter paramStringParameter;
 
     @BeforeAll
     static void setup() throws NoSuchMethodException {
-        Method method = ContextComponentTest.class.getMethod("parameters", String.class, Integer.class, String.class);
+        Method method = ContextComponentTest.class.getMethod("test", String.class, Integer.class, String.class);
 
         stringParameter = CachedParameter.build(method.getParameters()[0]);
         integerParameter = CachedParameter.build(method.getParameters()[1]);
@@ -60,9 +63,6 @@ class ContextComponentTest {
         assertFalse(component.canProvide(stringParameter));
         assertFalse(component.canProvide(integerParameter));
         assertFalse(component.canProvide(paramStringParameter));
-    }
-
-    public void parameters(String string, Integer integer, @Param(0) String paramString) {
     }
 
     private static class ParamImpl implements Param {

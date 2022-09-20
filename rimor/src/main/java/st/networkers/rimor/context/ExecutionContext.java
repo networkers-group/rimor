@@ -22,6 +22,9 @@ public class ExecutionContext {
     }
 
     public Optional<Object> get(CachedParameter parameter) {
+        if (!this.components.containsKey(parameter.getType()))
+            return Optional.empty();
+
         return this.components.get(parameter.getType()).stream()
                 .filter(component -> component.canProvide(parameter))
                 .map(ContextComponent::getObject)
