@@ -29,9 +29,7 @@ public class CommandExecutor {
     }
 
     private Object fromProvider(CachedParameter parameter, ExecutionContext context) {
-        return parameterProviderRegistry.get(parameter.getType()).stream()
-                .filter(provider -> provider.canProvide(parameter))
-                .findAny()
+        return parameterProviderRegistry.findFor(parameter)
                 .map(provider -> provider.get(parameter, context))
                 .orElse(null);
     }

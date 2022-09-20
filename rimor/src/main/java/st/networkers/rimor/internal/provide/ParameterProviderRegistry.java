@@ -1,13 +1,11 @@
 package st.networkers.rimor.internal.provide;
 
 import st.networkers.rimor.internal.reflect.CachedMethod;
+import st.networkers.rimor.internal.reflect.CachedParameter;
 import st.networkers.rimor.provide.ProvidesParameter;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ParameterProviderRegistry {
 
@@ -31,5 +29,11 @@ public class ParameterProviderRegistry {
 
     public List<ParameterProvider> get(Class<?> type) {
         return parameterProviders.get(type);
+    }
+
+    public Optional<ParameterProvider> findFor(CachedParameter parameter) {
+        return this.get(parameter.getType()).stream()
+                .filter(provider -> provider.canProvide(parameter))
+                .findAny();
     }
 }
