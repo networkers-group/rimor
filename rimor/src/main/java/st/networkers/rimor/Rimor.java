@@ -12,17 +12,22 @@ import st.networkers.rimor.internal.provide.ParameterProviderRegistry;
 public class Rimor {
 
     private final CommandRegistry registry = new CommandRegistry();
+    private final ParameterProviderRegistry parameterProviderRegistry;
     private final CommandExecutor executor;
 
     public Rimor() {
-        ParameterProviderRegistry parameterProviderRegistry = new ParameterProviderRegistry();
-        parameterProviderRegistry.register(new ParamProvider());
-
+        this.parameterProviderRegistry = new ParameterProviderRegistry();
         this.executor = new CommandExecutor(parameterProviderRegistry);
+
+        this.registerParameterProviders(new ParamProvider());
     }
 
     public void registerCommand(Command command) {
         registry.registerCommand(CommandResolver.resolve(command));
+    }
+
+    public void registerParameterProviders(Object... instances) {
+        this.parameterProviderRegistry.register(instances);
     }
 
     public Object execute(CommandInstruction instruction, ExecutionContext context) {

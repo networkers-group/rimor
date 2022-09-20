@@ -13,18 +13,15 @@ public class ParameterProviderRegistry {
 
     private final Map<Class<?>, List<ParameterProvider>> parameterProviders = new HashMap<>();
 
-    public void registerAll(Object... instances) {
-        for (Object object : instances)
-            this.register(object);
-    }
+    public void register(Object... instances) {
+        for (Object object : instances) {
+            for (Method method : object.getClass().getMethods()) {
+                if (!method.isAnnotationPresent(ProvidesParameter.class))
+                    continue;
 
-    public void register(Object object) {
-        for (Method method : object.getClass().getMethods()) {
-            if (!method.isAnnotationPresent(ProvidesParameter.class))
-                continue;
-
-            CachedMethod cachedMethod = CachedMethod.build(method);
-            this.register(method.getReturnType(), new ParameterProvider(object, cachedMethod));
+                CachedMethod cachedMethod = CachedMethod.build(method);
+                this.register(method.getReturnType(), new ParameterProvider(object, cachedMethod));
+            }
         }
     }
 
