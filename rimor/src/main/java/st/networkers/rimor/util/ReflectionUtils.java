@@ -16,7 +16,7 @@ public final class ReflectionUtils {
         Map<Class<? extends Annotation>, Annotation> annotations = new HashMap<>();
 
         for (Annotation annotation : element.getAnnotations())
-            annotations.put(annotation.getClass(), annotation);
+            annotations.put(annotation.annotationType(), annotation);
 
         return annotations;
     }
