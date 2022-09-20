@@ -67,6 +67,6 @@ public class ContextComponent {
         if (this.annotationClass != null)
             return parameter.isAnnotationPresent(this.annotationClass);
 
-        return true;
+        return parameter.getAnnotations().isEmpty();
     }
 }
