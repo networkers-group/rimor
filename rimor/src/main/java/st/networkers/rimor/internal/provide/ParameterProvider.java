@@ -1,11 +1,11 @@
 package st.networkers.rimor.internal.provide;
 
 import org.jetbrains.annotations.Nullable;
-import st.networkers.rimor.provide.ProvidesParameter;
-import st.networkers.rimor.provide.RequireAnnotations;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.reflect.CachedMethod;
 import st.networkers.rimor.internal.reflect.CachedParameter;
+import st.networkers.rimor.provide.ProvidesParameter;
+import st.networkers.rimor.provide.RequireAnnotations;
 import st.networkers.rimor.util.InjectionUtils;
 import st.networkers.rimor.util.ReflectionUtils;
 
@@ -37,7 +37,6 @@ public class ParameterProvider {
 
     public boolean canProvide(CachedParameter parameter) {
         return providerMethod.getMethod().getReturnType().isAssignableFrom(parameter.getType())
-               && parameter.getAnnotations().containsAll(this.annotations)
                && hasRequiredAnnotations(parameter);
     }
 
@@ -60,9 +59,14 @@ public class ParameterProvider {
     }
 
     private boolean hasRequiredAnnotations(CachedParameter parameter) {
+        for (Annotation annotation : this.annotations)
+            if (!parameter.getAnnotations().contains(annotation))
+                return false;
+
         for (Class<? extends Annotation> annotationClass : this.requiredAnnotations)
             if (!parameter.isAnnotationPresent(annotationClass))
                 return false;
-        return true;
+
+        return this.annotations.size() + this.requiredAnnotations.size() == parameter.getAnnotations().size();
     }
 }

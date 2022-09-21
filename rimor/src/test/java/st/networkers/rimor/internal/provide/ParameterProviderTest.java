@@ -8,10 +8,6 @@ import st.networkers.rimor.internal.reflect.CachedParameter;
 import st.networkers.rimor.provide.ProvidesParameter;
 import st.networkers.rimor.provide.RequireAnnotations;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.Collections;
 
@@ -19,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ParameterProviderTest {
 
-    public static class Providers {
+    public static class TestProviders {
         @ProvidesParameter
         public int provideInt() {
             return -1;
@@ -38,7 +34,7 @@ class ParameterProviderTest {
         }
     }
 
-    public void test(int i, @Deprecated int j, @Param(1) int k) {
+    public void injectableMethod(int i, @Deprecated int j, @Param(1) int k) {
     }
 
     private static final ExecutionContext context = ExecutionContext.build(Collections.emptyList());
@@ -50,9 +46,9 @@ class ParameterProviderTest {
 
     @BeforeAll
     static void setup() throws NoSuchMethodException {
-        providerRegistry.register(new Providers());
+        providerRegistry.register(new TestProviders());
 
-        Method method = ParameterProviderTest.class.getMethod("test", int.class, int.class, int.class);
+        Method method = ParameterProviderTest.class.getMethod("injectableMethod", int.class, int.class, int.class);
 
         intParameter = CachedParameter.build(method.getParameters()[0]);
         annotatedIntParameter = CachedParameter.build(method.getParameters()[1]);
@@ -61,31 +57,22 @@ class ParameterProviderTest {
 
     @Test
     void testSimpleProvider() {
-        assertEquals(
-                -1,
-                providerRegistry.findFor(intParameter)
-                        .map(parameterProvider -> parameterProvider.get(intParameter, context))
-                        .orElse(null)
-        );
+        assertEquals(-1, fromProvider(intParameter));
     }
 
     @Test
     void testAnnotatedProvider() {
-        assertEquals(
-                0,
-                providerRegistry.findFor(annotatedIntParameter)
-                        .map(parameterProvider -> parameterProvider.get(annotatedIntParameter, context))
-                        .orElse(null)
-        );
+        assertEquals(0, fromProvider(annotatedIntParameter));
     }
 
     @Test
     void testAnnotationClassProvider() {
-        assertEquals(
-                1,
-                providerRegistry.findFor(annotationClassIntParameter)
-                        .map(parameterProvider -> parameterProvider.get(annotationClassIntParameter, context))
-                        .orElse(null)
-        );
+        assertEquals(1, fromProvider(annotationClassIntParameter));
+    }
+
+    private Object fromProvider(CachedParameter parameter) {
+        return providerRegistry.findFor(parameter)
+                .map(parameterProvider -> parameterProvider.get(parameter, context))
+                .orElse(null);
     }
 }
