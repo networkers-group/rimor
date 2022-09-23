@@ -35,7 +35,7 @@ public class ParameterProvider {
     }
 
     public boolean canProvide(CachedParameter parameter) {
-        return providerMethod.getMethod().getReturnType().isAssignableFrom(parameter.getType())
+        return parameter.getType().isAssignableFrom(providerMethod.getMethod().getReturnType())
                && hasRequiredAnnotations(parameter);
     }
 
