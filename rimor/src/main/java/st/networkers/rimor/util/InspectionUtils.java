@@ -5,6 +5,7 @@ import st.networkers.rimor.command.Aliases;
 
 import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public final class InspectionUtils {
@@ -14,6 +15,7 @@ public final class InspectionUtils {
 
     @NotNull
     public static List<String> getAliases(@NotNull AnnotatedElement object) {
-        return Arrays.asList(object.getAnnotation(Aliases.class).value());
+        Aliases aliases = object.getAnnotation(Aliases.class);
+        return aliases == null ? Collections.emptyList() : Arrays.asList(aliases.value());
     }
 }
