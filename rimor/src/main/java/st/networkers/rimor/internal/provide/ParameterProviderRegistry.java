@@ -1,5 +1,6 @@
 package st.networkers.rimor.internal.provide;
 
+import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.reflect.CachedMethod;
 import st.networkers.rimor.internal.reflect.CachedParameter;
 import st.networkers.rimor.provide.ProvidesParameter;
@@ -27,12 +28,12 @@ public class ParameterProviderRegistry {
         this.parameterProviders.computeIfAbsent(type, t -> new ArrayList<>()).add(provider);
     }
 
-    public List<ParameterProvider> get(Class<?> type) {
-        return parameterProviders.get(type);
+    public Optional<Object> provide(CachedParameter parameter, ExecutionContext context) {
+        return this.findFor(parameter).map(provider -> provider.get(parameter, context, this));
     }
 
     public Optional<ParameterProvider> findFor(CachedParameter parameter) {
-        return this.get(parameter.getType()).stream()
+        return parameterProviders.get(parameter.getType()).stream()
                 .filter(provider -> provider.canProvide(parameter))
                 .findAny();
     }

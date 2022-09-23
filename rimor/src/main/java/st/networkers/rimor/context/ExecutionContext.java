@@ -2,14 +2,12 @@ package st.networkers.rimor.context;
 
 import st.networkers.rimor.internal.reflect.CachedParameter;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class ExecutionContext {
+public class ExecutionContext implements Cloneable {
 
-    private final Map<Class<?>, List<ContextComponent>> components;
+    private Map<Class<?>, List<ContextComponent>> components;
 
     public static ExecutionContext build(List<ContextComponent> components) {
         return new ExecutionContext(
@@ -29,5 +27,33 @@ public class ExecutionContext {
                 .filter(component -> component.canProvide(parameter))
                 .map(ContextComponent::getObject)
                 .findAny();
+    }
+
+    public void addComponent(ContextComponent component) {
+        this.components.computeIfAbsent(component.getType(), t -> new ArrayList<>()).add(component);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ExecutionContext)) return false;
+        ExecutionContext that = (ExecutionContext) o;
+        return Objects.equals(components, that.components);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(components);
+    }
+
+    @Override
+    public ExecutionContext clone() {
+        try {
+            ExecutionContext clone = (ExecutionContext) super.clone();
+            clone.components = new HashMap<>(this.components);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

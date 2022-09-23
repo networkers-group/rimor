@@ -1,13 +1,12 @@
 package st.networkers.rimor.internal.provide;
 
-import org.jetbrains.annotations.Nullable;
+import st.networkers.rimor.context.ContextComponent;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.reflect.CachedMethod;
 import st.networkers.rimor.internal.reflect.CachedParameter;
 import st.networkers.rimor.provide.ProvidesParameter;
 import st.networkers.rimor.provide.RequireAnnotations;
 import st.networkers.rimor.util.InjectionUtils;
-import st.networkers.rimor.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -40,22 +39,15 @@ public class ParameterProvider {
                && hasRequiredAnnotations(parameter);
     }
 
-    public Object get(CachedParameter parameterToInject, ExecutionContext context) {
-        Object[] providerParameters = InjectionUtils.resolve(
+    public Object get(CachedParameter parameterToInject,
+                      ExecutionContext context,
+                      ParameterProviderRegistry parameterProviderRegistry) {
+        return InjectionUtils.invokeMethod(
                 this.providerMethod,
-                context,
-                parameter -> getAnnotation(parameterToInject, parameter.getType())
+                this.providerClassInstance,
+                this.getContextWithParameterAnnotations(context, parameterToInject),
+                parameterProviderRegistry
         );
-
-        return ReflectionUtils.invoke(this.providerMethod.getMethod(), this.providerClassInstance, providerParameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    private @Nullable Annotation getAnnotation(CachedParameter parameterToInject, Class<?> annotationClass) {
-        if (!Annotation.class.isAssignableFrom(annotationClass))
-            return null;
-
-        return parameterToInject.getAnnotation((Class<? extends Annotation>) annotationClass);
     }
 
     private boolean hasRequiredAnnotations(CachedParameter parameter) {
@@ -68,5 +60,14 @@ public class ParameterProvider {
                 return false;
 
         return this.annotations.size() + this.requiredAnnotations.size() == parameter.getAnnotations().size();
+    }
+
+    private ExecutionContext getContextWithParameterAnnotations(ExecutionContext context, CachedParameter parameter) {
+        context = context.clone();
+
+        for (Annotation annotation : parameter.getAnnotations())
+            context.addComponent(new ContextComponent(annotation.annotationType(), annotation));
+
+        return context;
     }
 }

@@ -57,22 +57,20 @@ class ParameterProviderTest {
 
     @Test
     void testSimpleProvider() {
-        assertEquals(-1, fromProvider(intParameter));
+        assertEquals(-1, provide(intParameter));
     }
 
     @Test
     void testAnnotatedProvider() {
-        assertEquals(0, fromProvider(annotatedIntParameter));
+        assertEquals(0, provide(annotatedIntParameter));
     }
 
     @Test
     void testAnnotationClassProvider() {
-        assertEquals(1, fromProvider(annotationClassIntParameter));
+        assertEquals(1, provide(annotationClassIntParameter));
     }
 
-    private Object fromProvider(CachedParameter parameter) {
-        return providerRegistry.findFor(parameter)
-                .map(parameterProvider -> parameterProvider.get(parameter, context))
-                .orElse(null);
+    private Object provide(CachedParameter parameter) {
+        return providerRegistry.provide(parameter, context).orElse(null);
     }
 }
