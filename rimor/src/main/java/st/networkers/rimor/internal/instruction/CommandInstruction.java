@@ -1,7 +1,8 @@
-package st.networkers.rimor.internal.command;
+package st.networkers.rimor.internal.instruction;
 
 import lombok.Getter;
 import st.networkers.rimor.command.Command;
+import st.networkers.rimor.internal.command.RimorCommand;
 import st.networkers.rimor.internal.reflect.CachedMethod;
 
 import java.lang.reflect.Method;

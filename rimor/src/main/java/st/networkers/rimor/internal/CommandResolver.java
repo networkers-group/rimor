@@ -1,11 +1,11 @@
 package st.networkers.rimor.internal;
 
 import st.networkers.rimor.command.Command;
-import st.networkers.rimor.command.instruction.IgnoreMethodName;
-import st.networkers.rimor.command.instruction.Instruction;
-import st.networkers.rimor.command.instruction.MainInstruction;
+import st.networkers.rimor.instruction.IgnoreMethodName;
+import st.networkers.rimor.instruction.Instruction;
+import st.networkers.rimor.instruction.MainInstruction;
 import st.networkers.rimor.internal.command.RimorCommand;
-import st.networkers.rimor.internal.command.CommandInstruction;
+import st.networkers.rimor.internal.instruction.CommandInstruction;
 import st.networkers.rimor.util.InspectionUtils;
 
 import java.lang.reflect.Method;

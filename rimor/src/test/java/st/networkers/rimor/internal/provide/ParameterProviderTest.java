@@ -2,7 +2,7 @@ package st.networkers.rimor.internal.provide;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import st.networkers.rimor.command.parameter.Param;
+import st.networkers.rimor.provide.builtin.Param;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.reflect.CachedParameter;
 import st.networkers.rimor.provide.ProvidesParameter;

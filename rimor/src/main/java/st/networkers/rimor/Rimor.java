@@ -5,8 +5,8 @@ import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.CommandExecutor;
 import st.networkers.rimor.internal.CommandRegistry;
 import st.networkers.rimor.internal.CommandResolver;
-import st.networkers.rimor.internal.command.CommandInstruction;
-import st.networkers.rimor.internal.builtin.ParamProvider;
+import st.networkers.rimor.internal.instruction.CommandInstruction;
+import st.networkers.rimor.internal.provide.builtin.ParamProvider;
 import st.networkers.rimor.internal.provide.ParameterProviderRegistry;
 
 public class Rimor {

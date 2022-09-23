@@ -1,7 +1,7 @@
 package st.networkers.rimor.internal;
 
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.internal.command.CommandInstruction;
+import st.networkers.rimor.internal.instruction.CommandInstruction;
 import st.networkers.rimor.internal.provide.ParameterProviderRegistry;
 import st.networkers.rimor.internal.reflect.CachedMethod;
 import st.networkers.rimor.internal.reflect.CachedParameter;

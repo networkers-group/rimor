@@ -1,4 +1,4 @@
-package st.networkers.rimor.command.parameter;
+package st.networkers.rimor.provide.builtin;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

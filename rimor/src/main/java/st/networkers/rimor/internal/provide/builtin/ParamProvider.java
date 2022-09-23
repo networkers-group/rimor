@@ -1,8 +1,8 @@
-package st.networkers.rimor.internal.builtin;
+package st.networkers.rimor.internal.provide.builtin;
 
 import st.networkers.rimor.provide.RequireAnnotations;
-import st.networkers.rimor.command.parameter.Param;
-import st.networkers.rimor.command.parameter.Params;
+import st.networkers.rimor.provide.builtin.Param;
+import st.networkers.rimor.provide.builtin.Params;
 import st.networkers.rimor.provide.ProvidesParameter;
 
 import java.util.List;

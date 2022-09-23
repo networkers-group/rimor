@@ -3,6 +3,7 @@ package st.networkers.rimor.internal.command;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 import st.networkers.rimor.command.Command;
+import st.networkers.rimor.internal.instruction.CommandInstruction;
 
 import java.util.*;
 
