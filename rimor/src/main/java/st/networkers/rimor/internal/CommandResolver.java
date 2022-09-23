@@ -10,6 +10,7 @@ import st.networkers.rimor.util.InspectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,7 +59,7 @@ public final class CommandResolver {
         List<String> aliases = InspectionUtils.getAliases(command.getClass());
 
         if (aliases.isEmpty())
-            aliases.add(command.getClass().getSimpleName());
+            return Collections.singletonList(command.getClass().getSimpleName());
 
         return aliases;
     }
