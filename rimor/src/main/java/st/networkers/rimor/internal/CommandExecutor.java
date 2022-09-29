@@ -2,23 +2,17 @@ package st.networkers.rimor.internal;
 
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.instruction.CommandInstruction;
-import st.networkers.rimor.internal.provide.ParameterProviderRegistry;
-import st.networkers.rimor.util.InjectionUtils;
+import st.networkers.rimor.internal.inject.Injector;
 
 public class CommandExecutor {
 
-    private final ParameterProviderRegistry parameterProviderRegistry;
+    private final Injector injector;
 
-    public CommandExecutor(ParameterProviderRegistry parameterProviderRegistry) {
-        this.parameterProviderRegistry = parameterProviderRegistry;
+    public CommandExecutor(Injector injector) {
+        this.injector = injector;
     }
 
     public Object execute(CommandInstruction instruction, ExecutionContext context) {
-        return InjectionUtils.invokeMethod(
-                instruction.getMethod(),
-                instruction.getCommandInstance(),
-                context,
-                this.parameterProviderRegistry
-        );
+        return injector.invokeMethod(instruction.getMethod(), instruction.getCommandInstance(), context);
     }
 }

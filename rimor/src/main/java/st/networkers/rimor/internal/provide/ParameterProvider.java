@@ -2,12 +2,12 @@ package st.networkers.rimor.internal.provide;
 
 import st.networkers.rimor.context.ContextComponent;
 import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.internal.inject.Injector;
 import st.networkers.rimor.internal.reflect.CachedMethod;
 import st.networkers.rimor.internal.reflect.CachedParameter;
 import st.networkers.rimor.provide.ParameterProviderWrapper;
 import st.networkers.rimor.provide.ProvidesParameter;
 import st.networkers.rimor.provide.RequireAnnotations;
-import st.networkers.rimor.util.InjectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -40,15 +40,9 @@ public class ParameterProvider {
                && hasRequiredAnnotations(parameter);
     }
 
-    public Object get(CachedParameter parameterToInject,
-                      ExecutionContext context,
-                      ParameterProviderRegistry parameterProviderRegistry) {
-        return InjectionUtils.invokeMethod(
-                this.method,
-                this.wrapper,
-                this.getContextWithParameterAnnotations(context, parameterToInject),
-                parameterProviderRegistry
-        );
+    public Object get(CachedParameter parameterToInject, ExecutionContext context, Injector injector) {
+        return injector.invokeMethod(this.method, this.wrapper,
+                this.getContextWithParameterAnnotations(context, parameterToInject));
     }
 
     private boolean hasRequiredAnnotations(CachedParameter parameter) {
