@@ -11,13 +11,15 @@ import java.util.Map;
 public class CachedParameter extends CachedAnnotatedElement {
 
     public static CachedParameter build(Parameter parameter) {
-        return new CachedParameter(parameter.getType(), ReflectionUtils.getMappedAnnotations(parameter));
+        return new CachedParameter(parameter, ReflectionUtils.getMappedAnnotations(parameter), parameter.getType());
     }
 
+    private final Parameter parameter;
     private final Class<?> type;
 
-    public CachedParameter(Class<?> type, Map<Class<? extends Annotation>, Annotation> annotations) {
+    public CachedParameter(Parameter parameter, Map<Class<? extends Annotation>, Annotation> annotations, Class<?> type) {
         super(annotations);
+        this.parameter = parameter;
         this.type = type;
     }
 }

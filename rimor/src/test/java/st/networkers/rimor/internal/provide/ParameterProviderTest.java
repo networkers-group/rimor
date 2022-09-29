@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.inject.Injector;
 import st.networkers.rimor.internal.reflect.CachedMethod;
+import st.networkers.rimor.internal.reflect.CachedParameter;
 import st.networkers.rimor.provide.ParameterProviderWrapper;
 import st.networkers.rimor.provide.ProvidesParameter;
 import st.networkers.rimor.provide.RequireAnnotations;
@@ -32,8 +33,8 @@ class ParameterProviderTest {
 
         @ProvidesParameter
         @RequireAnnotations(Param.class)
-        public int provideAnnotatedInt(Param param) {
-            return param.value();
+        public int provideAnnotatedInt(CachedParameter parameter) {
+            return parameter.getAnnotation(Param.class).value();
         }
 
         // does not have the ProvidesParameter annotation

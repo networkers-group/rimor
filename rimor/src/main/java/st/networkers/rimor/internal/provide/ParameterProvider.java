@@ -41,8 +41,7 @@ public class ParameterProvider {
     }
 
     public Object get(CachedParameter parameterToInject, ExecutionContext context, Injector injector) {
-        return injector.invokeMethod(this.method, this.wrapper,
-                this.getContextWithParameterAnnotations(context, parameterToInject));
+        return injector.invokeMethod(this.method, this.wrapper, this.getContextWithParameter(context, parameterToInject));
     }
 
     private boolean hasRequiredAnnotations(CachedParameter parameter) {
@@ -57,11 +56,11 @@ public class ParameterProvider {
         return this.annotations.size() + this.requiredAnnotations.size() == parameter.getAnnotations().size();
     }
 
-    private ExecutionContext getContextWithParameterAnnotations(ExecutionContext context, CachedParameter parameter) {
+    private ExecutionContext getContextWithParameter(ExecutionContext context, CachedParameter parameter) {
         context = context.clone();
 
-        for (Annotation annotation : parameter.getAnnotations())
-            context.addComponent(new ContextComponent(annotation.annotationType(), annotation));
+        context.addComponent(new ContextComponent(parameter.getClass(), parameter));
+        context.addComponent(new ContextComponent(parameter.getParameter().getClass(), parameter.getParameter()));
 
         return context;
     }
