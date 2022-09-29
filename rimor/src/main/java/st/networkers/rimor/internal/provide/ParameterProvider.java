@@ -4,6 +4,7 @@ import st.networkers.rimor.context.ContextComponent;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.reflect.CachedMethod;
 import st.networkers.rimor.internal.reflect.CachedParameter;
+import st.networkers.rimor.provide.ParameterProviderWrapper;
 import st.networkers.rimor.provide.ProvidesParameter;
 import st.networkers.rimor.provide.RequireAnnotations;
 import st.networkers.rimor.util.InjectionUtils;
@@ -16,26 +17,26 @@ import java.util.stream.Collectors;
 
 public class ParameterProvider {
 
-    private final Object providerClassInstance;
-    private final CachedMethod providerMethod;
+    private final ParameterProviderWrapper wrapper;
+    private final CachedMethod method;
 
     private final List<Annotation> annotations;
     private final List<Class<? extends Annotation>> requiredAnnotations;
 
-    public ParameterProvider(Object providerClassInstance, CachedMethod providerMethod) {
-        this.providerClassInstance = providerClassInstance;
-        this.providerMethod = providerMethod;
-        this.annotations = providerMethod.getAnnotations().stream()
+    public ParameterProvider(ParameterProviderWrapper wrapper, CachedMethod method) {
+        this.wrapper = wrapper;
+        this.method = method;
+        this.annotations = method.getAnnotations().stream()
                 .filter(annotation -> !(annotation instanceof ProvidesParameter))
                 .filter(annotation -> !(annotation instanceof RequireAnnotations))
                 .collect(Collectors.toList());
-        this.requiredAnnotations = providerMethod.isAnnotationPresent(RequireAnnotations.class)
-                ? Arrays.asList(providerMethod.getAnnotation(RequireAnnotations.class).value())
+        this.requiredAnnotations = method.isAnnotationPresent(RequireAnnotations.class)
+                ? Arrays.asList(method.getAnnotation(RequireAnnotations.class).value())
                 : Collections.emptyList();
     }
 
     public boolean canProvide(CachedParameter parameter) {
-        return parameter.getType().isAssignableFrom(providerMethod.getMethod().getReturnType())
+        return parameter.getType().isAssignableFrom(method.getMethod().getReturnType())
                && hasRequiredAnnotations(parameter);
     }
 
@@ -43,8 +44,8 @@ public class ParameterProvider {
                       ExecutionContext context,
                       ParameterProviderRegistry parameterProviderRegistry) {
         return InjectionUtils.invokeMethod(
-                this.providerMethod,
-                this.providerClassInstance,
+                this.method,
+                this.wrapper,
                 this.getContextWithParameterAnnotations(context, parameterToInject),
                 parameterProviderRegistry
         );

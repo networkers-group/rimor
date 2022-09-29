@@ -2,6 +2,7 @@ package st.networkers.rimor.internal.provide;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import st.networkers.rimor.provide.ParameterProviderWrapper;
 import st.networkers.rimor.provide.builtin.Param;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.reflect.CachedParameter;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ParameterProviderTest {
 
-    public static class TestProviders {
+    public static class TestProviders implements ParameterProviderWrapper {
         @ProvidesParameter
         public int provideInt() {
             return -1;

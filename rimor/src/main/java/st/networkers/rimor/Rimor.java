@@ -6,8 +6,9 @@ import st.networkers.rimor.internal.CommandExecutor;
 import st.networkers.rimor.internal.CommandRegistry;
 import st.networkers.rimor.internal.CommandResolver;
 import st.networkers.rimor.internal.instruction.CommandInstruction;
-import st.networkers.rimor.internal.provide.builtin.ParamProvider;
+import st.networkers.rimor.internal.provide.builtin.ExecutionParametersProvider;
 import st.networkers.rimor.internal.provide.ParameterProviderRegistry;
+import st.networkers.rimor.provide.ParameterProviderWrapper;
 
 public class Rimor {
 
@@ -19,15 +20,15 @@ public class Rimor {
         this.parameterProviderRegistry = new ParameterProviderRegistry();
         this.executor = new CommandExecutor(parameterProviderRegistry);
 
-        this.registerParameterProviders(new ParamProvider());
+        this.registerParameterProviders(new ExecutionParametersProvider());
     }
 
     public void registerCommand(Command command) {
         registry.registerCommand(CommandResolver.resolve(command));
     }
 
-    public void registerParameterProviders(Object... instances) {
-        this.parameterProviderRegistry.register(instances);
+    public void registerParameterProviders(ParameterProviderWrapper... wrappers) {
+        this.parameterProviderRegistry.register(wrappers);
     }
 
     public Object execute(CommandInstruction instruction, ExecutionContext context) {
