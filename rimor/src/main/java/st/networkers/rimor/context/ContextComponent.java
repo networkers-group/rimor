@@ -2,7 +2,7 @@ package st.networkers.rimor.context;
 
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
-import st.networkers.rimor.internal.reflect.CachedParameter;
+import st.networkers.rimor.internal.inject.Token;
 
 import java.lang.annotation.Annotation;
 
@@ -56,17 +56,17 @@ public class ContextComponent {
         this.object = object;
     }
 
-    public boolean canProvide(CachedParameter parameter) {
-        return parameter.getType().isInstance(this.object) && this.annotationMatches(parameter);
+    public boolean canProvide(Token token) {
+        return token.getType().isInstance(this.object) && this.annotationMatches(token);
     }
 
-    private boolean annotationMatches(CachedParameter parameter) {
+    private boolean annotationMatches(Token token) {
         if (this.annotation != null)
-            return parameter.getAnnotations().contains(this.annotation);
+            return token.getAnnotations().containsValue(this.annotation);
 
         if (this.annotationClass != null)
-            return parameter.isAnnotationPresent(this.annotationClass);
+            return token.getAnnotations().containsKey(this.annotationClass);
 
-        return parameter.getAnnotations().isEmpty();
+        return token.getAnnotations().isEmpty();
     }
 }

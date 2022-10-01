@@ -1,17 +1,26 @@
 package st.networkers.rimor.context;
 
-import st.networkers.rimor.internal.reflect.CachedParameter;
+import st.networkers.rimor.internal.inject.Token;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ExecutionContext implements Cloneable {
 
     private Map<Class<?>, List<ContextComponent>> components;
 
-    public static ExecutionContext build(List<ContextComponent> components) {
-        return new ExecutionContext(
-                components.stream().collect(Collectors.groupingBy(ContextComponent::getType))
+    public static ExecutionContext build(ContextComponent... components) {
+        return build(Arrays.stream(components));
+    }
+
+    public static ExecutionContext build(Collection<ContextComponent> components) {
+        return build(components.stream());
+    }
+
+    public static ExecutionContext build(Stream<ContextComponent> components) {
+        return new ExecutionContext(components
+                .collect(Collectors.groupingBy(ContextComponent::getType))
         );
     }
 
@@ -19,12 +28,12 @@ public class ExecutionContext implements Cloneable {
         this.components = components;
     }
 
-    public Optional<Object> get(CachedParameter parameter) {
-        if (!this.components.containsKey(parameter.getType()))
+    public Optional<Object> get(Token token) {
+        if (!this.components.containsKey(token.getType()))
             return Optional.empty();
 
-        return this.components.get(parameter.getType()).stream()
-                .filter(component -> component.canProvide(parameter))
+        return this.components.get(token.getType()).stream()
+                .filter(component -> component.canProvide(token))
                 .map(ContextComponent::getObject)
                 .findAny();
     }

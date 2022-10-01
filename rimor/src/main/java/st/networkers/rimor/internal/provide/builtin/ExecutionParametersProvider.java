@@ -1,14 +1,14 @@
 package st.networkers.rimor.internal.provide.builtin;
 
-import st.networkers.rimor.provide.ParameterProviderWrapper;
+import st.networkers.rimor.provide.ProvidesParameter;
 import st.networkers.rimor.provide.RequireAnnotations;
+import st.networkers.rimor.provide.RimorProviderWrapper;
 import st.networkers.rimor.provide.builtin.Param;
 import st.networkers.rimor.provide.builtin.Params;
-import st.networkers.rimor.provide.ProvidesParameter;
 
 import java.util.List;
 
-public class ExecutionParametersProvider implements ParameterProviderWrapper {
+public class ExecutionParametersProvider implements RimorProviderWrapper {
 
     @ProvidesParameter
     @RequireAnnotations(Param.class)

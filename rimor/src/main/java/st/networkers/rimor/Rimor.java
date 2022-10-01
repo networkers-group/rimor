@@ -9,7 +9,7 @@ import st.networkers.rimor.internal.CommandResolver;
 import st.networkers.rimor.internal.inject.Injector;
 import st.networkers.rimor.internal.instruction.CommandInstruction;
 import st.networkers.rimor.internal.provide.builtin.ExecutionParametersProvider;
-import st.networkers.rimor.provide.ParameterProviderWrapper;
+import st.networkers.rimor.provide.RimorProviderWrapper;
 
 @Getter
 public class Rimor {
@@ -21,8 +21,8 @@ public class Rimor {
 
     public Rimor() {
         this.injector = new Injector()
-                // built-in parameter providers
-                .registerParameterProviders(new ExecutionParametersProvider());
+                // built-in providers
+                .registerProviders(new ExecutionParametersProvider());
 
         this.executor = new CommandExecutor(injector);
     }
@@ -38,8 +38,8 @@ public class Rimor {
         return this;
     }
 
-    public Rimor registerParameterProviders(ParameterProviderWrapper... wrappers) {
-        this.injector.registerParameterProviders(wrappers);
+    public Rimor registerProviders(RimorProviderWrapper... wrappers) {
+        this.injector.registerProviders(wrappers);
         return this;
     }
 

@@ -1,93 +1,52 @@
 package st.networkers.rimor.context;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import st.networkers.rimor.ParamImpl;
+import st.networkers.rimor.internal.inject.Token;
 import st.networkers.rimor.provide.builtin.Param;
-import st.networkers.rimor.internal.reflect.CachedParameter;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ContextComponentTest {
 
-    public void test(String string, Integer integer, @Param(0) String paramString) {
-    }
-
-    private static CachedParameter stringParameter;
-    private static CachedParameter integerParameter;
-    private static CachedParameter paramStringParameter;
-
-    @BeforeAll
-    static void setup() throws NoSuchMethodException {
-        Method method = ContextComponentTest.class.getMethod("test", String.class, Integer.class, String.class);
-
-        stringParameter = CachedParameter.build(method.getParameters()[0]);
-        integerParameter = CachedParameter.build(method.getParameters()[1]);
-        paramStringParameter = CachedParameter.build(method.getParameters()[2]);
-    }
+    static Token stringToken = new Token(String.class);
+    static Token intToken = new Token(int.class);
+    static Token annotatedStringToken = new Token(String.class).withAnnotation(new ParamImpl(0));
 
     @Test
     void testSimpleComponent() {
         ContextComponent component = new ContextComponent(String.class, "test");
 
-        assertTrue(component.canProvide(stringParameter));
-        assertFalse(component.canProvide(integerParameter));
-        assertFalse(component.canProvide(paramStringParameter));
+        assertTrue(component.canProvide(stringToken));
+        assertFalse(component.canProvide(intToken));
+        assertFalse(component.canProvide(annotatedStringToken));
     }
 
     @Test
     void testComponentWithAnnotationClass() {
         ContextComponent component = new ContextComponent(Param.class, String.class, "test");
 
-        assertFalse(component.canProvide(stringParameter));
-        assertFalse(component.canProvide(integerParameter));
-        assertTrue(component.canProvide(paramStringParameter));
+        assertFalse(component.canProvide(stringToken));
+        assertFalse(component.canProvide(intToken));
+        assertTrue(component.canProvide(annotatedStringToken));
     }
 
     @Test
     void testComponentWithEqualAnnotation() {
         ContextComponent component = new ContextComponent(new ParamImpl(0), String.class, "test");
 
-        assertFalse(component.canProvide(stringParameter));
-        assertFalse(component.canProvide(integerParameter));
-        assertTrue(component.canProvide(paramStringParameter));
+        assertFalse(component.canProvide(stringToken));
+        assertFalse(component.canProvide(intToken));
+        assertTrue(component.canProvide(annotatedStringToken));
     }
 
     @Test
     void testComponentWithNotEqualAnnotation() {
         ContextComponent component = new ContextComponent(new ParamImpl(1), String.class, "test");
 
-        assertFalse(component.canProvide(stringParameter));
-        assertFalse(component.canProvide(integerParameter));
-        assertFalse(component.canProvide(paramStringParameter));
-    }
-
-    private static class ParamImpl implements Param {
-        private final int value;
-
-        private ParamImpl(int value) {
-            this.value = value;
-        }
-
-        @Override
-        public int value() {
-            return value;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Param)) return false;
-            Param param = (Param) o;
-            return value == param.value();
-        }
-
-        @Override
-        public Class<? extends Annotation> annotationType() {
-            return Param.class;
-        }
+        assertFalse(component.canProvide(stringToken));
+        assertFalse(component.canProvide(intToken));
+        assertFalse(component.canProvide(annotatedStringToken));
     }
 }

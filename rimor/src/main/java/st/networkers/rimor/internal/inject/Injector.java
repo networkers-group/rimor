@@ -2,27 +2,34 @@ package st.networkers.rimor.internal.inject;
 
 import lombok.Getter;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.internal.provide.ParameterProviderRegistry;
+import st.networkers.rimor.internal.provide.ProviderRegistry;
 import st.networkers.rimor.internal.reflect.CachedMethod;
 import st.networkers.rimor.internal.reflect.CachedParameter;
-import st.networkers.rimor.provide.ParameterProviderWrapper;
+import st.networkers.rimor.provide.RimorProviderWrapper;
 import st.networkers.rimor.util.ReflectionUtils;
 
 public class Injector {
 
-    @Getter private final ParameterProviderRegistry parameterProviderRegistry;
+    @Getter private final ProviderRegistry providerRegistry;
 
     public Injector() {
-        this(new ParameterProviderRegistry());
+        this(new ProviderRegistry());
     }
 
-    private Injector(ParameterProviderRegistry parameterProviderRegistry) {
-        this.parameterProviderRegistry = parameterProviderRegistry;
+    private Injector(ProviderRegistry providerRegistry) {
+        this.providerRegistry = providerRegistry;
     }
 
-    public Injector registerParameterProviders(ParameterProviderWrapper... wrappers) {
-        parameterProviderRegistry.register(wrappers);
+    public Injector registerProviders(RimorProviderWrapper... wrappers) {
+        providerRegistry.register(wrappers);
         return this;
+    }
+
+    public Object get(Token token, ExecutionContext context) {
+        // Java 8 optionals don't have #or 😣
+        return context.get(token)
+                .orElseGet(() -> providerRegistry.provide(token, context, this)
+                        .orElse(null));
     }
 
     public Object invokeMethod(CachedMethod cachedMethod, Object instance, ExecutionContext context) {
@@ -34,16 +41,9 @@ public class Injector {
 
         int i = 0;
         for (CachedParameter parameter : cachedMethod.getParameters()) {
-            parameters[i++] = resolveParameter(parameter, context);
+            parameters[i++] = get(new Token(parameter.getType(), parameter.getAnnotationsMap()), context);
         }
 
         return parameters;
-    }
-
-    public Object resolveParameter(CachedParameter parameter, ExecutionContext context) {
-        // Java 8 optionals don't have #or 😣
-        return context.get(parameter)
-                .orElseGet(() -> parameterProviderRegistry.provide(parameter, context, this)
-                        .orElse(null));
     }
 }
