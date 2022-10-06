@@ -30,7 +30,7 @@ public class ProviderRegistry {
         this.providers.computeIfAbsent(type, t -> new ArrayList<>()).add(provider);
     }
 
-    public Optional<Object> provide(Token token, ExecutionContext context, Injector injector) {
+    public <T> Optional<T> provide(Token<? super T> token, ExecutionContext context, Injector injector) {
         return this.findFor(token).map(provider -> provider.get(token, context, injector));
     }
 

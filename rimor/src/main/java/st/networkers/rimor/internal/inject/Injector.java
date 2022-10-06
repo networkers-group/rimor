@@ -1,5 +1,6 @@
 package st.networkers.rimor.internal.inject;
 
+import com.google.common.reflect.TypeToken;
 import lombok.Getter;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.provide.ProviderRegistry;
@@ -25,11 +26,11 @@ public class Injector {
         return this;
     }
 
-    public Object get(Token token, ExecutionContext context) {
-        // Java 8 optionals don't have #or 😣
-        return context.get(token)
-                .orElseGet(() -> providerRegistry.provide(token, context, this)
-                        .orElse(null));
+    public <T> T get(Token<T> token, ExecutionContext context) {
+        return context.get(token).orElseGet(
+                // Java 8 optionals don't have #or 😣
+                () -> providerRegistry.provide(token, context, this).orElse(null)
+        );
     }
 
     public Object invokeMethod(CachedMethod cachedMethod, Object instance, ExecutionContext context) {
@@ -41,7 +42,7 @@ public class Injector {
 
         int i = 0;
         for (CachedParameter parameter : cachedMethod.getParameters()) {
-            parameters[i++] = get(new Token(parameter.getType(), parameter.getAnnotationsMap()), context);
+            parameters[i++] = get(new Token<>(TypeToken.of(parameter.getType()), parameter.getAnnotationsMap()), context);
         }
 
         return parameters;
