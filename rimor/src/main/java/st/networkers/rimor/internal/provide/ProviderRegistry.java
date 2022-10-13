@@ -33,8 +33,8 @@ public class ProviderRegistry {
     @SuppressWarnings("unchecked")
     public <T> Optional<RimorProvider<T>> findFor(Token<T> token) {
         return this.get(token)
-                .map(provider -> (RimorProvider<T>) provider)
                 .filter(provider -> provider.canProvide(token))
+                .map(provider -> (RimorProvider<T>) provider)
                 .findAny();
     }
 

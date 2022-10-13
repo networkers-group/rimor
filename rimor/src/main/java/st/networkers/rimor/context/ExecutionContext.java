@@ -35,8 +35,8 @@ public class ExecutionContext {
             return Optional.empty();
 
         return this.components.get(token.getType()).stream()
-                .map(component -> (ContextComponent<T>) component)
                 .filter(component -> component.canProvide(token))
+                .map(component -> (ContextComponent<T>) component)
                 .map(ContextComponent::getObject)
                 .findAny();
     }

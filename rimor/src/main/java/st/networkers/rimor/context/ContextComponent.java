@@ -32,7 +32,7 @@ public class ContextComponent<T> extends Annotated<ContextComponent<T>> {
         this.object = object;
     }
 
-    public boolean canProvide(Token<? super T> token) {
+    public boolean canProvide(Token<?> token) {
         return token.getType().isSupertypeOf(this.type) && this.matchesAnnotations(token);
     }
 }
