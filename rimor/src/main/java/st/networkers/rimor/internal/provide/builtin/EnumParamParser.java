@@ -11,8 +11,10 @@ import st.networkers.rimor.provide.builtin.ParamParser;
  */
 public class EnumParamParser extends ParamParser<Enum<?>> {
 
+    private static final TypeToken<Enum<?>> ENUM_TYPE = new TypeToken<Enum<?>>() {};
+
     public EnumParamParser() {
-        super(new TypeToken<Enum<?>>() {});
+        super(ENUM_TYPE);
     }
 
     @Override
@@ -26,7 +28,7 @@ public class EnumParamParser extends ParamParser<Enum<?>> {
 
     @Override
     public boolean canProvide(Token<?> token) {
-        return token.getType().isSubtypeOf(this.getProvidedType()) && matchesAnnotations(token);
+        return token.getType().isSubtypeOf(ENUM_TYPE) && matchesAnnotations(token);
     }
 
     @SuppressWarnings("unchecked")

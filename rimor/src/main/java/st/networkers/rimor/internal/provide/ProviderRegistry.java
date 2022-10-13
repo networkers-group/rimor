@@ -19,7 +19,8 @@ public class ProviderRegistry {
     }
 
     private <T> void register(RimorProvider<T> provider) {
-        this.register(provider.getProvidedType(), provider);
+        for (TypeToken<T> type : provider.getProvidedTypes())
+            this.register(type, provider);
     }
 
     public <T> void register(TypeToken<T> type, RimorProvider<? super T> provider) {

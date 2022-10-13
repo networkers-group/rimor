@@ -10,28 +10,38 @@ import st.networkers.rimor.util.InspectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Getter
 public abstract class RimorProvider<T> extends Annotated<RimorProvider<T>> {
 
-    private final TypeToken<T> providedType;
+    private final Collection<TypeToken<T>> providedTypes;
 
-    protected RimorProvider(Class<T> providedType) {
-        this(TypeToken.of(providedType));
+    @SafeVarargs
+    protected RimorProvider(Class<T>... providedTypes) {
+        this(Arrays.stream(providedTypes).map(TypeToken::of).collect(Collectors.toList()));
     }
 
-    protected RimorProvider(TypeToken<T> providedType) {
+    @SafeVarargs
+    protected RimorProvider(TypeToken<T>... providedTypes) {
+        this(Arrays.asList(providedTypes));
+    }
+
+    protected RimorProvider(Collection<TypeToken<T>> providedTypes) {
         super(null, null);
-        this.providedType = providedType;
+        this.providedTypes = providedTypes;
         this.inspectAnnotations();
     }
 
     public abstract T get(Token<T> token, Injector injector, ExecutionContext context);
 
     public boolean canProvide(Token<?> token) {
-        return token.getType().isSupertypeOf(this.providedType) && matchesAnnotations(token);
+        for (TypeToken<T> providedType : this.providedTypes)
+            if (token.getType().isSupertypeOf(providedType))
+                return matchesAnnotations(token);
+        return false;
     }
 
     private void inspectAnnotations() {

@@ -10,6 +10,7 @@ import st.networkers.rimor.provide.RequireAnnotations;
 import st.networkers.rimor.provide.RimorProvider;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -18,12 +19,18 @@ import java.util.List;
  */
 public abstract class ParamParser<T> extends RimorProvider<T> {
 
-    protected ParamParser(Class<T> providedType) {
-        super(providedType);
+    @SafeVarargs
+    protected ParamParser(Class<T>... providedTypes) {
+        super(providedTypes);
     }
 
-    protected ParamParser(TypeToken<T> providedType) {
-        super(providedType);
+    @SafeVarargs
+    protected ParamParser(TypeToken<T>... providedTypes) {
+        super(providedTypes);
+    }
+
+    protected ParamParser(Collection<TypeToken<T>> providedTypes) {
+        super(providedTypes);
     }
 
     protected abstract T parse(String parameter, Token<T> token, Injector injector, ExecutionContext context);
