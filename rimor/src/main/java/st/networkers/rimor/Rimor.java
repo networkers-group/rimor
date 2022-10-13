@@ -8,6 +8,7 @@ import st.networkers.rimor.internal.CommandRegistry;
 import st.networkers.rimor.internal.CommandResolver;
 import st.networkers.rimor.internal.inject.Injector;
 import st.networkers.rimor.internal.instruction.CommandInstruction;
+import st.networkers.rimor.internal.provide.builtin.BooleanParamParser;
 import st.networkers.rimor.internal.provide.builtin.EnumParamParser;
 import st.networkers.rimor.internal.provide.builtin.StringParamParser;
 import st.networkers.rimor.provide.RimorProvider;
@@ -23,8 +24,9 @@ public class Rimor {
     public Rimor() {
         this.injector = new Injector()
                 // built-in providers
-                .registerProvider(new StringParamParser())
-                .registerProvider(new EnumParamParser());
+                .registerProvider(new BooleanParamParser())
+                .registerProvider(new EnumParamParser())
+                .registerProvider(new StringParamParser());
 
         this.executor = new CommandExecutor(injector);
     }
