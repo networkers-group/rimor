@@ -35,7 +35,7 @@ public final class CommandResolver {
     private static void registerInstructions(RimorCommand command) {
         for (Method method : command.getCommandInstance().getClass().getMethods()) {
             if (method.isAnnotationPresent(MainInstruction.class)) {
-                command.registerMainInstruction(CommandInstruction.build(command, method, null));
+                command.registerMainInstruction(CommandInstruction.build(command, method, InspectionUtils.getAliases(method)));
                 continue;
             }
 

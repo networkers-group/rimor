@@ -6,6 +6,7 @@ import st.networkers.rimor.command.Command;
 import st.networkers.rimor.internal.instruction.CommandInstruction;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 public class RimorCommand {
@@ -23,7 +24,7 @@ public class RimorCommand {
                         List<String> aliases) {
         this.parent = parent;
         this.commandInstance = commandInstance;
-        this.aliases = aliases;
+        this.aliases = aliases.stream().map(String::toLowerCase).collect(Collectors.toList());
     }
 
     public Optional<RimorCommand> getParent() {
@@ -32,6 +33,7 @@ public class RimorCommand {
 
     public void registerMainInstruction(CommandInstruction instruction) {
         this.mainInstructions.add(instruction);
+        this.registerInstruction(instruction);
     }
 
     public void registerInstruction(CommandInstruction instruction) {
@@ -39,16 +41,20 @@ public class RimorCommand {
             this.instructions.computeIfAbsent(alias, a -> new ArrayList<>()).add(instruction);
     }
 
+    public void registerSubcommand(RimorCommand subcommand) {
+        for (String alias : subcommand.getAliases())
+            this.subcommands.put(alias, subcommand);
+    }
+
     public List<CommandInstruction> getInstructions(String alias) {
-        return this.instructions.get(alias);
+        return this.instructions.get(alias.toLowerCase());
+    }
+
+    public RimorCommand getSubcommand(String alias) {
+        return this.subcommands.get(alias.toLowerCase());
     }
 
     public Set<String> getAllInstructionAliases() {
         return this.instructions.keySet();
-    }
-
-    public void registerSubcommand(RimorCommand subcommand) {
-        for (String alias : subcommand.getAliases())
-            this.subcommands.put(alias, subcommand);
     }
 }
