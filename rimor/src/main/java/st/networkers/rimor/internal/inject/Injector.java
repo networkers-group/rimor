@@ -1,12 +1,11 @@
 package st.networkers.rimor.internal.inject;
 
-import com.google.common.reflect.TypeToken;
 import lombok.Getter;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.provide.ProviderRegistry;
 import st.networkers.rimor.internal.reflect.CachedMethod;
 import st.networkers.rimor.internal.reflect.CachedParameter;
-import st.networkers.rimor.provide.RimorProviderWrapper;
+import st.networkers.rimor.provide.RimorProvider;
 import st.networkers.rimor.util.ReflectionUtils;
 
 public class Injector {
@@ -21,8 +20,8 @@ public class Injector {
         this.providerRegistry = providerRegistry;
     }
 
-    public Injector registerProviders(RimorProviderWrapper... wrappers) {
-        providerRegistry.register(wrappers);
+    public Injector registerProviders(RimorProvider<?>... providers) {
+        providerRegistry.register(providers);
         return this;
     }
 
