@@ -42,7 +42,7 @@ public class Injector {
 
         int i = 0;
         for (CachedParameter parameter : cachedMethod.getParameters()) {
-            parameters[i++] = get(new Token<>(TypeToken.of(parameter.getType()), parameter.getAnnotationsMap()), context);
+            parameters[i++] = get(new Token<>(parameter.getType(), parameter.getAnnotationsMap()), context);
         }
 
         return parameters;

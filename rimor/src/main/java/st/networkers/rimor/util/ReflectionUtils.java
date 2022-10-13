@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
 
 public final class ReflectionUtils {
@@ -13,12 +13,7 @@ public final class ReflectionUtils {
     }
 
     public static Map<Class<? extends Annotation>, Annotation> getMappedAnnotations(AnnotatedElement element) {
-        Map<Class<? extends Annotation>, Annotation> annotations = new HashMap<>();
-
-        for (Annotation annotation : element.getAnnotations())
-            annotations.put(annotation.annotationType(), annotation);
-
-        return annotations;
+        return InspectionUtils.getMappedAnnotations(Arrays.asList(element.getAnnotations()));
     }
 
     public static Object invoke(Method method, Object instance, Object[] parameters) {

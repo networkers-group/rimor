@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ContextComponentTest {
 
     static Token<String> stringToken = new Token<>(String.class);
-    static Token<String> annotatedStringToken = new Token<>(String.class).withAnnotation(new ParamImpl(0));
+    static Token<String> annotatedStringToken = new Token<>(String.class).annotatedWith(new ParamImpl(0));
     static Token<List<String>> stringListToken = new Token<>(new TypeToken<List<String>>() {});
 
     @Test
@@ -35,7 +35,8 @@ class ContextComponentTest {
 
     @Test
     void testComponentWithAnnotationClass() {
-        ContextComponent<String> component = new ContextComponent<>(Param.class, String.class, "test");
+        ContextComponent<String> component = new ContextComponent<>(String.class, "test")
+                .annotatedWith(Param.class);
 
         assertTrue(component.canProvide(annotatedStringToken));
         assertFalse(component.canProvide(stringToken));
@@ -43,7 +44,8 @@ class ContextComponentTest {
 
     @Test
     void testComponentWithEqualAnnotation() {
-        ContextComponent<String> component = new ContextComponent<>(new ParamImpl(0), String.class, "test");
+        ContextComponent<String> component = new ContextComponent<>(String.class, "test")
+                .annotatedWith(new ParamImpl(0));
 
         assertTrue(component.canProvide(annotatedStringToken));
         assertFalse(component.canProvide(stringToken));
@@ -51,7 +53,8 @@ class ContextComponentTest {
 
     @Test
     void testComponentWithNotEqualAnnotation() {
-        ContextComponent<String> component = new ContextComponent<>(new ParamImpl(1), String.class, "test");
+        ContextComponent<String> component = new ContextComponent<>(String.class, "test")
+                .annotatedWith(new ParamImpl(1));
 
         assertFalse(component.canProvide(stringToken));
         assertFalse(component.canProvide(annotatedStringToken));

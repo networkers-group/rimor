@@ -3,10 +3,9 @@ package st.networkers.rimor.util;
 import org.jetbrains.annotations.NotNull;
 import st.networkers.rimor.command.Aliases;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public final class InspectionUtils {
 
@@ -25,5 +24,14 @@ public final class InspectionUtils {
     public static List<String> getAliases(@NotNull AnnotatedElement element) {
         Aliases aliases = element.getAnnotation(Aliases.class);
         return aliases == null ? Collections.emptyList() : Arrays.asList(aliases.value());
+    }
+
+    public static Map<Class<? extends Annotation>, Annotation> getMappedAnnotations(Collection<Annotation> annotations) {
+        Map<Class<? extends Annotation>, Annotation> annotationsMap = new HashMap<>();
+
+        for (Annotation annotation : annotations)
+            annotationsMap.put(annotation.annotationType(), annotation);
+
+        return annotationsMap;
     }
 }
