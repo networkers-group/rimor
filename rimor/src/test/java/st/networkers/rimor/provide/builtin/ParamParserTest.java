@@ -1,4 +1,4 @@
-package st.networkers.rimor.internal.provide.builtin;
+package st.networkers.rimor.provide.builtin;
 
 import com.google.common.reflect.TypeToken;
 import org.junit.jupiter.api.Test;
@@ -7,22 +7,23 @@ import st.networkers.rimor.context.ContextComponent;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.inject.Injector;
 import st.networkers.rimor.internal.inject.Token;
-import st.networkers.rimor.provide.builtin.Params;
+import st.networkers.rimor.internal.provide.builtin.EnumParamParser;
+import st.networkers.rimor.internal.provide.builtin.StringParamParser;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ExecutionParametersProviderTest {
+class ParamParserTest {
 
     enum TestEnum {
         TEST_1, TEST_2
     }
 
     static Injector injector = new Injector()
-            .registerProviders(new ExecutionParametersProvider());
-//            .registerProviders(ExecutionParametersProvider.enumParser());
+            .registerProvider(new StringParamParser())
+            .registerProvider(new EnumParamParser());
 
     static ExecutionContext context = ExecutionContext.build(
             new ContextComponent<>(new TypeToken<List<String>>() {}, Arrays.asList("test", "TEST_2"))

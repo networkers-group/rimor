@@ -20,6 +20,11 @@ public class Injector {
         this.providerRegistry = providerRegistry;
     }
 
+    public Injector registerProvider(RimorProvider<?> provider) {
+        providerRegistry.register(provider);
+        return this;
+    }
+
     public Injector registerProviders(RimorProvider<?>... providers) {
         providerRegistry.register(providers);
         return this;

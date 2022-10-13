@@ -28,9 +28,9 @@ public abstract class RimorProvider<T> extends Annotated<RimorProvider<T>> {
         this.inspectAnnotations();
     }
 
-    public abstract T get(Token<? super T> token, Injector injector, ExecutionContext context);
+    public abstract T get(Token<T> token, Injector injector, ExecutionContext context);
 
-    public boolean canProvide(Token<? super T> token) {
+    public boolean canProvide(Token<?> token) {
         return token.getType().isSupertypeOf(this.providedType) && matchesAnnotations(token);
     }
 
