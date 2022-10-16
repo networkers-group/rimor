@@ -1,4 +1,4 @@
-package st.networkers.rimor.internal;
+package st.networkers.rimor.internal.resolve;
 
 import st.networkers.rimor.command.Command;
 import st.networkers.rimor.instruction.IgnoreMethodName;
@@ -26,33 +26,13 @@ public final class CommandResolver {
     public static RimorCommand resolve(RimorCommand parent, Command command) {
         RimorCommand rimorCommand = new RimorCommand(parent, command, resolveAliases(command));
 
-        registerInstructions(rimorCommand);
-        registerSubcommands(rimorCommand);
+        ResolvedInstructions resolvedInstructions = resolveInstructions(rimorCommand);
+        resolvedInstructions.getMainInstructions().forEach(rimorCommand::registerMainInstruction);
+        resolvedInstructions.getInstructions().forEach(rimorCommand::registerInstruction);
+
+        resolveSubcommands(rimorCommand).forEach(rimorCommand::registerSubcommand);
 
         return rimorCommand;
-    }
-
-    private static void registerInstructions(RimorCommand command) {
-        for (Method method : command.getCommandInstance().getClass().getMethods()) {
-            if (method.isAnnotationPresent(MainInstruction.class)) {
-                command.registerMainInstruction(CommandInstruction.build(command, method, InspectionUtils.getAliases(method)));
-                continue;
-            }
-
-            if (method.isAnnotationPresent(Instruction.class)) {
-                List<String> aliases = new ArrayList<>(InspectionUtils.getAliases(method));
-
-                if (aliases.isEmpty() || !method.isAnnotationPresent(IgnoreMethodName.class))
-                    aliases.add(method.getName());
-
-                command.registerInstruction(CommandInstruction.build(command, method, aliases));
-            }
-        }
-    }
-
-    private static void registerSubcommands(RimorCommand command) {
-        for (RimorCommand subcommand : resolveSubcommands(command))
-            command.registerSubcommand(subcommand);
     }
 
     private static List<String> resolveAliases(Command command) {
@@ -62,6 +42,25 @@ public final class CommandResolver {
             return Collections.singletonList(command.getClass().getSimpleName());
 
         return aliases;
+    }
+
+    private static ResolvedInstructions resolveInstructions(RimorCommand command) {
+        ResolvedInstructions instructions = new ResolvedInstructions();
+
+        for (Method method : command.getCommandInstance().getClass().getMethods()) {
+            if (method.isAnnotationPresent(MainInstruction.class))
+                instructions.addMainInstruction(CommandInstruction.build(command, method, InspectionUtils.getAliases(method)));
+
+            if (method.isAnnotationPresent(Instruction.class)) {
+                List<String> aliases = new ArrayList<>(InspectionUtils.getAliases(method));
+                if (aliases.isEmpty() || !method.isAnnotationPresent(IgnoreMethodName.class))
+                    aliases.add(method.getName());
+
+                instructions.addInstruction(CommandInstruction.build(command, method, aliases));
+            }
+        }
+
+        return instructions;
     }
 
     private static List<RimorCommand> resolveSubcommands(RimorCommand rimorCommand) {
