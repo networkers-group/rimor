@@ -33,7 +33,6 @@ public class RimorCommand {
 
     public void registerMainInstruction(CommandInstruction instruction) {
         this.mainInstructions.add(instruction);
-        this.registerInstruction(instruction);
     }
 
     public void registerInstruction(CommandInstruction instruction) {
