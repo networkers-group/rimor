@@ -4,7 +4,7 @@ import st.networkers.rimor.command.Command;
 import st.networkers.rimor.instruction.IgnoreMethodName;
 import st.networkers.rimor.instruction.Instruction;
 import st.networkers.rimor.instruction.MainInstruction;
-import st.networkers.rimor.internal.command.RimorCommand;
+import st.networkers.rimor.internal.command.ResolvedCommand;
 import st.networkers.rimor.internal.instruction.CommandInstruction;
 import st.networkers.rimor.util.InspectionUtils;
 
@@ -19,20 +19,20 @@ public final class CommandResolver {
     private CommandResolver() {
     }
 
-    public static RimorCommand resolve(Command command) {
+    public static ResolvedCommand resolve(Command command) {
         return resolve(null, command);
     }
 
-    public static RimorCommand resolve(RimorCommand parent, Command command) {
-        RimorCommand rimorCommand = new RimorCommand(parent, command, resolveAliases(command));
+    public static ResolvedCommand resolve(ResolvedCommand parent, Command command) {
+        ResolvedCommand resolvedCommand = new ResolvedCommand(parent, command, resolveAliases(command));
 
-        ResolvedInstructions resolvedInstructions = resolveInstructions(rimorCommand);
-        resolvedInstructions.getMainInstructions().forEach(rimorCommand::registerMainInstruction);
-        resolvedInstructions.getInstructions().forEach(rimorCommand::registerInstruction);
+        ResolvedInstructions resolvedInstructions = resolveInstructions(resolvedCommand);
+        resolvedInstructions.getMainInstructions().forEach(resolvedCommand::registerMainInstruction);
+        resolvedInstructions.getInstructions().forEach(resolvedCommand::registerInstruction);
 
-        resolveSubcommands(rimorCommand).forEach(rimorCommand::registerSubcommand);
+        resolveSubcommands(resolvedCommand).forEach(resolvedCommand::registerSubcommand);
 
-        return rimorCommand;
+        return resolvedCommand;
     }
 
     private static List<String> resolveAliases(Command command) {
@@ -44,7 +44,7 @@ public final class CommandResolver {
         return aliases;
     }
 
-    private static ResolvedInstructions resolveInstructions(RimorCommand command) {
+    private static ResolvedInstructions resolveInstructions(ResolvedCommand command) {
         ResolvedInstructions instructions = new ResolvedInstructions();
 
         for (Method method : command.getCommandInstance().getClass().getMethods()) {
@@ -63,9 +63,9 @@ public final class CommandResolver {
         return instructions;
     }
 
-    private static List<RimorCommand> resolveSubcommands(RimorCommand rimorCommand) {
-        return rimorCommand.getCommandInstance().getSubcommands().stream()
-                .map(subcommand -> resolve(rimorCommand, subcommand))
+    private static List<ResolvedCommand> resolveSubcommands(ResolvedCommand resolvedCommand) {
+        return resolvedCommand.getCommandInstance().getSubcommands().stream()
+                .map(subcommand -> resolve(resolvedCommand, subcommand))
                 .collect(Collectors.toList());
     }
 }

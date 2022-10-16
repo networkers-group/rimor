@@ -1,20 +1,20 @@
 package st.networkers.rimor.internal;
 
-import st.networkers.rimor.internal.command.RimorCommand;
+import st.networkers.rimor.internal.command.ResolvedCommand;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CommandRegistry {
 
-    private final Map<String, RimorCommand> commands = new HashMap<>();
+    private final Map<String, ResolvedCommand> commands = new HashMap<>();
 
-    public void registerCommand(RimorCommand rimorCommand) {
-        for (String alias : rimorCommand.getAliases())
-            this.commands.put(alias.toLowerCase(), rimorCommand);
+    public void registerCommand(ResolvedCommand resolvedCommand) {
+        for (String alias : resolvedCommand.getAliases())
+            this.commands.put(alias.toLowerCase(), resolvedCommand);
     }
 
-    public RimorCommand getCommand(String alias) {
+    public ResolvedCommand getCommand(String alias) {
         return this.commands.get(alias.toLowerCase());
     }
 }

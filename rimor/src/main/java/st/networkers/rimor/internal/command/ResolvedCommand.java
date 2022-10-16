@@ -9,25 +9,25 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
-public class RimorCommand {
+public class ResolvedCommand {
 
-    @Nullable private final RimorCommand parent;
+    @Nullable private final ResolvedCommand parent;
     private final Command commandInstance;
     private final Collection<String> aliases;
 
     private final Collection<CommandInstruction> mainInstructions = new ArrayList<>();
     private final Map<String, Collection<CommandInstruction>> instructions = new HashMap<>();
-    private final Map<String, RimorCommand> subcommands = new HashMap<>();
+    private final Map<String, ResolvedCommand> subcommands = new HashMap<>();
 
-    public RimorCommand(@Nullable RimorCommand parent,
-                        Command commandInstance,
-                        Collection<String> aliases) {
+    public ResolvedCommand(@Nullable ResolvedCommand parent,
+                           Command commandInstance,
+                           Collection<String> aliases) {
         this.parent = parent;
         this.commandInstance = commandInstance;
         this.aliases = aliases.stream().map(String::toLowerCase).collect(Collectors.toList());
     }
 
-    public Optional<RimorCommand> getParent() {
+    public Optional<ResolvedCommand> getParent() {
         return Optional.ofNullable(parent);
     }
 
@@ -40,7 +40,7 @@ public class RimorCommand {
             this.instructions.computeIfAbsent(alias, a -> new ArrayList<>()).add(instruction);
     }
 
-    public void registerSubcommand(RimorCommand subcommand) {
+    public void registerSubcommand(ResolvedCommand subcommand) {
         for (String alias : subcommand.getAliases())
             this.subcommands.put(alias, subcommand);
     }
@@ -49,7 +49,7 @@ public class RimorCommand {
         return this.instructions.get(alias.toLowerCase());
     }
 
-    public RimorCommand getSubcommand(String alias) {
+    public ResolvedCommand getSubcommand(String alias) {
         return this.subcommands.get(alias.toLowerCase());
     }
 
