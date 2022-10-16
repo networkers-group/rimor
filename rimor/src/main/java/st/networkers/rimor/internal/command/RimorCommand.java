@@ -13,15 +13,15 @@ public class RimorCommand {
 
     @Nullable private final RimorCommand parent;
     private final Command commandInstance;
-    private final List<String> aliases;
+    private final Collection<String> aliases;
 
-    private final List<CommandInstruction> mainInstructions = new ArrayList<>();
-    private final Map<String, List<CommandInstruction>> instructions = new HashMap<>();
+    private final Collection<CommandInstruction> mainInstructions = new ArrayList<>();
+    private final Map<String, Collection<CommandInstruction>> instructions = new HashMap<>();
     private final Map<String, RimorCommand> subcommands = new HashMap<>();
 
     public RimorCommand(@Nullable RimorCommand parent,
                         Command commandInstance,
-                        List<String> aliases) {
+                        Collection<String> aliases) {
         this.parent = parent;
         this.commandInstance = commandInstance;
         this.aliases = aliases.stream().map(String::toLowerCase).collect(Collectors.toList());
@@ -45,7 +45,7 @@ public class RimorCommand {
             this.subcommands.put(alias, subcommand);
     }
 
-    public List<CommandInstruction> getInstructions(String alias) {
+    public Collection<CommandInstruction> getInstructions(String alias) {
         return this.instructions.get(alias.toLowerCase());
     }
 
