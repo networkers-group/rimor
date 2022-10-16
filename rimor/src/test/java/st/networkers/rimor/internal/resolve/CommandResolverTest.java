@@ -70,6 +70,11 @@ class CommandResolverTest {
         assertEquals(1, resolvedCommand.getSubcommands().size());
     }
 
+    @Test
+    void whenGettingBarSubcommandAndCheckingParent_thenParentEqualsResolvedCommand() {
+        assertThat(resolvedCommand.getSubcommand("bar").getParent()).contains(resolvedCommand);
+    }
+
     // the Bar subcommand has no @Aliases annotation, so the alias is the class name, Bar.
     @Test
     void whenGettingBarSubcommand_thenAliasesAreOnlyBar() {
