@@ -7,6 +7,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Contains injectable information relative to the execution of a command (for example, its parameters).
+ * <p>
+ * Every piece of information is wrapped in a {@link ContextComponent}.
+ */
 public class ExecutionContext {
 
     private final Map<TypeToken<?>, List<ContextComponent<?>>> components;

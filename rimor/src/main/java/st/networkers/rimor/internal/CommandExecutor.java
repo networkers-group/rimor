@@ -2,17 +2,15 @@ package st.networkers.rimor.internal;
 
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.instruction.CommandInstruction;
-import st.networkers.rimor.internal.inject.Injector;
 
-public class CommandExecutor {
+public interface CommandExecutor {
 
-    private final Injector injector;
-
-    public CommandExecutor(Injector injector) {
-        this.injector = injector;
-    }
-
-    public Object execute(CommandInstruction instruction, ExecutionContext context) {
-        return injector.invokeMethod(instruction.getMethod(), instruction.getCommandInstance(), context);
-    }
+    /**
+     * Executes the given {@link CommandInstruction} with the given {@link ExecutionContext}.
+     *
+     * @param instruction instruction to execute.
+     * @param context context of the command execution.
+     * @return the result of executing the instruction method.
+     */
+    Object execute(CommandInstruction instruction, ExecutionContext context);
 }

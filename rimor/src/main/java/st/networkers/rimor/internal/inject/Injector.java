@@ -1,54 +1,27 @@
 package st.networkers.rimor.internal.inject;
 
-import lombok.Getter;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.internal.provide.ProviderRegistry;
 import st.networkers.rimor.internal.reflect.CachedMethod;
-import st.networkers.rimor.internal.reflect.CachedParameter;
-import st.networkers.rimor.provide.RimorProvider;
-import st.networkers.rimor.util.ReflectionUtils;
 
-public class Injector {
+public interface Injector {
 
-    @Getter private final ProviderRegistry providerRegistry;
+    /**
+     * Gets the object for the given {@link Token} from the given {@link ExecutionContext}, if able. Otherwise,
+     * gets it from a registered provider, or {@code null}.
+     *
+     * @param token   the token to get its associated object
+     * @param context the context of a command execution
+     * @return the object associated with the token
+     */
+    <T> T get(Token<T> token, ExecutionContext context);
 
-    public Injector() {
-        this(new ProviderRegistry());
-    }
-
-    private Injector(ProviderRegistry providerRegistry) {
-        this.providerRegistry = providerRegistry;
-    }
-
-    public Injector registerProvider(RimorProvider<?> provider) {
-        providerRegistry.register(provider);
-        return this;
-    }
-
-    public Injector registerProviders(RimorProvider<?>... providers) {
-        providerRegistry.register(providers);
-        return this;
-    }
-
-    public <T> T get(Token<T> token, ExecutionContext context) {
-        return context.get(token).orElseGet(
-                // Java 8 optionals don't have #or 😣
-                () -> providerRegistry.provide(token, context, this).orElse(null)
-        );
-    }
-
-    public Object invokeMethod(CachedMethod cachedMethod, Object instance, ExecutionContext context) {
-        return ReflectionUtils.invoke(cachedMethod.getMethod(), instance, resolveParameters(cachedMethod, context));
-    }
-
-    public Object[] resolveParameters(CachedMethod cachedMethod, ExecutionContext context) {
-        Object[] parameters = new Object[cachedMethod.getParameters().size()];
-
-        int i = 0;
-        for (CachedParameter parameter : cachedMethod.getParameters()) {
-            parameters[i++] = get(new Token<>(parameter.getType(), parameter.getAnnotationsMap()), context);
-        }
-
-        return parameters;
-    }
+    /**
+     * Invokes the given method injecting all its parameters.
+     *
+     * @param cachedMethod the method to invoke
+     * @param instance     an instance of the method's class to invoke it on, or {@code null} if static
+     * @param context      the context of a command execution
+     * @return the result of executing the method
+     */
+    Object invokeMethod(CachedMethod cachedMethod, Object instance, ExecutionContext context);
 }

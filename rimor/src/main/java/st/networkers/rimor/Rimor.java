@@ -4,51 +4,63 @@ import lombok.Getter;
 import st.networkers.rimor.command.Command;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.CommandExecutor;
+import st.networkers.rimor.internal.CommandExecutorImpl;
 import st.networkers.rimor.internal.CommandRegistry;
 import st.networkers.rimor.internal.inject.Injector;
+import st.networkers.rimor.internal.inject.InjectorImpl;
 import st.networkers.rimor.internal.instruction.CommandInstruction;
-import st.networkers.rimor.internal.provide.builtin.BooleanParamParser;
-import st.networkers.rimor.internal.provide.builtin.EnumParamParser;
-import st.networkers.rimor.internal.provide.builtin.StringParamParser;
+import st.networkers.rimor.internal.provide.ProviderRegistry;
+import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 import st.networkers.rimor.internal.resolve.CommandResolver;
 import st.networkers.rimor.provide.RimorProvider;
 
 @Getter
 public class Rimor {
 
-    private final CommandRegistry registry = new CommandRegistry();
+    private final CommandRegistry commandRegistry = new CommandRegistry();
+    private final ProviderRegistry providerRegistry = new ProviderRegistryImpl();
 
-    private final Injector injector;
-    private final CommandExecutor executor;
+    private final Injector injector = new InjectorImpl(providerRegistry);
+    private final CommandExecutor executor = new CommandExecutorImpl(injector);
 
-    public Rimor() {
-        this.injector = new Injector()
-                // built-in providers
-                .registerProvider(new BooleanParamParser())
-                .registerProvider(new EnumParamParser())
-                .registerProvider(new StringParamParser());
-
-        this.executor = new CommandExecutor(injector);
-    }
-
+    /**
+     * Registers the given {@link Command}.
+     *
+     * @param command the command to register
+     */
     public Rimor registerCommand(Command command) {
-        registry.registerCommand(CommandResolver.resolve(command));
+        commandRegistry.registerCommand(CommandResolver.resolve(command));
         return this;
     }
 
+    /**
+     * Registers the given {@link Command}s.
+     *
+     * @param commands the commands to register
+     */
     public Rimor registerCommands(Command... commands) {
         for (Command command : commands)
             this.registerCommand(command);
         return this;
     }
 
+    /**
+     * Registers the given provider.
+     *
+     * @param provider the provider to register into this injector
+     */
     public Rimor registerProvider(RimorProvider<?> provider) {
-        this.injector.registerProvider(provider);
+        this.providerRegistry.register(provider);
         return this;
     }
 
+    /**
+     * Registers the given providers.
+     *
+     * @param providers the providers to register into this injector
+     */
     public Rimor registerProviders(RimorProvider<?>... providers) {
-        this.injector.registerProviders(providers);
+        this.providerRegistry.register(providers);
         return this;
     }
 

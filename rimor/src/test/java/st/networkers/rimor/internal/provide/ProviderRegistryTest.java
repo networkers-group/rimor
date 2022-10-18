@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ProviderRegistryTest {
 
-    static ProviderRegistry providerRegistry = new ProviderRegistry();
+    static ProviderRegistry providerRegistry = new ProviderRegistryImpl();
 
     static RimorProvider<String> simpleProvider = new RimorProvider<String>(String.class) {
         @Override
