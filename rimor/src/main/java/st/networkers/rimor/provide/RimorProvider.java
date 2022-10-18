@@ -30,7 +30,6 @@ public abstract class RimorProvider<T> extends Annotated<RimorProvider<T>> {
     }
 
     protected RimorProvider(Collection<TypeToken<T>> providedTypes) {
-        super(null, null);
         this.providedTypes = providedTypes;
         this.inspectAnnotations();
     }
@@ -45,16 +44,20 @@ public abstract class RimorProvider<T> extends Annotated<RimorProvider<T>> {
     }
 
     private void inspectAnnotations() {
+        Method method;
         try {
-            Method method = this.getClass().getMethod("get", Token.class, Injector.class, ExecutionContext.class);
-            this.annotations = InspectionUtils.getMappedAnnotations(Arrays.stream(method.getAnnotations())
-                    .filter(annotation -> !(annotation instanceof RequireAnnotations))
-                    .collect(Collectors.toList()));
-            this.requiredAnnotations = method.isAnnotationPresent(RequireAnnotations.class)
-                    ? Arrays.asList(method.getAnnotation(RequireAnnotations.class).value())
-                    : Collections.emptyList();
+            method = this.getClass().getMethod("get", Token.class, Injector.class, ExecutionContext.class);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
+
+        this.annotations.putAll(InspectionUtils.getMappedAnnotations(
+                Arrays.stream(method.getAnnotations())
+                        .filter(annotation -> !(annotation instanceof RequireAnnotations))
+                        .collect(Collectors.toList())
+        ));
+
+        if (method.isAnnotationPresent(RequireAnnotations.class))
+            Collections.addAll(this.requiredAnnotations, method.getAnnotation(RequireAnnotations.class).value());
     }
 }

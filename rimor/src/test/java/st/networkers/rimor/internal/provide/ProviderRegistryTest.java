@@ -25,11 +25,10 @@ class ProviderRegistryTest {
 
     static RimorProvider<String> annotatedProvider = new RimorProvider<String>(String.class) {
         @Override
-        @Deprecated
         public String get(Token<String> token, Injector injector, ExecutionContext context) {
             return "foo";
         }
-    };
+    }.annotatedWith(Deprecated.class);
 
     static RimorProvider<String> annotationRequiredProvider = new RimorProvider<String>(String.class) {
         @Override
