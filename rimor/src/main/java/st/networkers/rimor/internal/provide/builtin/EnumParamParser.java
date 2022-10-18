@@ -19,11 +19,7 @@ public class EnumParamParser extends ParamParser<Enum<?>> {
 
     @Override
     protected Enum<?> parse(String parameter, Token<Enum<?>> token, Injector injector, ExecutionContext context) {
-        try {
-            return parse(parameter, token);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
+        return parse(parameter, token);
     }
 
     @Override
@@ -33,6 +29,10 @@ public class EnumParamParser extends ParamParser<Enum<?>> {
 
     @SuppressWarnings("unchecked")
     private <T extends Enum<T>> T parse(String parameter, Token<? extends Enum<?>> token) {
-        return Enum.valueOf((Class<T>) token.getType().getRawType(), parameter);
+        try {
+            return Enum.valueOf((Class<T>) token.getType().getRawType(), parameter);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }
