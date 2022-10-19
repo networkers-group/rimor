@@ -10,17 +10,18 @@ import st.networkers.rimor.internal.inject.InjectorImpl;
 import st.networkers.rimor.internal.instruction.CommandInstruction;
 import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 import st.networkers.rimor.internal.resolve.CommandResolver;
-import st.networkers.rimor.plugin.PluginRegistry;
-import st.networkers.rimor.plugin.PluginRegistryImpl;
+import st.networkers.rimor.plugin.PluginManager;
+import st.networkers.rimor.plugin.PluginManagerImpl;
 import st.networkers.rimor.plugin.RimorPlugin;
 import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.provide.RimorProvider;
 
+@Getter
 public class Rimor {
 
-    @Getter private final CommandRegistry commandRegistry = new CommandRegistry();
+    private final CommandRegistry commandRegistry = new CommandRegistry();
+    private final PluginManager pluginManager = new PluginManagerImpl(this);
     private final ProviderRegistry providerRegistry = new ProviderRegistryImpl();
-    private final PluginRegistry pluginRegistry = new PluginRegistryImpl();
 
     private final Injector injector = new InjectorImpl(providerRegistry);
     private final CommandExecutor executor = new CommandExecutorImpl(injector);
@@ -73,8 +74,7 @@ public class Rimor {
      * @param plugin the plugin to register
      */
     public Rimor registerPlugin(RimorPlugin plugin) {
-        plugin.configure(this);
-        this.pluginRegistry.registerPlugin(plugin);
+        this.pluginManager.registerPlugin(plugin);
         return this;
     }
 

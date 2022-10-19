@@ -1,14 +1,24 @@
 package st.networkers.rimor.plugin;
 
+import st.networkers.rimor.Rimor;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class PluginRegistryImpl implements PluginRegistry {
+public class PluginManagerImpl implements PluginManager {
 
+    private final Rimor rimor;
     private final Collection<RimorPlugin> plugins = new ArrayList<>();
+
+    public PluginManagerImpl(Rimor rimor) {
+        this.rimor = rimor;
+    }
 
     @Override
     public void registerPlugin(RimorPlugin plugin) {
+        plugin.configure(rimor);
+        plugin.getCommands().forEach(rimor::registerCommand);
+        plugin.getProviders().forEach(rimor::registerProvider);
         plugins.add(plugin);
     }
 

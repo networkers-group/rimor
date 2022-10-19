@@ -2,7 +2,7 @@ package st.networkers.rimor.plugin;
 
 import java.util.Collection;
 
-public interface PluginRegistry {
+public interface PluginManager {
 
     void registerPlugin(RimorPlugin plugin);
 
