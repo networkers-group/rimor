@@ -2,19 +2,18 @@ package st.networkers.rimor;
 
 import lombok.Getter;
 import st.networkers.rimor.command.Command;
+import st.networkers.rimor.command.CommandRegistry;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.internal.CommandExecutor;
+import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.internal.CommandExecutorImpl;
-import st.networkers.rimor.internal.CommandRegistry;
-import st.networkers.rimor.internal.inject.Injector;
 import st.networkers.rimor.internal.inject.InjectorImpl;
 import st.networkers.rimor.internal.instruction.CommandInstruction;
-import st.networkers.rimor.internal.provide.ProviderRegistry;
 import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 import st.networkers.rimor.internal.resolve.CommandResolver;
 import st.networkers.rimor.plugin.PluginRegistry;
 import st.networkers.rimor.plugin.PluginRegistryImpl;
 import st.networkers.rimor.plugin.RimorPlugin;
+import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.provide.RimorProvider;
 
 public class Rimor {

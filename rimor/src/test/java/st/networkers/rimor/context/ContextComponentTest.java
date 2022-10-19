@@ -3,7 +3,7 @@ package st.networkers.rimor.context;
 import com.google.common.reflect.TypeToken;
 import org.junit.jupiter.api.Test;
 import st.networkers.rimor.ParamImpl;
-import st.networkers.rimor.internal.inject.Token;
+import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.provide.builtin.Param;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package st.networkers.rimor.internal.inject;
+package st.networkers.rimor.inject;
 
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.reflect.CachedMethod;

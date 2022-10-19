@@ -1,7 +1,6 @@
-package st.networkers.rimor.internal.provide;
+package st.networkers.rimor.provide;
 
-import st.networkers.rimor.internal.inject.Token;
-import st.networkers.rimor.provide.RimorProvider;
+import st.networkers.rimor.inject.Token;
 
 import java.util.Optional;
 

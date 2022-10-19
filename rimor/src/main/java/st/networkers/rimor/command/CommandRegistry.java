@@ -1,4 +1,4 @@
-package st.networkers.rimor.internal;
+package st.networkers.rimor.command;
 
 import st.networkers.rimor.internal.command.ResolvedCommand;
 

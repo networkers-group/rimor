@@ -3,9 +3,9 @@ package st.networkers.rimor.provide;
 import com.google.common.reflect.TypeToken;
 import lombok.Getter;
 import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.inject.Injector;
+import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.internal.inject.Annotated;
-import st.networkers.rimor.internal.inject.Injector;
-import st.networkers.rimor.internal.inject.Token;
 import st.networkers.rimor.util.InspectionUtils;
 
 import java.lang.reflect.Method;

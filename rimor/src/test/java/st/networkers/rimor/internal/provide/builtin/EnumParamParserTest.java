@@ -1,7 +1,7 @@
 package st.networkers.rimor.internal.provide.builtin;
 
 import org.junit.jupiter.api.Test;
-import st.networkers.rimor.internal.inject.Token;
+import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.provide.builtin.Param;
 
 import static org.junit.jupiter.api.Assertions.*;

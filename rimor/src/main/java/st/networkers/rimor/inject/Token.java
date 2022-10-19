@@ -1,7 +1,8 @@
-package st.networkers.rimor.internal.inject;
+package st.networkers.rimor.inject;
 
 import com.google.common.reflect.TypeToken;
 import lombok.Getter;
+import st.networkers.rimor.internal.inject.Annotated;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;

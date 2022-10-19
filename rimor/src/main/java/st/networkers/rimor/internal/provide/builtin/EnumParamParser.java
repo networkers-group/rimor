@@ -2,8 +2,8 @@ package st.networkers.rimor.internal.provide.builtin;
 
 import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.internal.inject.Injector;
-import st.networkers.rimor.internal.inject.Token;
+import st.networkers.rimor.inject.Injector;
+import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.provide.builtin.ParamParser;
 
 /**

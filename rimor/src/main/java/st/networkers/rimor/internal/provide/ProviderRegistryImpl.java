@@ -1,7 +1,8 @@
 package st.networkers.rimor.internal.provide;
 
 import com.google.common.reflect.TypeToken;
-import st.networkers.rimor.internal.inject.Token;
+import st.networkers.rimor.inject.Token;
+import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.provide.RimorProvider;
 
 import java.util.*;

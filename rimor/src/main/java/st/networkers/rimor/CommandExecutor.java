@@ -1,4 +1,4 @@
-package st.networkers.rimor.internal;
+package st.networkers.rimor;
 
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.internal.instruction.CommandInstruction;
