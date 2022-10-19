@@ -45,7 +45,7 @@ public class Rimor {
     }
 
     /**
-     * Registers the given provider.
+     * Registers the given {@link RimorProvider}.
      *
      * @param provider the provider to register into this injector
      */
@@ -55,12 +55,13 @@ public class Rimor {
     }
 
     /**
-     * Registers the given providers.
+     * Registers the given {@link RimorProvider}s.
      *
      * @param providers the providers to register into this injector
      */
     public Rimor registerProviders(RimorProvider<?>... providers) {
-        this.providerRegistry.register(providers);
+        for (RimorProvider<?> provider : providers)
+            this.registerProvider(provider);
         return this;
     }
 

@@ -40,7 +40,9 @@ class ProviderRegistryTest {
 
     @BeforeAll
     static void setUp() {
-        providerRegistry.register(simpleProvider, annotatedProvider, annotationRequiredProvider);
+        providerRegistry.register(simpleProvider);
+        providerRegistry.register(annotatedProvider);
+        providerRegistry.register(annotationRequiredProvider);
     }
 
     @Test

@@ -12,18 +12,9 @@ public class ProviderRegistryImpl implements ProviderRegistry {
     private final Map<TypeToken<?>, List<RimorProvider<?>>> providers = new HashMap<>();
 
     @Override
-    public void register(RimorProvider<?>... providers) {
-        for (RimorProvider<?> provider : providers)
-            this.register(provider);
-    }
-
-    private <T> void register(RimorProvider<T> provider) {
+    public <T> void register(RimorProvider<T> provider) {
         for (TypeToken<T> type : provider.getProvidedTypes())
-            this.register(type, provider);
-    }
-
-    private <T> void register(TypeToken<T> type, RimorProvider<? super T> provider) {
-        this.providers.computeIfAbsent(type, t -> new ArrayList<>()).add(provider);
+            this.providers.computeIfAbsent(type, t -> new ArrayList<>()).add(provider);
     }
 
     @Override

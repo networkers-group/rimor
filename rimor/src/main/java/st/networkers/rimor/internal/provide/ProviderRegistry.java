@@ -10,9 +10,9 @@ public interface ProviderRegistry {
     /**
      * Registers the given {@link RimorProvider}s.
      *
-     * @param providers the providers to register
+     * @param provider the provider to register
      */
-    void register(RimorProvider<?>... providers);
+    <T> void register(RimorProvider<T> provider);
 
     /**
      * Finds the {@link RimorProvider} associated with the given {@link Token}.
