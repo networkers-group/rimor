@@ -12,13 +12,16 @@ import st.networkers.rimor.internal.instruction.CommandInstruction;
 import st.networkers.rimor.internal.provide.ProviderRegistry;
 import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 import st.networkers.rimor.internal.resolve.CommandResolver;
+import st.networkers.rimor.plugin.PluginRegistry;
+import st.networkers.rimor.plugin.PluginRegistryImpl;
+import st.networkers.rimor.plugin.RimorPlugin;
 import st.networkers.rimor.provide.RimorProvider;
 
-@Getter
 public class Rimor {
 
-    private final CommandRegistry commandRegistry = new CommandRegistry();
+    @Getter private final CommandRegistry commandRegistry = new CommandRegistry();
     private final ProviderRegistry providerRegistry = new ProviderRegistryImpl();
+    private final PluginRegistry pluginRegistry = new PluginRegistryImpl();
 
     private final Injector injector = new InjectorImpl(providerRegistry);
     private final CommandExecutor executor = new CommandExecutorImpl(injector);
@@ -62,6 +65,28 @@ public class Rimor {
     public Rimor registerProviders(RimorProvider<?>... providers) {
         for (RimorProvider<?> provider : providers)
             this.registerProvider(provider);
+        return this;
+    }
+
+    /**
+     * Registers the given {@link RimorPlugin}.
+     *
+     * @param plugin the plugin to register
+     */
+    public Rimor registerPlugin(RimorPlugin plugin) {
+        plugin.configure(this);
+        this.pluginRegistry.registerPlugin(plugin);
+        return this;
+    }
+
+    /**
+     * Registers the given {@link RimorPlugin}.
+     *
+     * @param plugins the plugins to register
+     */
+    public Rimor registerPlugins(RimorPlugin... plugins) {
+        for (RimorPlugin plugin : plugins)
+            this.registerPlugin(plugin);
         return this;
     }
 
