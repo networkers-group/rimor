@@ -19,7 +19,7 @@ public class EnumParamParser extends ParamParser<Enum<?>> {
 
     @Override
     protected Enum<?> parse(String parameter, Token<Enum<?>> token, Injector injector, ExecutionContext context) {
-        return parse(parameter, token);
+        return parse(parameter.toUpperCase(), token);
     }
 
     @Override
