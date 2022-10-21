@@ -5,7 +5,7 @@ import st.networkers.rimor.instruction.IgnoreMethodName;
 import st.networkers.rimor.instruction.Instruction;
 import st.networkers.rimor.instruction.MainInstruction;
 import st.networkers.rimor.internal.command.ResolvedCommand;
-import st.networkers.rimor.internal.instruction.CommandInstruction;
+import st.networkers.rimor.internal.instruction.ResolvedInstruction;
 import st.networkers.rimor.util.InspectionUtils;
 
 import java.lang.reflect.Method;
@@ -49,14 +49,14 @@ public final class CommandResolver {
 
         for (Method method : command.getCommandInstance().getClass().getMethods()) {
             if (method.isAnnotationPresent(MainInstruction.class))
-                instructions.addMainInstruction(CommandInstruction.build(command, method, InspectionUtils.getAliases(method)));
+                instructions.addMainInstruction(ResolvedInstruction.build(command, method, InspectionUtils.getAliases(method)));
 
             if (method.isAnnotationPresent(Instruction.class)) {
                 List<String> aliases = new ArrayList<>(InspectionUtils.getAliases(method));
                 if (aliases.isEmpty() || !method.isAnnotationPresent(IgnoreMethodName.class))
                     aliases.add(method.getName());
 
-                instructions.addInstruction(CommandInstruction.build(command, method, aliases));
+                instructions.addInstruction(ResolvedInstruction.build(command, method, aliases));
             }
         }
 

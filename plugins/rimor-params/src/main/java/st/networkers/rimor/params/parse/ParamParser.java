@@ -4,7 +4,7 @@ import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.internal.instruction.CommandInstruction;
+import st.networkers.rimor.internal.instruction.ResolvedInstruction;
 import st.networkers.rimor.internal.reflect.CachedParameter;
 import st.networkers.rimor.params.Param;
 import st.networkers.rimor.params.Params;
@@ -51,7 +51,7 @@ public abstract class ParamParser<T> extends RimorProvider<T> {
                 : null;
     }
 
-    private static final Token<CommandInstruction> INSTRUCTION_TOKEN = new Token<>(CommandInstruction.class);
+    private static final Token<ResolvedInstruction> INSTRUCTION_TOKEN = new Token<>(ResolvedInstruction.class);
     private static final Token<CachedParameter> PARAMETER_TOKEN = new Token<>(CachedParameter.class);
 
     private int getPosition(Token<T> token, ExecutionContext context) {
@@ -62,13 +62,13 @@ public abstract class ParamParser<T> extends RimorProvider<T> {
             return param.position();
 
         // if not, return the position of the current parameter
-        CommandInstruction instruction = context.get(INSTRUCTION_TOKEN).orElseThrow(IllegalArgumentException::new);
+        ResolvedInstruction instruction = context.get(INSTRUCTION_TOKEN).orElseThrow(IllegalArgumentException::new);
         CachedParameter parameter = context.get(PARAMETER_TOKEN).orElseThrow(IllegalArgumentException::new);
 
         return this.getPositionFromParameter(instruction, parameter);
     }
 
-    private int getPositionFromParameter(CommandInstruction instruction, CachedParameter parameter) {
+    private int getPositionFromParameter(ResolvedInstruction instruction, CachedParameter parameter) {
         List<CachedParameter> parameters = new ArrayList<>(instruction.getMethod().getParameters());
         parameters.removeIf(p -> !p.isAnnotationPresent(Param.class));
 

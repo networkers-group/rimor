@@ -10,17 +10,17 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Getter
-public class CommandInstruction {
+public class ResolvedInstruction {
 
-    public static CommandInstruction build(ResolvedCommand command, Method method, Collection<String> aliases) {
-        return new CommandInstruction(command, CachedMethod.build(method), aliases);
+    public static ResolvedInstruction build(ResolvedCommand command, Method method, Collection<String> aliases) {
+        return new ResolvedInstruction(command, CachedMethod.build(method), aliases);
     }
 
     private final ResolvedCommand command;
     private final CachedMethod method;
     private final Collection<String> aliases;
 
-    public CommandInstruction(ResolvedCommand command, CachedMethod method, Collection<String> aliases) {
+    public ResolvedInstruction(ResolvedCommand command, CachedMethod method, Collection<String> aliases) {
         this.command = command;
         this.method = method;
         this.aliases = aliases.stream().map(String::toLowerCase).collect(Collectors.toList());

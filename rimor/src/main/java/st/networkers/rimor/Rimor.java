@@ -7,7 +7,7 @@ import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.internal.CommandExecutorImpl;
 import st.networkers.rimor.internal.inject.InjectorImpl;
-import st.networkers.rimor.internal.instruction.CommandInstruction;
+import st.networkers.rimor.internal.instruction.ResolvedInstruction;
 import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 import st.networkers.rimor.internal.resolve.CommandResolver;
 import st.networkers.rimor.plugin.PluginManager;
@@ -99,7 +99,7 @@ public class Rimor {
         return this;
     }
 
-    public Object execute(CommandInstruction instruction, ExecutionContext context) {
+    public Object execute(ResolvedInstruction instruction, ExecutionContext context) {
         return this.executor.execute(instruction, context);
     }
 }

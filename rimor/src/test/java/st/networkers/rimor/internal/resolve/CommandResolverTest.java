@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import st.networkers.rimor.TestCommand;
 import st.networkers.rimor.internal.command.ResolvedCommand;
-import st.networkers.rimor.internal.instruction.CommandInstruction;
+import st.networkers.rimor.internal.instruction.ResolvedInstruction;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,7 +52,7 @@ class CommandResolverTest {
 
     @Test
     void whenGettingFooInstruction_thenAliasesAreFooAndFooAlias() {
-        CommandInstruction fooInstruction = resolvedCommand.getInstructions("foo").stream().findAny().get();
+        ResolvedInstruction fooInstruction = resolvedCommand.getInstructions("foo").stream().findAny().get();
 
         assertThat(fooInstruction.getAliases()).hasSameElementsAs(Arrays.asList("foo", "fooalias"));
     }
@@ -60,7 +60,7 @@ class CommandResolverTest {
     @Test
     // the baz instruction just has "bazalias" as an alias because it is annotated with @IgnoreMethodName, which is baz
     void whenGettingBazInstruction_thenAliasesAreOnlyBazAlias() {
-        CommandInstruction bazInstruction = resolvedCommand.getInstructions("bazalias").stream().findAny().get();
+        ResolvedInstruction bazInstruction = resolvedCommand.getInstructions("bazalias").stream().findAny().get();
 
         assertEquals(Collections.singletonList("bazalias"), bazInstruction.getAliases());
     }
