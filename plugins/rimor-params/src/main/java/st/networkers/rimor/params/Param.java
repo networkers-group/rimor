@@ -1,4 +1,4 @@
-package st.networkers.rimor.provide.builtin;
+package st.networkers.rimor.params;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -8,5 +8,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface Param {
-    int value();
+
+    String value() default "";
+
+    String description() default "";
+
+    /**
+     * The position of this parameter, or -1 to automatically detect by the method parameters order.
+     */
+    int position() default -1;
 }

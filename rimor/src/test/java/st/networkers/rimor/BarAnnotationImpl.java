@@ -1,13 +1,12 @@
 package st.networkers.rimor;
 
-import st.networkers.rimor.provide.builtin.Param;
-
 import java.lang.annotation.Annotation;
 
-public class ParamImpl implements Param {
+@SuppressWarnings("ClassExplicitlyAnnotation")
+public class BarAnnotationImpl implements BarAnnotation {
     private final int value;
 
-    public ParamImpl(int value) {
+    public BarAnnotationImpl(int value) {
         this.value = value;
     }
 
@@ -19,13 +18,13 @@ public class ParamImpl implements Param {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Param)) return false;
-        Param param = (Param) o;
-        return value == param.value();
+        if (!(o instanceof BarAnnotation)) return false;
+        BarAnnotation barAnnotation = (BarAnnotation) o;
+        return value == barAnnotation.value();
     }
 
     @Override
     public Class<? extends Annotation> annotationType() {
-        return Param.class;
+        return BarAnnotation.class;
     }
 }

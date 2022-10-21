@@ -2,14 +2,15 @@ package st.networkers.rimor.internal.provide;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import st.networkers.rimor.ParamImpl;
+import st.networkers.rimor.BarAnnotation;
+import st.networkers.rimor.BarAnnotationImpl;
+import st.networkers.rimor.FooAnnotation;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.provide.RequireAnnotations;
 import st.networkers.rimor.provide.RimorProvider;
-import st.networkers.rimor.provide.builtin.Param;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -29,11 +30,11 @@ class ProviderRegistryTest {
         public String get(Token<String> token, Injector injector, ExecutionContext context) {
             return "foo";
         }
-    }.annotatedWith(Deprecated.class);
+    }.annotatedWith(FooAnnotation.class);
 
     static RimorProvider<String> annotationRequiredProvider = new RimorProvider<String>(String.class) {
         @Override
-        @RequireAnnotations(Param.class)
+        @RequireAnnotations(BarAnnotation.class)
         public String get(Token<String> token, Injector injector, ExecutionContext context) {
             return "bar";
         }
@@ -67,7 +68,7 @@ class ProviderRegistryTest {
         assertEquals(
                 annotatedProvider,
                 providerRegistry.findFor(
-                        new Token<>(String.class).annotatedWith(Deprecated.class)
+                        new Token<>(String.class).annotatedWith(FooAnnotation.class)
                 ).orElse(null)
         );
     }
@@ -77,7 +78,7 @@ class ProviderRegistryTest {
         assertEquals(
                 annotationRequiredProvider,
                 providerRegistry.findFor(
-                        new Token<>(String.class).annotatedWith(new ParamImpl(0))
+                        new Token<>(String.class).annotatedWith(new BarAnnotationImpl(0))
                 ).orElse(null)
         );
     }

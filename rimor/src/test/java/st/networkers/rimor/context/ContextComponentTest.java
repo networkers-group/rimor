@@ -2,9 +2,9 @@ package st.networkers.rimor.context;
 
 import com.google.common.reflect.TypeToken;
 import org.junit.jupiter.api.Test;
-import st.networkers.rimor.ParamImpl;
+import st.networkers.rimor.BarAnnotation;
+import st.networkers.rimor.BarAnnotationImpl;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.provide.builtin.Param;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ContextComponentTest {
 
     static Token<String> stringToken = new Token<>(String.class);
-    static Token<String> annotatedStringToken = new Token<>(String.class).annotatedWith(new ParamImpl(0));
+    static Token<String> annotatedStringToken = new Token<>(String.class).annotatedWith(new BarAnnotationImpl(0));
 
     @Test
     void givenStringComponent_whenCheckingIfCanProvideStringToken_thenTrue() {
@@ -35,7 +35,7 @@ class ContextComponentTest {
     @Test
     void givenAnnotatedStringComponent_whenCheckingIfCanProvideAnnotatedStringToken_thenTrue() {
         ContextComponent<String> component = new ContextComponent<>(String.class, "test")
-                .annotatedWith(Param.class);
+                .annotatedWith(BarAnnotation.class);
 
         assertTrue(component.canProvide(annotatedStringToken));
     }
@@ -43,7 +43,7 @@ class ContextComponentTest {
     @Test
     void givenAnnotatedStringComponent_whenCheckingIfCanProvideStringToken_thenFalse() {
         ContextComponent<String> component = new ContextComponent<>(String.class, "test")
-                .annotatedWith(Param.class);
+                .annotatedWith(BarAnnotation.class);
 
         assertFalse(component.canProvide(stringToken));
     }
@@ -51,7 +51,7 @@ class ContextComponentTest {
     @Test
     void givenAnnotatedStringComponent_whenCheckingIfCanProvideEquallyAnnotatedStringToken_thenTrue() {
         ContextComponent<String> component = new ContextComponent<>(String.class, "test")
-                .annotatedWith(new ParamImpl(0));
+                .annotatedWith(new BarAnnotationImpl(0));
 
         assertTrue(component.canProvide(annotatedStringToken));
     }
@@ -59,7 +59,7 @@ class ContextComponentTest {
     @Test
     void givenAnnotatedStringComponent_whenCheckingIfCanProvideNotEquallyAnnotatedStringToken_thenTrue() {
         ContextComponent<String> component = new ContextComponent<>(String.class, "test")
-                .annotatedWith(new ParamImpl(1));
+                .annotatedWith(new BarAnnotationImpl(1));
 
         assertFalse(component.canProvide(annotatedStringToken));
     }

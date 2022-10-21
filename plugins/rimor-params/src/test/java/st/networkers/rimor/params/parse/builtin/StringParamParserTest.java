@@ -1,4 +1,4 @@
-package st.networkers.rimor.internal.provide.builtin;
+package st.networkers.rimor.params.parse.builtin;
 
 import org.junit.jupiter.api.Test;
 

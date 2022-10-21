@@ -1,8 +1,8 @@
-package st.networkers.rimor.internal.provide.builtin;
+package st.networkers.rimor.params.parse.builtin;
 
 import org.junit.jupiter.api.Test;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.provide.builtin.Param;
+import st.networkers.rimor.params.Param;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +18,7 @@ class EnumParamParserTest {
     @Test
     void parse() {
         assertEquals(TestEnum.TEST_1, parse("TEST_1", token));
-        assertEquals(TestEnum.TEST_2, parse("TEST_2", token));
+        assertEquals(TestEnum.TEST_2, parse("test_2", token));
         assertNull(parse("TEST_3", token));
     }
 

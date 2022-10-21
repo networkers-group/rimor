@@ -1,11 +1,11 @@
-package st.networkers.rimor.internal.provide.builtin;
+package st.networkers.rimor.params.parse.builtin;
 
 import st.networkers.rimor.Rimor;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.inject.Token;
+import st.networkers.rimor.params.parse.ParamParser;
 import st.networkers.rimor.provide.RimorProvider;
-import st.networkers.rimor.provide.builtin.ParamParser;
 
 import java.util.Arrays;
 import java.util.Collection;

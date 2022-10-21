@@ -1,10 +1,10 @@
-package st.networkers.rimor.internal.provide.builtin;
+package st.networkers.rimor.params.parse.builtin;
 
 import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.provide.builtin.ParamParser;
+import st.networkers.rimor.params.parse.ParamParser;
 
 /**
  * Built-in param parser for any enum type.
