@@ -8,11 +8,10 @@ import st.networkers.rimor.internal.instruction.CommandInstruction;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Getter
 public class ResolvedCommand {
 
     @Nullable private final ResolvedCommand parent;
-    private final Command commandInstance;
+    @Getter private final Command commandInstance;
     private final Collection<String> aliases;
 
     private final Collection<CommandInstruction> mainInstructions = new ArrayList<>();
@@ -45,12 +44,28 @@ public class ResolvedCommand {
             this.subcommands.put(alias, subcommand);
     }
 
+    public Collection<String> getAliases() {
+        return Collections.unmodifiableCollection(this.aliases);
+    }
+
+    public Collection<CommandInstruction> getMainInstructions() {
+        return Collections.unmodifiableCollection(mainInstructions);
+    }
+
     public Collection<CommandInstruction> getInstructions(String alias) {
         return this.instructions.get(alias.toLowerCase());
     }
 
+    public Map<String, Collection<CommandInstruction>> getInstructions() {
+        return Collections.unmodifiableMap(this.instructions);
+    }
+
     public ResolvedCommand getSubcommand(String alias) {
         return this.subcommands.get(alias.toLowerCase());
+    }
+
+    public Map<String, ResolvedCommand> getSubcommands() {
+        return Collections.unmodifiableMap(this.subcommands);
     }
 
     public Set<String> getAllInstructionAliases() {

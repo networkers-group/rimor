@@ -78,6 +78,6 @@ class CommandResolverTest {
     // the Bar subcommand has no @Aliases annotation, so the alias is the class name, Bar.
     @Test
     void whenGettingBarSubcommand_thenAliasesAreOnlyBar() {
-        assertEquals(Collections.singletonList("bar"), resolvedCommand.getSubcommand("bar").getAliases());
+        assertThat(resolvedCommand.getSubcommand("bar").getAliases()).contains("bar");
     }
 }

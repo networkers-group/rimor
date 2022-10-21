@@ -2,6 +2,7 @@ package st.networkers.rimor.internal.reflect;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 public class CachedAnnotatedElement {
@@ -26,6 +27,6 @@ public class CachedAnnotatedElement {
     }
 
     public Map<Class<? extends Annotation>, Annotation> getAnnotationsMap() {
-        return this.annotations;
+        return Collections.unmodifiableMap(this.annotations);
     }
 }

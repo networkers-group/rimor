@@ -6,11 +6,11 @@ import st.networkers.rimor.util.ReflectionUtils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Getter
 public class CachedMethod extends CachedAnnotatedElement {
 
     public static CachedMethod build(Method method) {
@@ -23,12 +23,16 @@ public class CachedMethod extends CachedAnnotatedElement {
         );
     }
 
-    private final Method method;
+    @Getter private final Method method;
     private final List<CachedParameter> parameters;
 
     public CachedMethod(Method method, Map<Class<? extends Annotation>, Annotation> annotations, List<CachedParameter> parameters) {
         super(annotations);
         this.method = method;
         this.parameters = parameters;
+    }
+
+    public List<CachedParameter> getParameters() {
+        return Collections.unmodifiableList(this.parameters);
     }
 }
