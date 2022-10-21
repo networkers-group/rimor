@@ -1,5 +1,7 @@
 package st.networkers.rimor.plugin;
 
+import st.networkers.rimor.plugin.event.RimorEvent;
+
 import java.util.Collection;
 
 public interface PluginManager {
@@ -9,6 +11,8 @@ public interface PluginManager {
     <T extends RimorPlugin> T getPlugin(Class<T> pluginClass);
 
     void unregisterPlugin(RimorPlugin plugin);
+
+    void callEvent(RimorEvent event);
 
     Collection<RimorPlugin> getRegisteredPlugins();
 

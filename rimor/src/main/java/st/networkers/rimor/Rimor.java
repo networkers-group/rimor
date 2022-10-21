@@ -13,6 +13,7 @@ import st.networkers.rimor.internal.resolve.CommandResolver;
 import st.networkers.rimor.plugin.PluginManager;
 import st.networkers.rimor.plugin.PluginManagerImpl;
 import st.networkers.rimor.plugin.RimorPlugin;
+import st.networkers.rimor.plugin.event.RimorInitializationEvent;
 import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.provide.RimorProvider;
 
@@ -25,6 +26,7 @@ public class Rimor {
 
     private final Injector injector = new InjectorImpl(providerRegistry);
     private final CommandExecutor executor = new CommandExecutorImpl(injector);
+    private final boolean initialized = false;
 
     /**
      * Registers the given {@link Command}.
@@ -86,6 +88,14 @@ public class Rimor {
     public Rimor registerPlugins(RimorPlugin... plugins) {
         for (RimorPlugin plugin : plugins)
             this.registerPlugin(plugin);
+        return this;
+    }
+
+    /**
+     * Initializes all the registered plugins.
+     */
+    public Rimor initialize() {
+        this.pluginManager.callEvent(new RimorInitializationEvent(this));
         return this;
     }
 

@@ -1,16 +1,17 @@
 package st.networkers.rimor.plugin;
 
 import st.networkers.rimor.command.Command;
+import st.networkers.rimor.plugin.event.RimorEvent;
+import st.networkers.rimor.plugin.event.RimorEventListener;
 import st.networkers.rimor.provide.RimorProvider;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 public abstract class AbstractRimorPlugin implements RimorPlugin {
 
     private final Collection<Command> commands = new ArrayList<>();
     private final Collection<RimorProvider<?>> providers = new ArrayList<>();
+    private final Map<Class<? extends RimorEvent>, Collection<RimorEventListener<?>>> listeners = new HashMap<>();
 
     /**
      * Registers the given {@link Command}.
@@ -48,6 +49,16 @@ public abstract class AbstractRimorPlugin implements RimorPlugin {
         Collections.addAll(this.providers, providers);
     }
 
+    /**
+     * Registers the given {@link RimorEventListener}.
+     *
+     * @param eventClass the event to listen to
+     * @param listener the listener to register
+     */
+    protected <T extends RimorEvent> void registerListener(Class<T> eventClass, RimorEventListener<T> listener) {
+        this.listeners.computeIfAbsent(eventClass, c -> new ArrayList<>()).add(listener);
+    }
+
     @Override
     public Collection<Command> getCommands() {
         return this.commands;
@@ -56,5 +67,10 @@ public abstract class AbstractRimorPlugin implements RimorPlugin {
     @Override
     public Collection<RimorProvider<?>> getProviders() {
         return this.providers;
+    }
+
+    @Override
+    public Map<Class<? extends RimorEvent>, Collection<RimorEventListener<?>>> getEventListeners() {
+        return this.listeners;
     }
 }
