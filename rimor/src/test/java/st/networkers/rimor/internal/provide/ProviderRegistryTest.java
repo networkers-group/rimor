@@ -8,6 +8,7 @@ import st.networkers.rimor.FooAnnotation;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.inject.Token;
+import st.networkers.rimor.provide.AbstractRimorProvider;
 import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.provide.RequireAnnotations;
 import st.networkers.rimor.provide.RimorProvider;
@@ -18,21 +19,21 @@ class ProviderRegistryTest {
 
     static ProviderRegistry providerRegistry = new ProviderRegistryImpl();
 
-    static RimorProvider<String> simpleProvider = new RimorProvider<String>(String.class) {
+    static RimorProvider<String> simpleProvider = new AbstractRimorProvider<String>(String.class) {
         @Override
         public String get(Token<String> token, Injector injector, ExecutionContext context) {
             return "test";
         }
     };
 
-    static RimorProvider<String> annotatedProvider = new RimorProvider<String>(String.class) {
+    static RimorProvider<String> annotatedProvider = new AbstractRimorProvider<String>(String.class) {
         @Override
         public String get(Token<String> token, Injector injector, ExecutionContext context) {
             return "foo";
         }
     }.annotatedWith(FooAnnotation.class);
 
-    static RimorProvider<String> annotationRequiredProvider = new RimorProvider<String>(String.class) {
+    static RimorProvider<String> annotationRequiredProvider = new AbstractRimorProvider<String>(String.class) {
         @Override
         @RequireAnnotations(BarAnnotation.class)
         public String get(Token<String> token, Injector injector, ExecutionContext context) {

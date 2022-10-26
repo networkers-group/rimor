@@ -11,7 +11,7 @@ import st.networkers.rimor.params.Params;
 import st.networkers.rimor.params.parse.builtin.BooleanParamParser;
 import st.networkers.rimor.params.parse.builtin.EnumParamParser;
 import st.networkers.rimor.params.parse.builtin.StringParamParser;
-import st.networkers.rimor.provide.RimorProvider;
+import st.networkers.rimor.provide.AbstractRimorProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.List;
  * @see EnumParamParser
  * @see StringParamParser
  */
-public abstract class ParamParser<T> extends RimorProvider<T> {
+public abstract class ParamParser<T> extends AbstractRimorProvider<T> {
 
     private static final Token<List<String>> PARAMS_TOKEN = new Token<>(new TypeToken<List<String>>() {}).annotatedWith(Params.class);
 

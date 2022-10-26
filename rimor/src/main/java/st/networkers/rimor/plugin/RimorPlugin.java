@@ -9,6 +9,9 @@ import st.networkers.rimor.provide.RimorProvider;
 import java.util.Collection;
 import java.util.Map;
 
+/**
+ * @see AbstractRimorPlugin
+ */
 public interface RimorPlugin {
 
     void configure(Rimor rimor);

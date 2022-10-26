@@ -3,10 +3,10 @@ package st.networkers.rimor.context;
 import com.google.common.reflect.TypeToken;
 import lombok.Getter;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.internal.inject.Annotated;
+import st.networkers.rimor.internal.inject.AbstractAnnotated;
 
 @Getter
-public class ContextComponent<T> extends Annotated<ContextComponent<T>> {
+public class ContextComponent<T> extends AbstractAnnotated<ContextComponent<T>> {
 
     @Getter private final TypeToken<T> type;
     @Getter private final T object;

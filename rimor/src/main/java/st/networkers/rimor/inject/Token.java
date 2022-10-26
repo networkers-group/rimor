@@ -2,14 +2,14 @@ package st.networkers.rimor.inject;
 
 import com.google.common.reflect.TypeToken;
 import lombok.Getter;
-import st.networkers.rimor.internal.inject.Annotated;
+import st.networkers.rimor.internal.inject.AbstractAnnotated;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Map;
 
 @Getter
-public class Token<T> extends Annotated<Token<T>> {
+public class Token<T> extends AbstractAnnotated<Token<T>> {
 
     private final TypeToken<T> type;
 
