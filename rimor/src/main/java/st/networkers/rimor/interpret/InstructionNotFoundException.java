@@ -2,7 +2,8 @@ package st.networkers.rimor.interpret;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import st.networkers.rimor.command.Command;
+import org.jetbrains.annotations.Nullable;
+import st.networkers.rimor.internal.command.ResolvedCommand;
 
 /**
  * Thrown if the execution path does not belong to any instruction and there are no main instructions for the command.
@@ -40,6 +41,6 @@ import st.networkers.rimor.command.Command;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class InstructionNotFoundException extends RuntimeException {
-    private final Command uberCommand;
-    private final Command command;
+    private @Nullable final ResolvedCommand uberCommand;
+    private @Nullable final ResolvedCommand subCommand;
 }
