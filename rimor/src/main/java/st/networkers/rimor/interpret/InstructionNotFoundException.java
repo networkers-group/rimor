@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Nullable;
 import st.networkers.rimor.internal.command.ResolvedCommand;
 
+import java.util.List;
+
 /**
  * Thrown if the execution path does not belong to any instruction and there are no main instructions for the command.
  * <p>
@@ -43,4 +45,5 @@ import st.networkers.rimor.internal.command.ResolvedCommand;
 public class InstructionNotFoundException extends RuntimeException {
     private @Nullable final ResolvedCommand uberCommand;
     private @Nullable final ResolvedCommand subCommand;
+    private final List<String> remainingPath;
 }
