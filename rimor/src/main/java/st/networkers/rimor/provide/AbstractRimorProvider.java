@@ -43,7 +43,7 @@ public abstract class AbstractRimorProvider<T>
     public boolean canProvide(Token<?> token) {
         for (TypeToken<T> providedType : this.providedTypes)
             if (token.getType().isSupertypeOf(providedType))
-                return matchesAnnotations(token);
+                return matchesAnnotations(token) && token.matchesAnnotations(this);
         return false;
     }
 

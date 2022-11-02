@@ -24,7 +24,7 @@ public class EnumParamParser extends ParamParser<Enum<?>> {
 
     @Override
     public boolean canProvide(Token<?> token) {
-        return token.getType().isSubtypeOf(ENUM_TYPE) && matchesAnnotations(token);
+        return token.getType().isSubtypeOf(ENUM_TYPE) && this.matchesAnnotations(token) && token.matchesAnnotations(this);
     }
 
     @SuppressWarnings("unchecked")

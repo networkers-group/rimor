@@ -40,8 +40,7 @@ public abstract class AbstractAnnotated<T extends AbstractAnnotated<T>> implemen
             if (!this.isAnnotationPresent(annotation))
                 return false;
 
-        return this.annotations.size() + this.requiredAnnotations.size()
-               == annotated.getAnnotations().size() + annotated.getRequiredAnnotations().size();
+        return true;
     }
 
     @Override

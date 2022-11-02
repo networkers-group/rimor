@@ -5,6 +5,14 @@ import java.util.Collection;
 
 public interface Annotated {
 
+    /**
+     * Checks if this Annotated matches the annotations of the specified {@code Annotated} parameter, i.e. if this
+     * Annotated has the same annotations and the required annotations of the specified {@code Annotated} parameter.
+     *
+     * @param annotated the Annotated to check if this matches its annotations
+     * @return {@code true} if this Annotated matches the annotations of the specified {@code Annotated} parameter,
+     * {@code false} otherwise
+     */
     boolean matchesAnnotations(Annotated annotated);
 
     Collection<Annotation> getAnnotations();
