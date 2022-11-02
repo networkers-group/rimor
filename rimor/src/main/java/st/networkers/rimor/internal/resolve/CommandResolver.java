@@ -7,6 +7,7 @@ import st.networkers.rimor.instruction.MainInstruction;
 import st.networkers.rimor.internal.command.ResolvedCommand;
 import st.networkers.rimor.internal.instruction.ResolvedInstruction;
 import st.networkers.rimor.util.InspectionUtils;
+import st.networkers.rimor.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -24,7 +25,12 @@ public final class CommandResolver {
     }
 
     public static ResolvedCommand resolve(ResolvedCommand parent, Command command) {
-        ResolvedCommand resolvedCommand = new ResolvedCommand(parent, command, resolveAliases(command));
+        ResolvedCommand resolvedCommand = new ResolvedCommand(
+                parent,
+                command,
+                resolveAliases(command),
+                ReflectionUtils.getMappedAnnotations(command.getClass())
+        );
 
         ResolvedInstructions resolvedInstructions = resolveInstructions(resolvedCommand);
         resolvedInstructions.getMainInstructions().forEach(resolvedCommand::registerMainInstruction);

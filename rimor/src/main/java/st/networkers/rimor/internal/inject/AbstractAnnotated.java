@@ -15,6 +15,10 @@ public abstract class AbstractAnnotated<T extends AbstractAnnotated<T>> implemen
         this(new HashMap<>(), new ArrayList<>());
     }
 
+    protected AbstractAnnotated(Map<Class<? extends Annotation>, Annotation> annotations) {
+        this(annotations, new ArrayList<>());
+    }
+
     protected AbstractAnnotated(Map<Class<? extends Annotation>, Annotation> annotations, Collection<Class<? extends Annotation>> requiredAnnotations) {
         this.annotations = annotations;
         this.requiredAnnotations = requiredAnnotations;

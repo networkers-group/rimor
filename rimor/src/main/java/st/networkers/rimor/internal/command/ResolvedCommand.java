@@ -3,12 +3,14 @@ package st.networkers.rimor.internal.command;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 import st.networkers.rimor.command.Command;
+import st.networkers.rimor.internal.inject.AbstractAnnotated;
 import st.networkers.rimor.internal.instruction.ResolvedInstruction;
 
+import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ResolvedCommand {
+public class ResolvedCommand extends AbstractAnnotated<ResolvedCommand> {
 
     @Nullable private final ResolvedCommand parent;
     @Getter private final Command commandInstance;
@@ -20,7 +22,9 @@ public class ResolvedCommand {
 
     public ResolvedCommand(@Nullable ResolvedCommand parent,
                            Command commandInstance,
-                           Collection<String> aliases) {
+                           Collection<String> aliases,
+                           Map<Class<? extends Annotation>, Annotation> annotations) {
+        super(annotations);
         this.parent = parent;
         this.commandInstance = commandInstance;
         this.aliases = aliases.stream().map(String::toLowerCase).collect(Collectors.toList());
