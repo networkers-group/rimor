@@ -20,11 +20,6 @@ public class TestCommand extends AbstractCommand {
         return true;
     }
 
-    @MainInstruction
-    public boolean main(@FooAnnotation List<String> params) {
-        return true;
-    }
-
     @Instruction
     @Aliases("fooAlias")
     public void foo(@FooAnnotation List<String> params, String param0, String param1) {

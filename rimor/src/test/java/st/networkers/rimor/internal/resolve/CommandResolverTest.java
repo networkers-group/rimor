@@ -10,10 +10,8 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SuppressWarnings("OptionalGetWithoutIsPresent")
 class CommandResolverTest {
 
     private static TestCommand testCommand;
@@ -41,18 +39,18 @@ class CommandResolverTest {
     }
 
     @Test
-    void whenGettingMainInstructions_thenSizeIs2() {
-        assertEquals(2, resolvedCommand.getMainInstructions().size());
+    void whenGettingMainInstruction_thenIsNotNull() {
+        assertNotNull(resolvedCommand.getMainInstruction());
     }
 
     @Test
-    void whenGettingFooInstructions_thenSizeIs1() {
-        assertEquals(1, resolvedCommand.getInstructions("foo").size());
+    void whenGettingFooInstruction_thenIsNotNull() {
+        assertNotNull(resolvedCommand.getInstruction("foo"));
     }
 
     @Test
     void whenGettingFooInstruction_thenAliasesAreFooAndFooAlias() {
-        ResolvedInstruction fooInstruction = resolvedCommand.getInstructions("foo").stream().findAny().get();
+        ResolvedInstruction fooInstruction = resolvedCommand.getInstruction("foo");
 
         assertThat(fooInstruction.getAliases()).hasSameElementsAs(Arrays.asList("foo", "fooalias"));
     }
@@ -60,7 +58,7 @@ class CommandResolverTest {
     @Test
     // the baz instruction just has "bazalias" as an alias because it is annotated with @IgnoreMethodName, which is baz
     void whenGettingBazInstruction_thenAliasesAreOnlyBazAlias() {
-        ResolvedInstruction bazInstruction = resolvedCommand.getInstructions("bazalias").stream().findAny().get();
+        ResolvedInstruction bazInstruction = resolvedCommand.getInstruction("bazalias");
 
         assertEquals(Collections.singletonList("bazalias"), bazInstruction.getAliases());
     }

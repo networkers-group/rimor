@@ -1,6 +1,7 @@
 package st.networkers.rimor.internal.command;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 import st.networkers.rimor.command.Command;
 import st.networkers.rimor.internal.inject.AbstractAnnotated;
@@ -16,8 +17,8 @@ public class ResolvedCommand extends AbstractAnnotated<ResolvedCommand> {
     @Getter private final Command commandInstance;
     private final Collection<String> aliases;
 
-    private final Collection<ResolvedInstruction> mainInstructions = new ArrayList<>();
-    private final Map<String, Collection<ResolvedInstruction>> instructions = new HashMap<>();
+    @Getter @Setter private ResolvedInstruction mainInstruction;
+    private final Map<String, ResolvedInstruction> instructions = new HashMap<>();
     private final Map<String, ResolvedCommand> subcommands = new HashMap<>();
 
     public ResolvedCommand(@Nullable ResolvedCommand parent,
@@ -34,13 +35,9 @@ public class ResolvedCommand extends AbstractAnnotated<ResolvedCommand> {
         return Optional.ofNullable(parent);
     }
 
-    public void registerMainInstruction(ResolvedInstruction instruction) {
-        this.mainInstructions.add(instruction);
-    }
-
     public void registerInstruction(ResolvedInstruction instruction) {
         for (String alias : instruction.getAliases())
-            this.instructions.computeIfAbsent(alias, a -> new ArrayList<>()).add(instruction);
+            this.instructions.put(alias, instruction);
     }
 
     public void registerSubcommand(ResolvedCommand subcommand) {
@@ -52,15 +49,11 @@ public class ResolvedCommand extends AbstractAnnotated<ResolvedCommand> {
         return Collections.unmodifiableCollection(this.aliases);
     }
 
-    public Collection<ResolvedInstruction> getMainInstructions() {
-        return Collections.unmodifiableCollection(mainInstructions);
-    }
-
-    public Collection<ResolvedInstruction> getInstructions(String alias) {
+    public ResolvedInstruction getInstruction(String alias) {
         return this.instructions.get(alias.toLowerCase());
     }
 
-    public Map<String, Collection<ResolvedInstruction>> getInstructions() {
+    public Map<String, ResolvedInstruction> getInstructions() {
         return Collections.unmodifiableMap(this.instructions);
     }
 

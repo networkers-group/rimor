@@ -33,7 +33,7 @@ public final class CommandResolver {
         );
 
         ResolvedInstructions resolvedInstructions = resolveInstructions(resolvedCommand);
-        resolvedInstructions.getMainInstructions().forEach(resolvedCommand::registerMainInstruction);
+        resolvedCommand.setMainInstruction(resolvedInstructions.getMainInstruction());
         resolvedInstructions.getInstructions().forEach(resolvedCommand::registerInstruction);
 
         resolveSubcommands(resolvedCommand).forEach(resolvedCommand::registerSubcommand);
@@ -51,22 +51,23 @@ public final class CommandResolver {
     }
 
     private static ResolvedInstructions resolveInstructions(ResolvedCommand command) {
-        ResolvedInstructions instructions = new ResolvedInstructions();
+        ResolvedInstructions results = new ResolvedInstructions();
 
         for (Method method : command.getCommandInstance().getClass().getMethods()) {
             if (method.isAnnotationPresent(MainInstruction.class))
-                instructions.addMainInstruction(ResolvedInstruction.build(command, method, InspectionUtils.getAliases(method)));
+                results.setMainInstruction(ResolvedInstruction.build(command, method, InspectionUtils.getAliases(method)));
 
             if (method.isAnnotationPresent(Instruction.class)) {
                 List<String> aliases = new ArrayList<>(InspectionUtils.getAliases(method));
+
                 if (aliases.isEmpty() || !method.isAnnotationPresent(IgnoreMethodName.class))
                     aliases.add(method.getName());
 
-                instructions.addInstruction(ResolvedInstruction.build(command, method, aliases));
+                results.addInstruction(ResolvedInstruction.build(command, method, aliases));
             }
         }
 
-        return instructions;
+        return results;
     }
 
     private static List<ResolvedCommand> resolveSubcommands(ResolvedCommand resolvedCommand) {
