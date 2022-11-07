@@ -1,18 +1,18 @@
-package st.networkers.rimor.plugin;
+package st.networkers.rimor.extension;
 
 import st.networkers.rimor.Rimor;
 import st.networkers.rimor.command.Command;
-import st.networkers.rimor.plugin.event.RimorEvent;
-import st.networkers.rimor.plugin.event.RimorEventListener;
+import st.networkers.rimor.extension.event.RimorEvent;
+import st.networkers.rimor.extension.event.RimorEventListener;
 import st.networkers.rimor.provide.RimorProvider;
 
 import java.util.Collection;
 import java.util.Map;
 
 /**
- * @see AbstractRimorPlugin
+ * @see AbstractRimorExtension
  */
-public interface RimorPlugin {
+public interface RimorExtension {
 
     void configure(Rimor rimor);
 

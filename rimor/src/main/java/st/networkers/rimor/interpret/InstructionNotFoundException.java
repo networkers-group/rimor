@@ -38,7 +38,7 @@ import java.util.List;
  *     }
  * </pre>
  * will not throw anything if {@code git pull} is executed, because the main instruction will be run and (if using the
- * rimor-params plugin), {@code "pull"} will be passed as a parameter.
+ * rimor-params extension), {@code "pull"} will be passed as a parameter.
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

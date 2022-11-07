@@ -1,13 +1,13 @@
-package st.networkers.rimor.plugin;
+package st.networkers.rimor.extension;
 
 import st.networkers.rimor.command.Command;
-import st.networkers.rimor.plugin.event.RimorEvent;
-import st.networkers.rimor.plugin.event.RimorEventListener;
+import st.networkers.rimor.extension.event.RimorEvent;
+import st.networkers.rimor.extension.event.RimorEventListener;
 import st.networkers.rimor.provide.RimorProvider;
 
 import java.util.*;
 
-public abstract class AbstractRimorPlugin implements RimorPlugin {
+public abstract class AbstractRimorExtension implements RimorExtension {
 
     private final Collection<Command> commands = new ArrayList<>();
     private final Collection<RimorProvider<?>> providers = new ArrayList<>();

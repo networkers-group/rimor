@@ -1,4 +1,4 @@
-package st.networkers.rimor.plugin.event;
+package st.networkers.rimor.extension.event;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

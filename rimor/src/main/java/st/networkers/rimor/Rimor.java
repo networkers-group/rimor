@@ -10,10 +10,10 @@ import st.networkers.rimor.internal.inject.InjectorImpl;
 import st.networkers.rimor.internal.instruction.ResolvedInstruction;
 import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 import st.networkers.rimor.internal.resolve.CommandResolver;
-import st.networkers.rimor.plugin.PluginManager;
-import st.networkers.rimor.plugin.PluginManagerImpl;
-import st.networkers.rimor.plugin.RimorPlugin;
-import st.networkers.rimor.plugin.event.RimorInitializationEvent;
+import st.networkers.rimor.extension.ExtensionManager;
+import st.networkers.rimor.extension.ExtensionManagerImpl;
+import st.networkers.rimor.extension.RimorExtension;
+import st.networkers.rimor.extension.event.RimorInitializationEvent;
 import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.provide.RimorProvider;
 
@@ -21,7 +21,7 @@ import st.networkers.rimor.provide.RimorProvider;
 public class Rimor {
 
     private final CommandRegistry commandRegistry = new CommandRegistry();
-    private final PluginManager pluginManager = new PluginManagerImpl(this);
+    private final ExtensionManager extensionManager = new ExtensionManagerImpl(this);
     private final ProviderRegistry providerRegistry = new ProviderRegistryImpl();
 
     private final Injector injector = new InjectorImpl(providerRegistry);
@@ -71,31 +71,31 @@ public class Rimor {
     }
 
     /**
-     * Registers the given {@link RimorPlugin}.
+     * Registers the given {@link RimorExtension}.
      *
-     * @param plugin the plugin to register
+     * @param extension the extension to register
      */
-    public Rimor registerPlugin(RimorPlugin plugin) {
-        this.pluginManager.registerPlugin(plugin);
+    public Rimor registerExtension(RimorExtension extension) {
+        this.extensionManager.registerExtension(extension);
         return this;
     }
 
     /**
-     * Registers the given {@link RimorPlugin}.
+     * Registers the given {@link RimorExtension}.
      *
-     * @param plugins the plugins to register
+     * @param extensions the extensions to register
      */
-    public Rimor registerPlugins(RimorPlugin... plugins) {
-        for (RimorPlugin plugin : plugins)
-            this.registerPlugin(plugin);
+    public Rimor registerExtensions(RimorExtension... extensions) {
+        for (RimorExtension extension : extensions)
+            this.registerExtension(extension);
         return this;
     }
 
     /**
-     * Initializes all the registered plugins.
+     * Initializes all the registered extensions.
      */
     public Rimor initialize() {
-        this.pluginManager.callEvent(new RimorInitializationEvent(this));
+        this.extensionManager.callEvent(new RimorInitializationEvent(this));
         return this;
     }
 

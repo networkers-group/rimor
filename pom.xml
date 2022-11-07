@@ -10,7 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>rimor</module>
-        <module>plugins</module>
+        <module>extensions</module>
     </modules>
 
     <properties>
