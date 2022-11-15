@@ -52,7 +52,7 @@ class ProviderRegistryTest {
     void givenAStringToken_whenFindingProvider_thenSimpleProvider() {
         assertEquals(
                 simpleProvider,
-                providerRegistry.findFor(new Token<>(String.class)).orElse(null)
+                providerRegistry.findFor(new Token<>(String.class), null, null).orElse(null)
         );
     }
 
@@ -60,7 +60,7 @@ class ProviderRegistryTest {
     void givenAStringSuperclassToken_whenFindingProvider_thenSimpleProvider() {
         assertEquals(
                 simpleProvider,
-                providerRegistry.findFor(new Token<>(CharSequence.class)).orElse(null)
+                providerRegistry.findFor(new Token<>(CharSequence.class), null, null).orElse(null)
         );
     }
 
@@ -69,7 +69,7 @@ class ProviderRegistryTest {
         assertEquals(
                 annotatedProvider,
                 providerRegistry.findFor(
-                        new Token<>(String.class).annotatedWith(FooAnnotation.class)
+                        new Token<>(String.class).annotatedWith(FooAnnotation.class), null, null
                 ).orElse(null)
         );
     }
@@ -79,7 +79,7 @@ class ProviderRegistryTest {
         assertEquals(
                 annotationRequiredProvider,
                 providerRegistry.findFor(
-                        new Token<>(String.class).annotatedWith(new BarAnnotationImpl(0))
+                        new Token<>(String.class).annotatedWith(new BarAnnotationImpl(0)), null, null
                 ).orElse(null)
         );
     }

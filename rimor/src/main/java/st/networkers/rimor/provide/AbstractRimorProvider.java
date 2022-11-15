@@ -40,10 +40,10 @@ public abstract class AbstractRimorProvider<T>
     }
 
     @Override
-    public boolean canProvide(Token<?> token) {
+    public boolean canProvide(Token<?> token, Injector injector, ExecutionContext context) {
         for (TypeToken<T> providedType : this.providedTypes)
             if (token.getType().isSupertypeOf(providedType))
-                return matchesAnnotations(token) && token.matchesAnnotations(this);
+                return this.matchesAnnotations(token) && token.matchesAnnotations(this);
         return false;
     }
 

@@ -20,7 +20,9 @@ public class InjectorImpl implements Injector {
     public <T> T get(Token<T> token, ExecutionContext context) {
         // Java 8 optionals don't have #or 😣
         return context.get(token).orElseGet(
-                () -> providerRegistry.findFor(token).map(provider -> provider.get(token, this, context)).orElse(null)
+                () -> providerRegistry.findFor(token, this, context)
+                        .map(provider -> provider.get(token, this, context))
+                        .orElse(null)
         );
     }
 

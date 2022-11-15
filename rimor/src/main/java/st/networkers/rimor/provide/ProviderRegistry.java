@@ -1,5 +1,7 @@
 package st.networkers.rimor.provide;
 
+import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.inject.Token;
 
 import java.util.Optional;
@@ -19,5 +21,5 @@ public interface ProviderRegistry {
      * @param token the token to get its associated provider
      * @return an optional containing the provider associated, or empty if none was found.
      */
-    <T> Optional<RimorProvider<T>> findFor(Token<T> token);
+    <T> Optional<RimorProvider<T>> findFor(Token<T> token, Injector injector, ExecutionContext context);
 }

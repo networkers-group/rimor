@@ -15,7 +15,7 @@ public interface RimorProvider<T> extends Annotated {
 
     Collection<TypeToken<T>> getProvidedTypes();
 
-    boolean canProvide(Token<?> token);
+    boolean canProvide(Token<?> token, Injector injector, ExecutionContext context);
 
     T get(Token<T> token, Injector injector, ExecutionContext context);
 
