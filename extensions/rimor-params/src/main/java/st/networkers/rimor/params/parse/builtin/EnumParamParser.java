@@ -4,12 +4,12 @@ import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.params.parse.ParamParser;
+import st.networkers.rimor.params.parse.AbstractParamParser;
 
 /**
  * Built-in param parser for any enum type.
  */
-public class EnumParamParser extends ParamParser<Enum<?>> {
+public class EnumParamParser extends AbstractParamParser<Enum<?>> {
 
     private static final TypeToken<Enum<?>> ENUM_TYPE = new TypeToken<Enum<?>>() {};
 
@@ -18,12 +18,18 @@ public class EnumParamParser extends ParamParser<Enum<?>> {
     }
 
     @Override
-    protected Enum<?> parse(String parameter, Token<Enum<?>> token, Injector injector, ExecutionContext context) {
-        return parse(parameter.toUpperCase(), token);
+    public Enum<?> parse(Object rawParameter, Token<Enum<?>> token, Injector injector, ExecutionContext context) {
+        if (rawParameter instanceof Enum<?>) {
+            return (Enum<?>) rawParameter;
+        } else if (rawParameter instanceof String) {
+            String parameter = (String) rawParameter;
+            return parse(parameter.toUpperCase(), token);
+        }
+        throw new IllegalArgumentException(rawParameter + " is neither an Enum or String type");
     }
 
     @Override
-    public boolean canProvide(Token<?> token) {
+    public boolean canProvide(Token<?> token, Injector injector, ExecutionContext context) {
         return token.getType().isSubtypeOf(ENUM_TYPE) && this.matchesAnnotations(token) && token.matchesAnnotations(this);
     }
 

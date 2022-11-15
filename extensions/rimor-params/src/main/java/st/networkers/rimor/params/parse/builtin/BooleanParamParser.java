@@ -4,7 +4,7 @@ import st.networkers.rimor.Rimor;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.params.parse.ParamParser;
+import st.networkers.rimor.params.parse.AbstractParamParser;
 import st.networkers.rimor.provide.RimorProvider;
 
 import java.util.Arrays;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * );
  * </pre>
  */
-public class BooleanParamParser extends ParamParser<Boolean> {
+public class BooleanParamParser extends AbstractParamParser<Boolean> {
 
     private final Collection<String> trueAliases;
 
@@ -36,7 +36,14 @@ public class BooleanParamParser extends ParamParser<Boolean> {
     }
 
     @Override
-    protected Boolean parse(String parameter, Token<Boolean> token, Injector injector, ExecutionContext context) {
-        return Boolean.parseBoolean(parameter) || trueAliases.contains(parameter.toLowerCase());
+    public Boolean parse(Object rawParameter, Token<Boolean> token, Injector injector, ExecutionContext context) {
+        if (rawParameter instanceof Boolean) {
+            return (Boolean) rawParameter;
+        } else if (rawParameter instanceof String) {
+            String parameter = (String) rawParameter;
+            return Boolean.parseBoolean(parameter) || this.trueAliases.contains(parameter.toLowerCase());
+        }
+
+        return null;
     }
 }

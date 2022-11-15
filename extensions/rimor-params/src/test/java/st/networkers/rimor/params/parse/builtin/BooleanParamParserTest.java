@@ -11,6 +11,8 @@ class BooleanParamParserTest {
 
     @Test
     void parse() {
+        assertTrue(booleanParamParser.parse(true, null, null, null));
+        assertFalse(booleanParamParser.parse(false, null, null, null));
         assertTrue(booleanParamParser.parse("true", null, null, null));
         assertTrue(booleanParamParser.parse("yes", null, null, null));
         assertFalse(booleanParamParser.parse("false", null, null, null));

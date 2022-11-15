@@ -17,6 +17,7 @@ class EnumParamParserTest {
 
     @Test
     void parse() {
+        assertEquals(TestEnum.TEST_1, parse(TestEnum.TEST_1, token));
         assertEquals(TestEnum.TEST_1, parse("TEST_1", token));
         assertEquals(TestEnum.TEST_2, parse("test_2", token));
         assertNull(parse("TEST_3", token));
@@ -24,13 +25,13 @@ class EnumParamParserTest {
 
     @Test
     void canProvide() {
-        assertTrue(enumParamParser.canProvide(token));
-        assertFalse(enumParamParser.canProvide(new Token<>(TestEnum.class))); // does not have Param annotation
-        assertFalse(enumParamParser.canProvide(new Token<>(String.class)));
+        assertTrue(enumParamParser.canProvide(token, null, null));
+        assertFalse(enumParamParser.canProvide(new Token<>(TestEnum.class), null, null)); // does not have Param annotation
+        assertFalse(enumParamParser.canProvide(new Token<>(String.class), null, null));
     }
 
     @SuppressWarnings("unchecked")
-    static <T extends Enum<T>> Enum<?> parse(String parameter, Token<T> token) {
+    static <T extends Enum<T>> Enum<?> parse(Object parameter, Token<T> token) {
         return enumParamParser.parse(parameter, (Token<Enum<?>>) token, null, null);
     }
 }
