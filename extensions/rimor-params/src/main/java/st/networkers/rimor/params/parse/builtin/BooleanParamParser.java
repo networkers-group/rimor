@@ -46,6 +46,6 @@ public class BooleanParamParser extends AbstractParamParser<Boolean> {
             return Boolean.parseBoolean(parameter) || this.trueAliases.contains(parameter.toLowerCase());
         }
 
-        return null;
+        throw new IllegalArgumentException(rawParameter + " is neither a Boolean or String type");
     }
 }
