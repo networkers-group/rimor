@@ -21,16 +21,21 @@ public class EnumParamParser extends AbstractParamParser<Enum<?>> {
     public Enum<?> parse(Object rawParameter, Token<Enum<?>> token, Injector injector, ExecutionContext context) {
         if (rawParameter instanceof Enum<?>) {
             return (Enum<?>) rawParameter;
-        } else if (rawParameter instanceof String) {
+        }
+
+        if (rawParameter instanceof String) {
             String parameter = (String) rawParameter;
             return parse(parameter.toUpperCase(), token);
         }
+
         throw new IllegalArgumentException(rawParameter + " is neither an Enum or String type");
     }
 
     @Override
     public boolean canProvide(Token<?> token, Injector injector, ExecutionContext context) {
-        return token.getType().isSubtypeOf(ENUM_TYPE) && this.matchesAnnotations(token) && token.matchesAnnotations(this);
+        return token.getType().isSubtypeOf(ENUM_TYPE)
+               && this.matchesAnnotations(token)
+               && token.matchesAnnotations(this);
     }
 
     @SuppressWarnings("unchecked")

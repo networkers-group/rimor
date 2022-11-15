@@ -39,7 +39,9 @@ public class BooleanParamParser extends AbstractParamParser<Boolean> {
     public Boolean parse(Object rawParameter, Token<Boolean> token, Injector injector, ExecutionContext context) {
         if (rawParameter instanceof Boolean) {
             return (Boolean) rawParameter;
-        } else if (rawParameter instanceof String) {
+        }
+
+        if (rawParameter instanceof String) {
             String parameter = (String) rawParameter;
             return Boolean.parseBoolean(parameter) || this.trueAliases.contains(parameter.toLowerCase());
         }
