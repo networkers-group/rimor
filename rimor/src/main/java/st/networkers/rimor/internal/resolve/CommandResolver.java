@@ -39,9 +39,8 @@ public final class CommandResolver {
     private static ResolvedInstructions resolveInstructions(Command command) {
         ResolvedInstructions results = new ResolvedInstructions();
 
-        for (Method method : command.getCommandInstance().getClass().getMethods()) {
-            Instruction instruction = Instruction.build(command, method,
-                    InspectionUtils.getAliases(method));
+        for (Method method : command.getDefinition().getClass().getMethods()) {
+            Instruction instruction = Instruction.build(command, method, InspectionUtils.getAliases(method));
 
             if (method.isAnnotationPresent(MainInstructionMapping.class))
                 results.setMainInstruction(instruction);
@@ -54,7 +53,7 @@ public final class CommandResolver {
     }
 
     private static List<Command> resolveSubcommands(Command command) {
-        return command.getCommandInstance().getSubcommands().stream()
+        return command.getDefinition().getSubcommands().stream()
                 .map(subcommand -> resolve(command, subcommand))
                 .collect(Collectors.toList());
     }

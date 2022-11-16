@@ -20,16 +20,16 @@ import java.util.stream.Collectors;
 public class Command implements Executable {
 
     @Nullable private final Command parent;
-    @Getter private final CommandDefinition commandInstance;
+    @Getter private final CommandDefinition definition;
     private final Collection<String> aliases;
 
     @Getter @Setter private Instruction mainInstruction;
     private final Map<String, Instruction> instructions = new HashMap<>();
     private final Map<String, Command> subcommands = new HashMap<>();
 
-    public Command(@Nullable Command parent, CommandDefinition commandInstance, Collection<String> aliases) {
+    public Command(@Nullable Command parent, CommandDefinition definition, Collection<String> aliases) {
         this.parent = parent;
-        this.commandInstance = commandInstance;
+        this.definition = definition;
         this.aliases = aliases.stream().map(String::toLowerCase).collect(Collectors.toList());
     }
 

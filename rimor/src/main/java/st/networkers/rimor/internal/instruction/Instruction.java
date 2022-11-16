@@ -36,6 +36,6 @@ public class Instruction extends AbstractAnnotated<Instruction> implements Execu
     }
 
     public CommandDefinition getCommandInstance() {
-        return command.getCommandInstance();
+        return command.getDefinition();
     }
 }

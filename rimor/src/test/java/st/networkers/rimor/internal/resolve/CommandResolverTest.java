@@ -30,7 +30,7 @@ class CommandResolverTest {
 
     @Test
     void whenCheckingCommandInstance_thenCommandInstanceEqualsSetupInstance() {
-        assertEquals(testCommand, command.getCommandInstance());
+        assertEquals(testCommand, command.getDefinition());
     }
 
     @Test
