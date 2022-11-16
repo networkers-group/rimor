@@ -14,20 +14,20 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
-public class ResolvedInstruction extends AbstractAnnotated<ResolvedInstruction> {
+public class Instruction extends AbstractAnnotated<Instruction> {
 
-    public static ResolvedInstruction build(Command command, Method method, Collection<String> aliases) {
-        return new ResolvedInstruction(command, CachedMethod.build(method), aliases, ReflectionUtils.getMappedAnnotations(method));
+    public static Instruction build(Command command, Method method, Collection<String> aliases) {
+        return new Instruction(command, CachedMethod.build(method), aliases, ReflectionUtils.getMappedAnnotations(method));
     }
 
     private final Command command;
     private final CachedMethod method;
     private final Collection<String> aliases;
 
-    public ResolvedInstruction(Command command,
-                               CachedMethod method,
-                               Collection<String> aliases,
-                               Map<Class<? extends Annotation>, Annotation> annotations) {
+    public Instruction(Command command,
+                       CachedMethod method,
+                       Collection<String> aliases,
+                       Map<Class<? extends Annotation>, Annotation> annotations) {
         super(annotations);
         this.command = command;
         this.method = method;

@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import st.networkers.rimor.command.AbstractCommandDefinition;
 import st.networkers.rimor.command.CommandDefinition;
 import st.networkers.rimor.internal.inject.AbstractAnnotated;
-import st.networkers.rimor.internal.instruction.ResolvedInstruction;
+import st.networkers.rimor.internal.instruction.Instruction;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -24,8 +24,8 @@ public class Command extends AbstractAnnotated<Command> {
     @Getter private final CommandDefinition commandInstance;
     private final Collection<String> aliases;
 
-    @Getter @Setter private ResolvedInstruction mainInstruction;
-    private final Map<String, ResolvedInstruction> instructions = new HashMap<>();
+    @Getter @Setter private Instruction mainInstruction;
+    private final Map<String, Instruction> instructions = new HashMap<>();
     private final Map<String, Command> subcommands = new HashMap<>();
 
     public Command(@Nullable Command parent,
@@ -42,7 +42,7 @@ public class Command extends AbstractAnnotated<Command> {
         return Optional.ofNullable(parent);
     }
 
-    public void registerInstruction(ResolvedInstruction instruction) {
+    public void registerInstruction(Instruction instruction) {
         for (String alias : instruction.getAliases())
             this.instructions.put(alias, instruction);
     }
@@ -56,11 +56,11 @@ public class Command extends AbstractAnnotated<Command> {
         return Collections.unmodifiableCollection(this.aliases);
     }
 
-    public ResolvedInstruction getInstruction(String alias) {
+    public Instruction getInstruction(String alias) {
         return this.instructions.get(alias.toLowerCase());
     }
 
-    public Map<String, ResolvedInstruction> getInstructions() {
+    public Map<String, Instruction> getInstructions() {
         return Collections.unmodifiableMap(this.instructions);
     }
 

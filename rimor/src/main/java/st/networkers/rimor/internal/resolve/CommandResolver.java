@@ -4,7 +4,7 @@ import st.networkers.rimor.command.CommandDefinition;
 import st.networkers.rimor.instruction.InstructionMapping;
 import st.networkers.rimor.instruction.MainInstructionMapping;
 import st.networkers.rimor.internal.command.Command;
-import st.networkers.rimor.internal.instruction.ResolvedInstruction;
+import st.networkers.rimor.internal.instruction.Instruction;
 import st.networkers.rimor.util.InspectionUtils;
 import st.networkers.rimor.util.ReflectionUtils;
 
@@ -42,7 +42,7 @@ public final class CommandResolver {
         ResolvedInstructions results = new ResolvedInstructions();
 
         for (Method method : command.getCommandInstance().getClass().getMethods()) {
-            ResolvedInstruction instruction = ResolvedInstruction.build(command, method,
+            Instruction instruction = Instruction.build(command, method,
                     InspectionUtils.getAliases(method));
 
             if (method.isAnnotationPresent(MainInstructionMapping.class))

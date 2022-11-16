@@ -4,16 +4,16 @@ import lombok.Getter;
 import st.networkers.rimor.command.CommandDefinition;
 import st.networkers.rimor.command.CommandRegistry;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.inject.Injector;
-import st.networkers.rimor.internal.CommandExecutorImpl;
-import st.networkers.rimor.internal.inject.InjectorImpl;
-import st.networkers.rimor.internal.instruction.ResolvedInstruction;
-import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
-import st.networkers.rimor.internal.resolve.CommandResolver;
 import st.networkers.rimor.extension.ExtensionManager;
 import st.networkers.rimor.extension.ExtensionManagerImpl;
 import st.networkers.rimor.extension.RimorExtension;
 import st.networkers.rimor.extension.event.RimorInitializationEvent;
+import st.networkers.rimor.inject.Injector;
+import st.networkers.rimor.internal.CommandExecutorImpl;
+import st.networkers.rimor.internal.inject.InjectorImpl;
+import st.networkers.rimor.internal.instruction.Instruction;
+import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
+import st.networkers.rimor.internal.resolve.CommandResolver;
 import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.provide.RimorProvider;
 
@@ -99,7 +99,7 @@ public class Rimor {
         return this;
     }
 
-    public Object execute(ResolvedInstruction instruction, ExecutionContext context) {
+    public Object execute(Instruction instruction, ExecutionContext context) {
         return this.executor.execute(instruction, context);
     }
 }
