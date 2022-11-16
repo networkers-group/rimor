@@ -15,12 +15,12 @@ import java.util.List;
  *     &#64;CommandMapping("git")
  *     public class GitCommand extends AbstractCommandDefinition {
  *         &#64;InstructionMapping
- *         public void commit(@Params List\<String> params) {
+ *         public void commit(@Params {@literal List<String>} params) {
  *              // whatever
  *         }
  *
  *         &#64;InstructionMapping
- *         public void push(@Params List\<String> params) {
+ *         public void push(@Params {@literal List<String>} params) {
  *              // whatever
  *         }
  *     }
@@ -32,7 +32,7 @@ import java.util.List;
  *     &#64;CommandMapping("git")
  *     public class GitCommand extends AbstractCommandDefinition {
  *         &#64;MainInstructionMapping
- *         public void main(@Params List<String> params) {
+ *         public void main(@Params {@literal List<String>} params) {
  *              // whatever
  *         }
  *     }

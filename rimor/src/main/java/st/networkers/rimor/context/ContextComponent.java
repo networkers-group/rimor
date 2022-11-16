@@ -6,7 +6,7 @@ import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.internal.inject.AbstractAnnotated;
 
 /**
- * Wraps an object of type {@link T} to inject in instructions.
+ * Wraps an object of type {@link T} to inject in instruction methods.
  */
 @Getter
 public class ContextComponent<T> extends AbstractAnnotated<ContextComponent<T>> {

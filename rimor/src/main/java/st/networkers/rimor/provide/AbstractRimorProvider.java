@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
  * {@code CommandSender} always present in any {@link ExecutionContext} annotated with {@code @Sender}:
  *
  * <pre>
- * public class UserProvider extends AbstractRimorProvider<User> {
+ * public class UserProvider extends {@literal AbstractRimorProvider<User>} {
  *
  *     // from injection, passing as parameter... whatever.
- *     private final Database<User> userDatabase;
+ *     private final {@literal Database<User>} userDatabase;
  *
  *     public UserProvider() {
  *         super(User.class); // the provided types, also can use TypeToken
@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
  *     }
  *
  *     &#64;Override
- *     public User get(Token<User> token, Injector injector, ExecutionContext context) {
- *         Token<CommandSender> senderToken = new Token<>(CommandSender.class)
+ *     public User get({@literal Token<User>} token, Injector injector, ExecutionContext context) {
+ *         {@literal Token<CommandSender>} senderToken = new Token<>(CommandSender.class)
  *                 .annotatedWith(Sender.class);
  *
  *         CommandSender sender = context.get(senderToken)
@@ -85,13 +85,13 @@ public abstract class AbstractRimorProvider<T>
             throw new RuntimeException(e);
         }
 
+        if (method.isAnnotationPresent(RequireAnnotations.class))
+            Collections.addAll(this.requiredAnnotations, method.getAnnotation(RequireAnnotations.class).value());
+
         this.annotations.putAll(InspectionUtils.getMappedAnnotations(
                 Arrays.stream(method.getAnnotations())
                         .filter(annotation -> !(annotation instanceof RequireAnnotations))
                         .collect(Collectors.toList())
         ));
-
-        if (method.isAnnotationPresent(RequireAnnotations.class))
-            Collections.addAll(this.requiredAnnotations, method.getAnnotation(RequireAnnotations.class).value());
     }
 }
