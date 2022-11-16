@@ -1,6 +1,6 @@
 package st.networkers.rimor;
 
-import st.networkers.rimor.command.AbstractCommand;
+import st.networkers.rimor.command.AbstractCommandDefinition;
 import st.networkers.rimor.command.Aliases;
 import st.networkers.rimor.instruction.IgnoreMethodName;
 import st.networkers.rimor.instruction.Instruction;
@@ -9,7 +9,7 @@ import st.networkers.rimor.instruction.MainInstruction;
 import java.util.List;
 
 @Aliases({"test", "testCommand"})
-public class TestCommand extends AbstractCommand {
+public class TestCommand extends AbstractCommandDefinition {
 
     public TestCommand() {
         registerSubcommand(new Bar());
@@ -31,7 +31,7 @@ public class TestCommand extends AbstractCommand {
     public void baz() {
     }
 
-    public static class Bar extends AbstractCommand {
+    public static class Bar extends AbstractCommandDefinition {
 
         @Instruction
         public boolean set(boolean enabled) {

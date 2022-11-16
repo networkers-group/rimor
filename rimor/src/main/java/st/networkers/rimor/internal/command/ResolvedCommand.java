@@ -3,7 +3,7 @@ package st.networkers.rimor.internal.command;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
-import st.networkers.rimor.command.Command;
+import st.networkers.rimor.command.CommandDefinition;
 import st.networkers.rimor.internal.inject.AbstractAnnotated;
 import st.networkers.rimor.internal.instruction.ResolvedInstruction;
 
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class ResolvedCommand extends AbstractAnnotated<ResolvedCommand> {
 
     @Nullable private final ResolvedCommand parent;
-    @Getter private final Command commandInstance;
+    @Getter private final CommandDefinition commandInstance;
     private final Collection<String> aliases;
 
     @Getter @Setter private ResolvedInstruction mainInstruction;
@@ -22,7 +22,7 @@ public class ResolvedCommand extends AbstractAnnotated<ResolvedCommand> {
     private final Map<String, ResolvedCommand> subcommands = new HashMap<>();
 
     public ResolvedCommand(@Nullable ResolvedCommand parent,
-                           Command commandInstance,
+                           CommandDefinition commandInstance,
                            Collection<String> aliases,
                            Map<Class<? extends Annotation>, Annotation> annotations) {
         super(annotations);

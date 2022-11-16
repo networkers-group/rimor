@@ -13,7 +13,7 @@ import java.util.List;
  * For example, the command
  * <pre>
  *     &#64;Aliases("git")
- *     public class GitCommand extends AbstractCommand {
+ *     public class GitCommand extends AbstractCommandDefinition {
  *         &#64;Instruction
  *         public void commit(@Params List\<String> params) {
  *              // whatever
@@ -30,7 +30,7 @@ import java.util.List;
  * However, if a main instruction is present:
  * <pre>
  *     &#64;Aliases("git")
- *     public class GitCommand extends AbstractCommand {
+ *     public class GitCommand extends AbstractCommandDefinition {
  *         &#64;MainInstruction
  *         public void main(@Params List<String> params) {
  *              // whatever

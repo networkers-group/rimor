@@ -1,7 +1,7 @@
 package st.networkers.rimor;
 
 import lombok.Getter;
-import st.networkers.rimor.command.Command;
+import st.networkers.rimor.command.CommandDefinition;
 import st.networkers.rimor.command.CommandRegistry;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Injector;
@@ -29,22 +29,22 @@ public class Rimor {
     private final boolean initialized = false;
 
     /**
-     * Registers the given {@link Command}.
+     * Registers the given {@link CommandDefinition}.
      *
      * @param command the command to register
      */
-    public Rimor registerCommand(Command command) {
+    public Rimor registerCommand(CommandDefinition command) {
         commandRegistry.registerCommand(CommandResolver.resolve(command));
         return this;
     }
 
     /**
-     * Registers the given {@link Command}s.
+     * Registers the given {@link CommandDefinition}s.
      *
      * @param commands the commands to register
      */
-    public Rimor registerCommands(Command... commands) {
-        for (Command command : commands)
+    public Rimor registerCommands(CommandDefinition... commands) {
+        for (CommandDefinition command : commands)
             this.registerCommand(command);
         return this;
     }

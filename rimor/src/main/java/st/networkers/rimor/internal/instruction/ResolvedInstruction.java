@@ -1,7 +1,7 @@
 package st.networkers.rimor.internal.instruction;
 
 import lombok.Getter;
-import st.networkers.rimor.command.Command;
+import st.networkers.rimor.command.CommandDefinition;
 import st.networkers.rimor.internal.command.ResolvedCommand;
 import st.networkers.rimor.internal.inject.AbstractAnnotated;
 import st.networkers.rimor.internal.reflect.CachedMethod;
@@ -34,7 +34,7 @@ public class ResolvedInstruction extends AbstractAnnotated<ResolvedInstruction> 
         this.aliases = aliases.stream().map(String::toLowerCase).collect(Collectors.toList());
     }
 
-    public Command getCommandInstance() {
+    public CommandDefinition getCommandInstance() {
         return command.getCommandInstance();
     }
 }

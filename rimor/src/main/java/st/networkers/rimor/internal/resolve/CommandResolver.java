@@ -1,6 +1,6 @@
 package st.networkers.rimor.internal.resolve;
 
-import st.networkers.rimor.command.Command;
+import st.networkers.rimor.command.CommandDefinition;
 import st.networkers.rimor.instruction.Instruction;
 import st.networkers.rimor.instruction.MainInstruction;
 import st.networkers.rimor.internal.command.ResolvedCommand;
@@ -17,25 +17,25 @@ public final class CommandResolver {
     private CommandResolver() {
     }
 
-    public static ResolvedCommand resolve(Command command) {
+    public static ResolvedCommand resolve(CommandDefinition command) {
         return resolve(null, command);
     }
 
-    public static ResolvedCommand resolve(ResolvedCommand parent, Command command) {
-        ResolvedCommand resolvedCommand = new ResolvedCommand(
+    public static ResolvedCommand resolve(ResolvedCommand parent, CommandDefinition definition) {
+        ResolvedCommand command = new ResolvedCommand(
                 parent,
-                command,
-                InspectionUtils.getAliases(command.getClass()),
-                ReflectionUtils.getMappedAnnotations(command.getClass())
+                definition,
+                InspectionUtils.getAliases(definition.getClass()),
+                ReflectionUtils.getMappedAnnotations(definition.getClass())
         );
 
-        ResolvedInstructions resolvedInstructions = resolveInstructions(resolvedCommand);
-        resolvedCommand.setMainInstruction(resolvedInstructions.getMainInstruction());
-        resolvedInstructions.getInstructions().forEach(resolvedCommand::registerInstruction);
+        ResolvedInstructions resolvedInstructions = resolveInstructions(command);
+        command.setMainInstruction(resolvedInstructions.getMainInstruction());
+        resolvedInstructions.getInstructions().forEach(command::registerInstruction);
 
-        resolveSubcommands(resolvedCommand).forEach(resolvedCommand::registerSubcommand);
+        resolveSubcommands(command).forEach(command::registerSubcommand);
 
-        return resolvedCommand;
+        return command;
     }
 
     private static ResolvedInstructions resolveInstructions(ResolvedCommand command) {
@@ -55,9 +55,9 @@ public final class CommandResolver {
         return results;
     }
 
-    private static List<ResolvedCommand> resolveSubcommands(ResolvedCommand resolvedCommand) {
-        return resolvedCommand.getCommandInstance().getSubcommands().stream()
-                .map(subcommand -> resolve(resolvedCommand, subcommand))
+    private static List<ResolvedCommand> resolveSubcommands(ResolvedCommand command) {
+        return command.getCommandInstance().getSubcommands().stream()
+                .map(subcommand -> resolve(command, subcommand))
                 .collect(Collectors.toList());
     }
 }
