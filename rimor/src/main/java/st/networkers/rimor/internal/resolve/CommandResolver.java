@@ -3,7 +3,7 @@ package st.networkers.rimor.internal.resolve;
 import st.networkers.rimor.command.CommandDefinition;
 import st.networkers.rimor.instruction.Instruction;
 import st.networkers.rimor.instruction.MainInstruction;
-import st.networkers.rimor.internal.command.ResolvedCommand;
+import st.networkers.rimor.internal.command.Command;
 import st.networkers.rimor.internal.instruction.ResolvedInstruction;
 import st.networkers.rimor.util.InspectionUtils;
 import st.networkers.rimor.util.ReflectionUtils;
@@ -17,12 +17,12 @@ public final class CommandResolver {
     private CommandResolver() {
     }
 
-    public static ResolvedCommand resolve(CommandDefinition command) {
+    public static Command resolve(CommandDefinition command) {
         return resolve(null, command);
     }
 
-    public static ResolvedCommand resolve(ResolvedCommand parent, CommandDefinition definition) {
-        ResolvedCommand command = new ResolvedCommand(
+    public static Command resolve(Command parent, CommandDefinition definition) {
+        Command command = new Command(
                 parent,
                 definition,
                 InspectionUtils.getAliases(definition.getClass()),
@@ -38,7 +38,7 @@ public final class CommandResolver {
         return command;
     }
 
-    private static ResolvedInstructions resolveInstructions(ResolvedCommand command) {
+    private static ResolvedInstructions resolveInstructions(Command command) {
         ResolvedInstructions results = new ResolvedInstructions();
 
         for (Method method : command.getCommandInstance().getClass().getMethods()) {
@@ -55,7 +55,7 @@ public final class CommandResolver {
         return results;
     }
 
-    private static List<ResolvedCommand> resolveSubcommands(ResolvedCommand command) {
+    private static List<Command> resolveSubcommands(Command command) {
         return command.getCommandInstance().getSubcommands().stream()
                 .map(subcommand -> resolve(command, subcommand))
                 .collect(Collectors.toList());

@@ -3,7 +3,7 @@ package st.networkers.rimor.internal.resolve;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import st.networkers.rimor.TestCommand;
-import st.networkers.rimor.internal.command.ResolvedCommand;
+import st.networkers.rimor.internal.command.Command;
 import st.networkers.rimor.internal.instruction.ResolvedInstruction;
 
 import java.util.Arrays;
@@ -15,42 +15,42 @@ import static org.junit.jupiter.api.Assertions.*;
 class CommandResolverTest {
 
     private static TestCommand testCommand;
-    private static ResolvedCommand resolvedCommand;
+    private static Command command;
 
     @BeforeAll
     static void setUp() {
         testCommand = new TestCommand();
-        resolvedCommand = CommandResolver.resolve(testCommand);
+        command = CommandResolver.resolve(testCommand);
     }
 
     @Test
     void whenCheckingParent_thenParentIsNull() {
-        assertNull(resolvedCommand.getParent().orElse(null));
+        assertNull(command.getParent().orElse(null));
     }
 
     @Test
     void whenCheckingCommandInstance_thenCommandInstanceEqualsSetupInstance() {
-        assertEquals(testCommand, resolvedCommand.getCommandInstance());
+        assertEquals(testCommand, command.getCommandInstance());
     }
 
     @Test
     void whenCheckingAliases_thenAliasesEqualsToAnnotated() {
-        assertThat(resolvedCommand.getAliases()).hasSameElementsAs(Arrays.asList("test", "testcommand"));
+        assertThat(command.getAliases()).hasSameElementsAs(Arrays.asList("test", "testcommand"));
     }
 
     @Test
     void whenGettingMainInstruction_thenIsNotNull() {
-        assertNotNull(resolvedCommand.getMainInstruction());
+        assertNotNull(command.getMainInstruction());
     }
 
     @Test
     void whenGettingFooInstruction_thenIsNotNull() {
-        assertNotNull(resolvedCommand.getInstruction("foo"));
+        assertNotNull(command.getInstruction("foo"));
     }
 
     @Test
     void whenGettingFooInstruction_thenAliasesAreFooAndFooAlias() {
-        ResolvedInstruction fooInstruction = resolvedCommand.getInstruction("foo");
+        ResolvedInstruction fooInstruction = command.getInstruction("foo");
 
         assertThat(fooInstruction.getAliases()).hasSameElementsAs(Arrays.asList("foo", "fooalias"));
     }
@@ -58,24 +58,24 @@ class CommandResolverTest {
     @Test
     // the baz instruction just has "bazalias" as an alias because it is annotated with @IgnoreMethodName, which is baz
     void whenGettingBazInstruction_thenAliasesAreOnlyBazAlias() {
-        ResolvedInstruction bazInstruction = resolvedCommand.getInstruction("bazalias");
+        ResolvedInstruction bazInstruction = command.getInstruction("bazalias");
 
         assertEquals(Collections.singletonList("bazalias"), bazInstruction.getAliases());
     }
 
     @Test
     void whenGettingSubcommands_thenSizeIs1() {
-        assertEquals(1, resolvedCommand.getSubcommands().size());
+        assertEquals(1, command.getSubcommands().size());
     }
 
     @Test
     void whenGettingBarSubcommandAndCheckingParent_thenParentEqualsResolvedCommand() {
-        assertThat(resolvedCommand.getSubcommand("bar").getParent()).contains(resolvedCommand);
+        assertThat(command.getSubcommand("bar").getParent()).contains(command);
     }
 
     // the Bar subcommand has no @Aliases annotation, so the alias is the class name, Bar.
     @Test
     void whenGettingBarSubcommand_thenAliasesAreOnlyBar() {
-        assertThat(resolvedCommand.getSubcommand("bar").getAliases()).contains("bar");
+        assertThat(command.getSubcommand("bar").getAliases()).contains("bar");
     }
 }

@@ -3,7 +3,7 @@ package st.networkers.rimor.interpret;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Nullable;
-import st.networkers.rimor.internal.command.ResolvedCommand;
+import st.networkers.rimor.internal.command.Command;
 
 import java.util.List;
 
@@ -43,7 +43,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class InstructionNotFoundException extends RuntimeException {
-    private @Nullable final ResolvedCommand uberCommand;
-    private @Nullable final ResolvedCommand subCommand;
+    private @Nullable final Command uberCommand;
+    private @Nullable final Command subCommand;
     private final List<String> remainingPath;
 }
