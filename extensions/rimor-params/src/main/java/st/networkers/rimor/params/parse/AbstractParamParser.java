@@ -47,7 +47,9 @@ public abstract class AbstractParamParser<T> extends AbstractRimorProvider<T> im
         int position = this.getPosition(token, context);
         List<Object> commandParameters = context.get(PARAMS_TOKEN).orElseGet(ArrayList::new);
 
-        return position < commandParameters.size() ? commandParameters.get(position) : null;
+        return position >= 0
+                ? position < commandParameters.size() ? commandParameters.get(position) : null
+                : null;
     }
 
     private int getPosition(Token<T> token, ExecutionContext context) {
