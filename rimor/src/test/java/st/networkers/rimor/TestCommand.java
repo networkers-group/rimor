@@ -1,14 +1,13 @@
 package st.networkers.rimor;
 
 import st.networkers.rimor.command.AbstractCommandDefinition;
-import st.networkers.rimor.command.Aliases;
-import st.networkers.rimor.instruction.IgnoreMethodName;
+import st.networkers.rimor.command.CommandMapping;
 import st.networkers.rimor.instruction.InstructionMapping;
 import st.networkers.rimor.instruction.MainInstructionMapping;
 
 import java.util.List;
 
-@Aliases({"test", "testCommand"})
+@CommandMapping({"test", "testCommand"})
 public class TestCommand extends AbstractCommandDefinition {
 
     public TestCommand() {
@@ -20,14 +19,11 @@ public class TestCommand extends AbstractCommandDefinition {
         return true;
     }
 
-    @InstructionMapping
-    @Aliases("fooAlias")
+    @InstructionMapping("fooAlias")
     public void foo(@FooAnnotation List<String> params, String param0, String param1) {
     }
 
-    @InstructionMapping
-    @Aliases("bazAlias")
-    @IgnoreMethodName
+    @InstructionMapping(value = "bazAlias", ignoreMethodName = true)
     public void baz() {
     }
 

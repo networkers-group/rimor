@@ -12,15 +12,15 @@ import java.util.List;
  * <p>
  * For example, the command
  * <pre>
- *     &#64;Aliases("git")
+ *     &#64;CommandMapping("git")
  *     public class GitCommand extends AbstractCommandDefinition {
  *         &#64;InstructionMapping
- *         public void commit() {
+ *         public void commit(@Params List\<String> params) {
  *              // whatever
  *         }
  *
  *         &#64;InstructionMapping
- *         public void push() {
+ *         public void push(@Params List\<String> params) {
  *              // whatever
  *         }
  *     }
@@ -29,10 +29,10 @@ import java.util.List;
  * <p>
  * However, if a main instruction is present:
  * <pre>
- *     &#64;Aliases("git")
+ *     &#64;CommandMapping("git")
  *     public class GitCommand extends AbstractCommandDefinition {
  *         &#64;MainInstructionMapping
- *         public void main(@Params {@literal List<Object>} params) {
+ *         public void main(@Params List<String> params) {
  *              // whatever
  *         }
  *     }

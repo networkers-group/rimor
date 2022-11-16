@@ -56,7 +56,7 @@ class CommandResolverTest {
     }
 
     @Test
-    // the baz instruction just has "bazalias" as an alias because it is annotated with @IgnoreMethodName, which is baz
+    // the baz instruction just has "bazalias" as an alias because ignoreMethodName is true, which is baz
     void whenGettingBazInstruction_thenAliasesAreOnlyBazAlias() {
         Instruction bazInstruction = command.getInstruction("bazalias");
 
@@ -73,7 +73,7 @@ class CommandResolverTest {
         assertThat(command.getSubcommand("bar").getParent()).contains(command);
     }
 
-    // the Bar subcommand has no @Aliases annotation, so the alias is the class name, Bar.
+    // the Bar subcommand has no aliases, so the alias is the class name, Bar.
     @Test
     void whenGettingBarSubcommand_thenAliasesAreOnlyBar() {
         assertThat(command.getSubcommand("bar").getAliases()).contains("bar");

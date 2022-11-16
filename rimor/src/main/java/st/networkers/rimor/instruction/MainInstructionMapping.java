@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * <p>
  * For example, having this command:
  * <pre>
- *     &#64;Aliases("git")
+ *     &#64;CommandMapping("git")
  *     public class GitCommand extends AbstractCommandDefinition {
  *
  *         // rimor-params extension for @Params :)

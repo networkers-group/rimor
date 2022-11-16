@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * @see Aliases
+ * @see CommandMapping
  * @see st.networkers.rimor.instruction.MainInstructionMapping
  * @see st.networkers.rimor.instruction.InstructionMapping
  */
