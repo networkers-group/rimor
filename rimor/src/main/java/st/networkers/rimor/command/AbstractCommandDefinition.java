@@ -5,6 +5,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * @see Aliases
+ * @see st.networkers.rimor.instruction.MainInstructionMapping
+ * @see st.networkers.rimor.instruction.InstructionMapping
+ */
 public abstract class AbstractCommandDefinition implements CommandDefinition {
 
     private final Collection<CommandDefinition> subcommands = new ArrayList<>();

@@ -8,11 +8,17 @@ import st.networkers.rimor.internal.instruction.Instruction;
 import st.networkers.rimor.internal.reflect.CachedParameter;
 import st.networkers.rimor.params.Param;
 import st.networkers.rimor.params.Params;
+import st.networkers.rimor.params.parse.builtin.BooleanParamParser;
 import st.networkers.rimor.provide.AbstractRimorProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Abstract useful class for implementing {@link ParamParser}s.
+ * <p>
+ * Check {@link BooleanParamParser} for a quick example.
+ */
 public abstract class AbstractParamParser<T> extends AbstractRimorProvider<T> implements ParamParser<T> {
 
     protected static final Token<List<Object>> PARAMS_TOKEN = new Token<>(new TypeToken<List<Object>>() {}).annotatedWith(Params.class);

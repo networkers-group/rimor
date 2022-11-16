@@ -9,6 +9,8 @@ import st.networkers.rimor.internal.inject.Annotated;
 import java.util.Collection;
 
 /**
+ * Provides injectable objects that can be calculated in execution time.
+ *
  * @see AbstractRimorProvider
  */
 public interface RimorProvider<T> extends Annotated {

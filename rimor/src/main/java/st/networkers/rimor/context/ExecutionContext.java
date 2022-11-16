@@ -8,13 +8,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Contains injectable information relative to the execution of a command (for example, its parameters).
+ * Contains injectable objects relative to the execution of a command (for example, its parameters, the sender...).
  * <p>
- * Every piece of information is wrapped in a {@link ContextComponent}.
+ * Every injectable object is wrapped in a {@link ContextComponent}.
  */
 public class ExecutionContext {
-
-    private final Map<TypeToken<?>, List<ContextComponent<?>>> components;
 
     public static ExecutionContext build(ContextComponent<?>... components) {
         return build(Arrays.stream(components));
@@ -29,6 +27,8 @@ public class ExecutionContext {
                 .collect(Collectors.groupingBy(ContextComponent::getType))
         );
     }
+
+    private final Map<TypeToken<?>, List<ContextComponent<?>>> components;
 
     private ExecutionContext(Map<TypeToken<?>, List<ContextComponent<?>>> components) {
         this.components = components;

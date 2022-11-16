@@ -14,13 +14,13 @@ import java.util.List;
  * <pre>
  *     &#64;Aliases("git")
  *     public class GitCommand extends AbstractCommandDefinition {
- *         &#64;Instruction
- *         public void commit(@Params List\<String> params) {
+ *         &#64;InstructionMapping
+ *         public void commit() {
  *              // whatever
  *         }
  *
- *         &#64;Instruction
- *         public void push(@Params List\<String> params) {
+ *         &#64;InstructionMapping
+ *         public void push() {
  *              // whatever
  *         }
  *     }
@@ -31,8 +31,8 @@ import java.util.List;
  * <pre>
  *     &#64;Aliases("git")
  *     public class GitCommand extends AbstractCommandDefinition {
- *         &#64;MainInstruction
- *         public void main(@Params List<String> params) {
+ *         &#64;MainInstructionMapping
+ *         public void main(@Params {@literal List<Object>} params) {
  *              // whatever
  *         }
  *     }

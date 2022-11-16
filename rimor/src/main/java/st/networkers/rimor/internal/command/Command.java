@@ -3,6 +3,7 @@ package st.networkers.rimor.internal.command;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
+import st.networkers.rimor.Executable;
 import st.networkers.rimor.command.AbstractCommandDefinition;
 import st.networkers.rimor.command.CommandDefinition;
 import st.networkers.rimor.internal.inject.AbstractAnnotated;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
  * @see CommandDefinition
  * @see AbstractCommandDefinition
  */
-public class Command extends AbstractAnnotated<Command> {
+public class Command extends AbstractAnnotated<Command> implements Executable {
 
     @Nullable private final Command parent;
     @Getter private final CommandDefinition commandInstance;
