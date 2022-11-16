@@ -26,6 +26,6 @@ public class PresentObjectParamParser extends AbstractParamParser<Object> {
             return false;
 
         Object object = this.getParameter((Token<Object>) token, injector, context);
-        return object == null || token.getType().isSupertypeOf(object.getClass());
+        return object != null && token.getType().isSupertypeOf(object.getClass());
     }
 }
