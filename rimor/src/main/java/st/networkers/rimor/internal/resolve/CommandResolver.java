@@ -1,8 +1,8 @@
 package st.networkers.rimor.internal.resolve;
 
 import st.networkers.rimor.command.CommandDefinition;
-import st.networkers.rimor.instruction.Instruction;
-import st.networkers.rimor.instruction.MainInstruction;
+import st.networkers.rimor.instruction.InstructionMapping;
+import st.networkers.rimor.instruction.MainInstructionMapping;
 import st.networkers.rimor.internal.command.Command;
 import st.networkers.rimor.internal.instruction.ResolvedInstruction;
 import st.networkers.rimor.util.InspectionUtils;
@@ -45,10 +45,10 @@ public final class CommandResolver {
             ResolvedInstruction instruction = ResolvedInstruction.build(command, method,
                     InspectionUtils.getAliases(method));
 
-            if (method.isAnnotationPresent(MainInstruction.class))
+            if (method.isAnnotationPresent(MainInstructionMapping.class))
                 results.setMainInstruction(instruction);
 
-            if (method.isAnnotationPresent(Instruction.class))
+            if (method.isAnnotationPresent(InstructionMapping.class))
                 results.addInstruction(instruction);
         }
 

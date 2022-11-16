@@ -2,8 +2,8 @@
 <project version="4">
   <component name="EntryPointsManager">
     <list size="2">
-      <item index="0" class="java.lang.String" itemvalue="st.networkers.rimor.instruction.Instruction" />
-      <item index="1" class="java.lang.String" itemvalue="st.networkers.rimor.instruction.MainInstruction" />
+      <item index="0" class="java.lang.String" itemvalue="st.networkers.rimor.instruction.InstructionMapping" />
+      <item index="1" class="java.lang.String" itemvalue="st.networkers.rimor.instruction.MainInstructionMapping" />
     </list>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
