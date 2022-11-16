@@ -1,19 +1,19 @@
 package st.networkers.rimor;
 
 import lombok.Getter;
-import st.networkers.rimor.command.Command;
+import st.networkers.rimor.command.CommandDefinition;
 import st.networkers.rimor.command.CommandRegistry;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.inject.Injector;
-import st.networkers.rimor.internal.CommandExecutorImpl;
-import st.networkers.rimor.internal.inject.InjectorImpl;
-import st.networkers.rimor.internal.instruction.ResolvedInstruction;
-import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
-import st.networkers.rimor.internal.resolve.CommandResolver;
 import st.networkers.rimor.extension.ExtensionManager;
 import st.networkers.rimor.extension.ExtensionManagerImpl;
 import st.networkers.rimor.extension.RimorExtension;
 import st.networkers.rimor.extension.event.RimorInitializationEvent;
+import st.networkers.rimor.inject.Injector;
+import st.networkers.rimor.internal.CommandExecutorImpl;
+import st.networkers.rimor.internal.inject.InjectorImpl;
+import st.networkers.rimor.internal.instruction.Instruction;
+import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
+import st.networkers.rimor.internal.resolve.CommandResolver;
 import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.provide.RimorProvider;
 
@@ -29,22 +29,22 @@ public class Rimor {
     private final boolean initialized = false;
 
     /**
-     * Registers the given {@link Command}.
+     * Registers the given {@link CommandDefinition}.
      *
      * @param command the command to register
      */
-    public Rimor registerCommand(Command command) {
+    public Rimor registerCommand(CommandDefinition command) {
         commandRegistry.registerCommand(CommandResolver.resolve(command));
         return this;
     }
 
     /**
-     * Registers the given {@link Command}s.
+     * Registers the given {@link CommandDefinition}s.
      *
      * @param commands the commands to register
      */
-    public Rimor registerCommands(Command... commands) {
-        for (Command command : commands)
+    public Rimor registerCommands(CommandDefinition... commands) {
+        for (CommandDefinition command : commands)
             this.registerCommand(command);
         return this;
     }
@@ -99,7 +99,7 @@ public class Rimor {
         return this;
     }
 
-    public Object execute(ResolvedInstruction instruction, ExecutionContext context) {
+    public Object execute(Instruction instruction, ExecutionContext context) {
         return this.executor.execute(instruction, context);
     }
 }

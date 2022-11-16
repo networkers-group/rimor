@@ -13,10 +13,40 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+/**
+ * Useful abstract class to implement {@link RimorProvider}s.
+ * <p>
+ * For example, to provide an imaginary {@code User} annotated with {@code @UserData} from an imaginary
+ * {@code CommandSender} always present in any {@link ExecutionContext} annotated with {@code @Sender}:
+ *
+ * <pre>
+ * public class UserProvider extends AbstractRimorProvider<User> {
+ *
+ *     // from injection, passing as parameter... whatever.
+ *     private final Database<User> userDatabase;
+ *
+ *     public UserProvider() {
+ *         super(User.class); // the provided types, also can use TypeToken
+ *         annotatedWith(UserData.class);
+ *     }
+ *
+ *     &#64;Override
+ *     public User get(Token<User> token, Injector injector, ExecutionContext context) {
+ *         Token<CommandSender> senderToken = new Token<>(CommandSender.class)
+ *                 .annotatedWith(Sender.class);
+ *
+ *         CommandSender sender = context.get(senderToken)
+ *                 .orElseThrow(new IllegalArgumentException());
+ *
+ *         return userDatabase.fromId(sender.getId());
+ *     }
+ * }
+ * </pre>
+ */
 public abstract class AbstractRimorProvider<T>
         extends AbstractAnnotated<AbstractRimorProvider<T>>
-        implements RimorProvider<T>
-{
+        implements RimorProvider<T> {
+
     private final Collection<TypeToken<T>> providedTypes;
 
     @SafeVarargs

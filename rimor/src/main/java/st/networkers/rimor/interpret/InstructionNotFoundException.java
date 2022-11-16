@@ -3,7 +3,7 @@ package st.networkers.rimor.interpret;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Nullable;
-import st.networkers.rimor.internal.command.ResolvedCommand;
+import st.networkers.rimor.internal.command.Command;
 
 import java.util.List;
 
@@ -13,14 +13,14 @@ import java.util.List;
  * For example, the command
  * <pre>
  *     &#64;Aliases("git")
- *     public class GitCommand extends AbstractCommand {
- *         &#64;Instruction
- *         public void commit(@Params List\<String> params) {
+ *     public class GitCommand extends AbstractCommandDefinition {
+ *         &#64;InstructionMapping
+ *         public void commit() {
  *              // whatever
  *         }
  *
- *         &#64;Instruction
- *         public void push(@Params List\<String> params) {
+ *         &#64;InstructionMapping
+ *         public void push() {
  *              // whatever
  *         }
  *     }
@@ -30,9 +30,9 @@ import java.util.List;
  * However, if a main instruction is present:
  * <pre>
  *     &#64;Aliases("git")
- *     public class GitCommand extends AbstractCommand {
- *         &#64;MainInstruction
- *         public void main(@Params List<String> params) {
+ *     public class GitCommand extends AbstractCommandDefinition {
+ *         &#64;MainInstructionMapping
+ *         public void main(@Params {@literal List<Object>} params) {
  *              // whatever
  *         }
  *     }
@@ -43,7 +43,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class InstructionNotFoundException extends RuntimeException {
-    private @Nullable final ResolvedCommand uberCommand;
-    private @Nullable final ResolvedCommand subCommand;
+    private @Nullable final Command uberCommand;
+    private @Nullable final Command subCommand;
     private final List<String> remainingPath;
 }

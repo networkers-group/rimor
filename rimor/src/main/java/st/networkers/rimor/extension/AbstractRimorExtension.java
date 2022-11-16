@@ -1,6 +1,6 @@
 package st.networkers.rimor.extension;
 
-import st.networkers.rimor.command.Command;
+import st.networkers.rimor.command.CommandDefinition;
 import st.networkers.rimor.extension.event.RimorEvent;
 import st.networkers.rimor.extension.event.RimorEventListener;
 import st.networkers.rimor.provide.RimorProvider;
@@ -9,25 +9,25 @@ import java.util.*;
 
 public abstract class AbstractRimorExtension implements RimorExtension {
 
-    private final Collection<Command> commands = new ArrayList<>();
+    private final Collection<CommandDefinition> commands = new ArrayList<>();
     private final Collection<RimorProvider<?>> providers = new ArrayList<>();
     private final Map<Class<? extends RimorEvent>, Collection<RimorEventListener<?>>> listeners = new HashMap<>();
 
     /**
-     * Registers the given {@link Command}.
+     * Registers the given {@link CommandDefinition}.
      *
      * @param command the command to register
      */
-    protected void registerCommand(Command command) {
+    protected void registerCommand(CommandDefinition command) {
         this.commands.add(command);
     }
 
     /**
-     * Registers the given {@link Command}s.
+     * Registers the given {@link CommandDefinition}s.
      *
      * @param commands the commands to register
      */
-    protected void registerCommands(Command... commands) {
+    protected void registerCommands(CommandDefinition... commands) {
         Collections.addAll(this.commands, commands);
     }
 
@@ -60,7 +60,7 @@ public abstract class AbstractRimorExtension implements RimorExtension {
     }
 
     @Override
-    public Collection<Command> getCommands() {
+    public Collection<CommandDefinition> getCommands() {
         return this.commands;
     }
 

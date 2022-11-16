@@ -1,10 +1,10 @@
 package st.networkers.rimor.internal.resolve;
 
-import st.networkers.rimor.command.Command;
-import st.networkers.rimor.instruction.Instruction;
-import st.networkers.rimor.instruction.MainInstruction;
-import st.networkers.rimor.internal.command.ResolvedCommand;
-import st.networkers.rimor.internal.instruction.ResolvedInstruction;
+import st.networkers.rimor.command.CommandDefinition;
+import st.networkers.rimor.instruction.InstructionMapping;
+import st.networkers.rimor.instruction.MainInstructionMapping;
+import st.networkers.rimor.internal.command.Command;
+import st.networkers.rimor.internal.instruction.Instruction;
 import st.networkers.rimor.util.InspectionUtils;
 import st.networkers.rimor.util.ReflectionUtils;
 
@@ -17,47 +17,47 @@ public final class CommandResolver {
     private CommandResolver() {
     }
 
-    public static ResolvedCommand resolve(Command command) {
+    public static Command resolve(CommandDefinition command) {
         return resolve(null, command);
     }
 
-    public static ResolvedCommand resolve(ResolvedCommand parent, Command command) {
-        ResolvedCommand resolvedCommand = new ResolvedCommand(
+    public static Command resolve(Command parent, CommandDefinition definition) {
+        Command command = new Command(
                 parent,
-                command,
-                InspectionUtils.getAliases(command.getClass()),
-                ReflectionUtils.getMappedAnnotations(command.getClass())
+                definition,
+                InspectionUtils.getAliases(definition.getClass()),
+                ReflectionUtils.getMappedAnnotations(definition.getClass())
         );
 
-        ResolvedInstructions resolvedInstructions = resolveInstructions(resolvedCommand);
-        resolvedCommand.setMainInstruction(resolvedInstructions.getMainInstruction());
-        resolvedInstructions.getInstructions().forEach(resolvedCommand::registerInstruction);
+        ResolvedInstructions resolvedInstructions = resolveInstructions(command);
+        command.setMainInstruction(resolvedInstructions.getMainInstruction());
+        resolvedInstructions.getInstructions().forEach(command::registerInstruction);
 
-        resolveSubcommands(resolvedCommand).forEach(resolvedCommand::registerSubcommand);
+        resolveSubcommands(command).forEach(command::registerSubcommand);
 
-        return resolvedCommand;
+        return command;
     }
 
-    private static ResolvedInstructions resolveInstructions(ResolvedCommand command) {
+    private static ResolvedInstructions resolveInstructions(Command command) {
         ResolvedInstructions results = new ResolvedInstructions();
 
         for (Method method : command.getCommandInstance().getClass().getMethods()) {
-            ResolvedInstruction instruction = ResolvedInstruction.build(command, method,
+            Instruction instruction = Instruction.build(command, method,
                     InspectionUtils.getAliases(method));
 
-            if (method.isAnnotationPresent(MainInstruction.class))
+            if (method.isAnnotationPresent(MainInstructionMapping.class))
                 results.setMainInstruction(instruction);
 
-            if (method.isAnnotationPresent(Instruction.class))
+            if (method.isAnnotationPresent(InstructionMapping.class))
                 results.addInstruction(instruction);
         }
 
         return results;
     }
 
-    private static List<ResolvedCommand> resolveSubcommands(ResolvedCommand resolvedCommand) {
-        return resolvedCommand.getCommandInstance().getSubcommands().stream()
-                .map(subcommand -> resolve(resolvedCommand, subcommand))
+    private static List<Command> resolveSubcommands(Command command) {
+        return command.getCommandInstance().getSubcommands().stream()
+                .map(subcommand -> resolve(command, subcommand))
                 .collect(Collectors.toList());
     }
 }

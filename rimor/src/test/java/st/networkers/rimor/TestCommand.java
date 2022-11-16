@@ -1,39 +1,39 @@
 package st.networkers.rimor;
 
-import st.networkers.rimor.command.AbstractCommand;
+import st.networkers.rimor.command.AbstractCommandDefinition;
 import st.networkers.rimor.command.Aliases;
 import st.networkers.rimor.instruction.IgnoreMethodName;
-import st.networkers.rimor.instruction.Instruction;
-import st.networkers.rimor.instruction.MainInstruction;
+import st.networkers.rimor.instruction.InstructionMapping;
+import st.networkers.rimor.instruction.MainInstructionMapping;
 
 import java.util.List;
 
 @Aliases({"test", "testCommand"})
-public class TestCommand extends AbstractCommand {
+public class TestCommand extends AbstractCommandDefinition {
 
     public TestCommand() {
         registerSubcommand(new Bar());
     }
 
-    @MainInstruction
+    @MainInstructionMapping
     public boolean main() {
         return true;
     }
 
-    @Instruction
+    @InstructionMapping
     @Aliases("fooAlias")
     public void foo(@FooAnnotation List<String> params, String param0, String param1) {
     }
 
-    @Instruction
+    @InstructionMapping
     @Aliases("bazAlias")
     @IgnoreMethodName
     public void baz() {
     }
 
-    public static class Bar extends AbstractCommand {
+    public static class Bar extends AbstractCommandDefinition {
 
-        @Instruction
+        @InstructionMapping
         public boolean set(boolean enabled) {
             return enabled;
         }

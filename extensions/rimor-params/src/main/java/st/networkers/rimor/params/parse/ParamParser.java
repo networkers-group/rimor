@@ -7,6 +7,7 @@ import st.networkers.rimor.params.Params;
 import st.networkers.rimor.params.parse.builtin.BooleanParamParser;
 import st.networkers.rimor.params.parse.builtin.EnumParamParser;
 import st.networkers.rimor.params.parse.builtin.PresentObjectParamParser;
+import st.networkers.rimor.provide.RimorProvider;
 
 /**
  * Abstract class for providers that just parse an element from the {@link Params}-annotated lists.
@@ -16,7 +17,7 @@ import st.networkers.rimor.params.parse.builtin.PresentObjectParamParser;
  * @see EnumParamParser
  * @see PresentObjectParamParser
  */
-public interface ParamParser<T> {
+public interface ParamParser<T> extends RimorProvider<T> {
 
     Object getParameter(Token<T> token, Injector injector, ExecutionContext context);
 
