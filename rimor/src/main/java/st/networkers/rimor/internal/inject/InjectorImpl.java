@@ -8,6 +8,8 @@ import st.networkers.rimor.internal.reflect.CachedParameter;
 import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.util.ReflectionUtils;
 
+import java.util.Optional;
+
 public class InjectorImpl implements Injector {
 
     private final ProviderRegistry providerRegistry;
@@ -24,6 +26,11 @@ public class InjectorImpl implements Injector {
                         .map(provider -> provider.get(token, this, context))
                         .orElse(null)
         );
+    }
+
+    @Override
+    public <T> Optional<T> getOptional(Token<T> token, ExecutionContext context) {
+        return Optional.ofNullable(this.get(token, context));
     }
 
     @Override
