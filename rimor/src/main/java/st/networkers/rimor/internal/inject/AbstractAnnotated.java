@@ -1,10 +1,7 @@
 package st.networkers.rimor.internal.inject;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractAnnotated<T extends AbstractAnnotated<T>> implements Annotated {
 
@@ -53,8 +50,13 @@ public abstract class AbstractAnnotated<T extends AbstractAnnotated<T>> implemen
     }
 
     @Override
+    public Map<Class<? extends Annotation>, Annotation> getMappedAnnotations() {
+        return Collections.unmodifiableMap(annotations);
+    }
+
+    @Override
     public Collection<Class<? extends Annotation>> getRequiredAnnotations() {
-        return requiredAnnotations;
+        return Collections.unmodifiableCollection(requiredAnnotations);
     }
 
     @Override

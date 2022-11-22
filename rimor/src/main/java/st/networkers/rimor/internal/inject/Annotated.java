@@ -2,6 +2,7 @@ package st.networkers.rimor.internal.inject;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Represents a dynamically annotated type.
@@ -27,6 +28,11 @@ public interface Annotated {
      * The annotation instances of this {@link Annotated}.
      */
     Collection<Annotation> getAnnotations();
+
+    /**
+     * The annotation instances of this {@link Annotated}, mapped by the annotation classes.
+     */
+    Map<Class<? extends Annotation>, Annotation> getMappedAnnotations();
 
     /**
      * The classes of the required annotations of this {@link Annotated}.
