@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Useful abstract class to implement {@link RimorProvider}s.
@@ -51,16 +52,20 @@ public abstract class AbstractRimorProvider<T>
 
     @SafeVarargs
     protected AbstractRimorProvider(Class<? extends T>... providedTypes) {
-        this(Arrays.stream(providedTypes).map(TypeToken::of).collect(Collectors.toList()));
+        this(Arrays.stream(providedTypes).map(TypeToken::of));
     }
 
     @SafeVarargs
     protected AbstractRimorProvider(TypeToken<? extends T>... providedTypes) {
-        this(Arrays.asList(providedTypes));
+        this(Arrays.stream(providedTypes));
     }
 
     protected AbstractRimorProvider(Collection<TypeToken<? extends T>> providedTypes) {
-        this.providedTypes = providedTypes;
+        this(providedTypes.stream());
+    }
+
+    private AbstractRimorProvider(Stream<TypeToken<? extends T>> providedTypes) {
+        this.providedTypes = providedTypes.map(TypeToken::wrap).collect(Collectors.toList());
         this.inspectAnnotations();
     }
 

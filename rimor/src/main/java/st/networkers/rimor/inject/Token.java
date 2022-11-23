@@ -7,6 +7,7 @@ import st.networkers.rimor.internal.inject.AbstractAnnotated;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,7 +30,7 @@ public class Token<T> extends AbstractAnnotated<Token<T>> {
      * @param type the type of the token
      */
     public Token(Class<T> type) {
-        this(TypeToken.of(type));
+        this(type, new HashMap<>());
     }
 
     /**
@@ -38,11 +39,11 @@ public class Token<T> extends AbstractAnnotated<Token<T>> {
      * @param type the type of the token
      */
     public Token(TypeToken<T> type) {
-        this.type = type;
+        this(type, new HashMap<>());
     }
 
     public Token(Class<T> type, Map<Class<? extends Annotation>, Annotation> annotations) {
-        this(TypeToken.of(type), annotations);
+        this(type, annotations, new ArrayList<>());
     }
 
     public Token(TypeToken<T> type, Map<Class<? extends Annotation>, Annotation> annotations) {
@@ -61,6 +62,6 @@ public class Token<T> extends AbstractAnnotated<Token<T>> {
                  Collection<Class<? extends Annotation>> requiredAnnotations
     ) {
         super(annotations, requiredAnnotations);
-        this.type = type;
+        this.type = type.wrap();
     }
 }

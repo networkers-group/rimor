@@ -31,7 +31,7 @@ public class BooleanParamParser extends AbstractParamParser<Boolean> {
     }
 
     public BooleanParamParser(Collection<String> trueAliases) {
-        super(boolean.class, Boolean.class);
+        super(boolean.class);
         this.trueAliases = trueAliases.stream().map(String::toLowerCase).collect(Collectors.toList());
     }
 

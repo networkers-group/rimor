@@ -31,7 +31,7 @@ public class ContextComponent<T> extends AbstractAnnotated<ContextComponent<T>> 
      * @param object the instance to inject
      */
     public ContextComponent(TypeToken<T> type, T object) {
-        this.type = type;
+        this.type = type.wrap();
         this.object = object;
     }
 
