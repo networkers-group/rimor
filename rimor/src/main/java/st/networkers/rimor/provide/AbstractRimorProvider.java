@@ -47,31 +47,31 @@ public abstract class AbstractRimorProvider<T>
         extends AbstractAnnotated<AbstractRimorProvider<T>>
         implements RimorProvider<T> {
 
-    private final Collection<TypeToken<T>> providedTypes;
+    private final Collection<TypeToken<? extends T>> providedTypes;
 
     @SafeVarargs
-    protected AbstractRimorProvider(Class<T>... providedTypes) {
+    protected AbstractRimorProvider(Class<? extends T>... providedTypes) {
         this(Arrays.stream(providedTypes).map(TypeToken::of).collect(Collectors.toList()));
     }
 
     @SafeVarargs
-    protected AbstractRimorProvider(TypeToken<T>... providedTypes) {
+    protected AbstractRimorProvider(TypeToken<? extends T>... providedTypes) {
         this(Arrays.asList(providedTypes));
     }
 
-    protected AbstractRimorProvider(Collection<TypeToken<T>> providedTypes) {
+    protected AbstractRimorProvider(Collection<TypeToken<? extends T>> providedTypes) {
         this.providedTypes = providedTypes;
         this.inspectAnnotations();
     }
 
     @Override
-    public Collection<TypeToken<T>> getProvidedTypes() {
+    public Collection<TypeToken<? extends T>> getProvidedTypes() {
         return providedTypes;
     }
 
     @Override
     public boolean canProvide(Token<?> token, Injector injector, ExecutionContext context) {
-        for (TypeToken<T> providedType : this.providedTypes)
+        for (TypeToken<? extends T> providedType : this.providedTypes)
             if (token.getType().isSupertypeOf(providedType))
                 return this.matchesAnnotations(token) && token.matchesAnnotations(this);
         return false;

@@ -16,7 +16,7 @@ public class ProviderRegistryImpl implements ProviderRegistry {
 
     @Override
     public <T> void register(RimorProvider<T> provider) {
-        for (TypeToken<T> type : provider.getProvidedTypes())
+        for (TypeToken<? extends T> type : provider.getProvidedTypes())
             this.providers.computeIfAbsent(type, t -> new ArrayList<>()).add(provider);
     }
 

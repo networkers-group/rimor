@@ -15,7 +15,7 @@ import java.util.Collection;
  */
 public interface RimorProvider<T> extends Annotated {
 
-    Collection<TypeToken<T>> getProvidedTypes();
+    Collection<TypeToken<? extends T>> getProvidedTypes();
 
     boolean canProvide(Token<?> token, Injector injector, ExecutionContext context);
 
