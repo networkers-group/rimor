@@ -13,6 +13,7 @@ import st.networkers.rimor.internal.CommandExecutorImpl;
 import st.networkers.rimor.internal.inject.InjectorImpl;
 import st.networkers.rimor.internal.instruction.Instruction;
 import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
+import st.networkers.rimor.internal.provide.builtin.OptionalProvider;
 import st.networkers.rimor.internal.resolve.CommandResolver;
 import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.provide.RimorProvider;
@@ -27,6 +28,10 @@ public class Rimor {
     private final Injector injector = new InjectorImpl(providerRegistry);
     private final CommandExecutor executor = new CommandExecutorImpl(injector);
     private final boolean initialized = false;
+
+    public Rimor() {
+        this.registerProvider(new OptionalProvider());
+    }
 
     /**
      * Registers the given {@link CommandDefinition}.
