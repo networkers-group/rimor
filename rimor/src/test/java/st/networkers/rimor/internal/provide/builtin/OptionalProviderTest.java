@@ -13,6 +13,7 @@ import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class OptionalProviderTest {
@@ -21,7 +22,7 @@ class OptionalProviderTest {
     static Injector injector = new InjectorImpl(new ProviderRegistryImpl());
 
     @Test
-    void givenContextWithFooComponent_whenGettingFooWrappedInOptional_thenOptionalWrapsFoo() {
+    void givenContextWithFooStringComponent_whenGettingFooWrappedInOptional_thenOptionalWrapsFoo() {
         ExecutionContext context = ExecutionContext.build(
                 new ContextComponent<>(String.class, "foo")
         );
@@ -31,7 +32,7 @@ class OptionalProviderTest {
     }
 
     @Test
-    void givenContextWithFooComponentAnnotatedWithBar_whenGettingFooWrappedInOptionalAnnotatedWithBar_thenOptionalWrapsFoo() {
+    void givenContextWithFooStringComponentAnnotatedWithBar_whenGettingFooWrappedInOptionalAnnotatedWithBar_thenOptionalWrapsFoo() {
         ExecutionContext context = ExecutionContext.build(
                 new ContextComponent<>(String.class, "foo").annotatedWith(new BarAnnotationImpl(0))
         );
@@ -39,6 +40,26 @@ class OptionalProviderTest {
         Token<Optional<?>> token = buildToken(new TypeToken<Optional<String>>() {})
                 .annotatedWith(BarAnnotation.class);
         assertEquals(provider.get(token, injector, context), Optional.of("foo"));
+    }
+
+    @Test
+    void givenContextWithIntComponent_whenGettingIntegerWrappedInOptional_thenOptionalWrapsGivenInteger() {
+        ExecutionContext context = ExecutionContext.build(
+                new ContextComponent<>(int.class, 3)
+        );
+
+        Token<Optional<?>> token = buildToken(new TypeToken<Optional<Integer>>() {});
+        assertEquals(provider.get(token, injector, context), Optional.of(3));
+    }
+
+    @Test
+    void givenContextWithIntComponent_whenGettingStringWrappedInOptional_thenOptionalIsEmpty() {
+        ExecutionContext context = ExecutionContext.build(
+                new ContextComponent<>(int.class, 3)
+        );
+
+        Token<Optional<?>> token = buildToken(new TypeToken<Optional<String>>() {});
+        assertThat(provider.get(token, injector, context)).isEmpty();
     }
 
     @SuppressWarnings("unchecked")
