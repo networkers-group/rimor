@@ -16,16 +16,6 @@ import java.util.Optional;
 public interface Injector {
 
     /**
-     * Gets the object associated with the given {@link Token} from the given {@link ExecutionContext}, if able.
-     * Otherwise, gets it from a registered provider, or {@code null} if there are no providers that provide the given token.
-     *
-     * @param token   the token to get its associated object
-     * @param context the context of a command execution
-     * @return the object associated with the token, or {@code null}
-     */
-    <T> T get(Token<T> token, ExecutionContext context);
-
-    /**
      * Gets an {@link Optional} wrapping the object associated with the given {@link Token} from the given
      * {@link ExecutionContext}, if able. Otherwise, gets it from a registered provider, or an empty optional if there
      * are no providers that provide the given token.
@@ -34,7 +24,7 @@ public interface Injector {
      * @param context the context of a command execution
      * @return an {@link Optional} wrapping the object associated with the token, or empty
      */
-    <T> Optional<T> getOptional(Token<T> token, ExecutionContext context);
+    <T> Optional<T> get(Token<T> token, ExecutionContext context);
 
     /**
      * Invokes the given method injecting all its parameters.

@@ -26,6 +26,6 @@ public class OptionalProvider extends AbstractRimorProvider<Optional<?>> {
         // a token associated with the type wrapped in the optional with the same annotations of the given optional token
         Token<?> wrappedToken = new Token<>(wrappedType, token.getMappedAnnotations(), token.getRequiredAnnotations());
 
-        return injector.getOptional(wrappedToken, context);
+        return injector.get(wrappedToken, context);
     }
 }

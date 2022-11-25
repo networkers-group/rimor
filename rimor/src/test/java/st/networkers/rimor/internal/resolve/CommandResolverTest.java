@@ -4,14 +4,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import st.networkers.rimor.TestCommand;
 import st.networkers.rimor.internal.command.Command;
-import st.networkers.rimor.internal.instruction.Instruction;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 class CommandResolverTest {
 
     private static TestCommand testCommand;
@@ -25,7 +25,7 @@ class CommandResolverTest {
 
     @Test
     void whenCheckingParent_thenParentIsNull() {
-        assertNull(command.getParent().orElse(null));
+        assertThat(command.getParent()).isNotPresent();
     }
 
     @Test
@@ -40,42 +40,37 @@ class CommandResolverTest {
 
     @Test
     void whenGettingMainInstruction_thenIsNotNull() {
-        assertNotNull(command.getMainInstruction());
-    }
-
-    @Test
-    void whenGettingFooInstruction_thenIsNotNull() {
-        assertNotNull(command.getInstruction("foo"));
+        assertThat(command.getMainInstruction()).isPresent();
     }
 
     @Test
     void whenGettingFooInstruction_thenAliasesAreFooAndFooAlias() {
-        Instruction fooInstruction = command.getInstruction("foo");
-
-        assertThat(fooInstruction.getAliases()).hasSameElementsAs(Arrays.asList("foo", "fooalias"));
+        assertThat(command.getInstruction("foo")).isPresent();
+        assertThat(command.getInstruction("foo").get().getAliases()).hasSameElementsAs(Arrays.asList("foo", "fooalias"));
     }
 
     @Test
     // the baz instruction just has "bazalias" as an alias because ignoreMethodName is true, which is baz
     void whenGettingBazInstruction_thenAliasesAreOnlyBazAlias() {
-        Instruction bazInstruction = command.getInstruction("bazalias");
-
-        assertEquals(Collections.singletonList("bazalias"), bazInstruction.getAliases());
+        assertThat(command.getInstruction("baz")).isNotPresent();
+        assertThat(command.getInstruction("bazalias")).isPresent();
+        assertEquals(Collections.singletonList("bazalias"), command.getInstruction("bazalias").get().getAliases());
     }
 
     @Test
-    void whenGettingSubcommands_thenSizeIs1() {
+    void whenGettingSubcommands_thenThereIsOnlyBar() {
         assertEquals(1, command.getSubcommands().size());
+        assertThat(command.getSubcommand("bar")).isPresent();
     }
 
     @Test
     void whenGettingBarSubcommandAndCheckingParent_thenParentEqualsResolvedCommand() {
-        assertThat(command.getSubcommand("bar").getParent()).contains(command);
+        assertThat(command.getSubcommand("bar").get().getParent()).contains(command);
     }
 
     // the Bar subcommand has no aliases, so the alias is the class name, Bar.
     @Test
     void whenGettingBarSubcommand_thenAliasesAreOnlyBar() {
-        assertThat(command.getSubcommand("bar").getAliases()).contains("bar");
+        assertThat(command.getSubcommand("bar").get().getAliases()).contains("bar");
     }
 }

@@ -25,7 +25,7 @@ public class Command implements Executable {
     @Getter private final CommandDefinition definition;
     private final Collection<String> aliases;
 
-    @Getter @Setter private Instruction mainInstruction;
+    @Setter private Instruction mainInstruction;
     private final Map<String, Instruction> instructions = new HashMap<>();
     private final Map<String, Command> subcommands = new HashMap<>();
 
@@ -53,16 +53,20 @@ public class Command implements Executable {
         return Collections.unmodifiableCollection(this.aliases);
     }
 
-    public Instruction getInstruction(String alias) {
-        return this.instructions.get(alias.toLowerCase());
+    public Optional<Instruction> getMainInstruction() {
+        return Optional.ofNullable(this.mainInstruction);
+    }
+
+    public Optional<Instruction> getInstruction(String alias) {
+        return Optional.ofNullable(this.instructions.get(alias.toLowerCase()));
     }
 
     public Map<String, Instruction> getInstructions() {
         return Collections.unmodifiableMap(this.instructions);
     }
 
-    public Command getSubcommand(String alias) {
-        return this.subcommands.get(alias.toLowerCase());
+    public Optional<Command> getSubcommand(String alias) {
+        return Optional.ofNullable(this.subcommands.get(alias.toLowerCase()));
     }
 
     public Map<String, Command> getSubcommands() {
