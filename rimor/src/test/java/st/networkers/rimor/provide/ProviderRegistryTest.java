@@ -1,4 +1,4 @@
-package st.networkers.rimor.internal.provide;
+package st.networkers.rimor.provide;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -8,10 +8,7 @@ import st.networkers.rimor.FooAnnotation;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.provide.AbstractRimorProvider;
-import st.networkers.rimor.provide.ProviderRegistry;
-import st.networkers.rimor.provide.RequireAnnotations;
-import st.networkers.rimor.provide.RimorProvider;
+import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

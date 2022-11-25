@@ -14,12 +14,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 class CommandResolverTest {
 
-    private static TestCommand testCommand;
-    private static Command command;
+    static TestCommand testCommand = new TestCommand();
+    static Command command;
 
     @BeforeAll
     static void setUp() {
-        testCommand = new TestCommand();
         command = CommandResolver.resolve(testCommand);
     }
 
