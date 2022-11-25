@@ -7,8 +7,10 @@ import org.jetbrains.annotations.Nullable;
 import st.networkers.rimor.Executable;
 import st.networkers.rimor.command.AbstractCommandDefinition;
 import st.networkers.rimor.command.CommandDefinition;
+import st.networkers.rimor.internal.inject.AbstractAnnotated;
 import st.networkers.rimor.internal.instruction.Instruction;
 
+import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
  * @see AbstractCommandDefinition
  */
 @EqualsAndHashCode(callSuper = false)
-public class Command implements Executable {
+public class Command extends AbstractAnnotated<Command> implements Executable {
 
     @Nullable private final Command parent;
     @Getter private final CommandDefinition definition;
@@ -29,7 +31,9 @@ public class Command implements Executable {
     private final Map<String, Instruction> instructions = new HashMap<>();
     private final Map<String, Command> subcommands = new HashMap<>();
 
-    public Command(@Nullable Command parent, CommandDefinition definition, Collection<String> aliases) {
+    public Command(@Nullable Command parent, CommandDefinition definition, Collection<String> aliases,
+                   Map<Class<? extends Annotation>, Annotation> annotations) {
+        super(annotations);
         this.parent = parent;
         this.definition = definition;
         this.aliases = aliases.stream().map(String::toLowerCase).collect(Collectors.toList());

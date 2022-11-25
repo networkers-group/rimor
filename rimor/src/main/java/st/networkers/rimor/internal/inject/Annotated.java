@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * @see st.networkers.rimor.inject.Token
  * @see st.networkers.rimor.provide.RimorProvider
- * @see st.networkers.rimor.interpret.execution.ExecutionEnclosingTask
+ * @see st.networkers.rimor.execute.task.ExecutionEnclosingTask
  * @see st.networkers.rimor.internal.instruction.Instruction
  */
 public interface Annotated {

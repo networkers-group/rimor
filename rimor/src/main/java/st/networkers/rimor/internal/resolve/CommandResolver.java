@@ -6,6 +6,7 @@ import st.networkers.rimor.instruction.MainInstructionMapping;
 import st.networkers.rimor.internal.command.Command;
 import st.networkers.rimor.internal.instruction.Instruction;
 import st.networkers.rimor.util.InspectionUtils;
+import st.networkers.rimor.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -24,7 +25,8 @@ public final class CommandResolver {
         Command command = new Command(
                 parent,
                 definition,
-                InspectionUtils.getAliases(definition.getClass())
+                InspectionUtils.getAliases(definition.getClass()),
+                ReflectionUtils.getMappedAnnotations(definition.getClass())
         );
 
         ResolvedInstructions resolvedInstructions = resolveInstructions(command);

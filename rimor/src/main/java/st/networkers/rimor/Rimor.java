@@ -4,17 +4,22 @@ import lombok.Getter;
 import st.networkers.rimor.command.CommandDefinition;
 import st.networkers.rimor.command.CommandRegistry;
 import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.execute.CommandExecutor;
+import st.networkers.rimor.execute.task.ExecutionEnclosingTaskRegistry;
+import st.networkers.rimor.execute.task.ExecutionEnclosingTaskRegistryImpl;
 import st.networkers.rimor.extension.ExtensionManager;
 import st.networkers.rimor.extension.ExtensionManagerImpl;
 import st.networkers.rimor.extension.RimorExtension;
 import st.networkers.rimor.extension.event.RimorInitializationEvent;
 import st.networkers.rimor.inject.Injector;
-import st.networkers.rimor.internal.CommandExecutorImpl;
+import st.networkers.rimor.internal.execute.CommandExecutorImpl;
 import st.networkers.rimor.internal.inject.InjectorImpl;
 import st.networkers.rimor.internal.instruction.Instruction;
+import st.networkers.rimor.internal.interpret.RimorInterpreterImpl;
 import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 import st.networkers.rimor.internal.provide.builtin.OptionalProvider;
 import st.networkers.rimor.internal.resolve.CommandResolver;
+import st.networkers.rimor.interpret.RimorInterpreter;
 import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.provide.RimorProvider;
 
@@ -22,11 +27,14 @@ import st.networkers.rimor.provide.RimorProvider;
 public class Rimor {
 
     private final CommandRegistry commandRegistry = new CommandRegistry();
-    private final ExtensionManager extensionManager = new ExtensionManagerImpl(this);
     private final ProviderRegistry providerRegistry = new ProviderRegistryImpl();
+    private final ExecutionEnclosingTaskRegistry executionEnclosingTaskRegistry = new ExecutionEnclosingTaskRegistryImpl();
+    private final ExtensionManager extensionManager = new ExtensionManagerImpl(this);
 
     private final Injector injector = new InjectorImpl(providerRegistry);
+    private final RimorInterpreter interpreter = new RimorInterpreterImpl(executionEnclosingTaskRegistry, injector);
     private final CommandExecutor executor = new CommandExecutorImpl(injector);
+
     private final boolean initialized = false;
 
     public Rimor() {
