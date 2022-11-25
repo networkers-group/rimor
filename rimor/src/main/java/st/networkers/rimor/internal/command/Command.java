@@ -1,5 +1,6 @@
 package st.networkers.rimor.internal.command;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
  * @see CommandDefinition
  * @see AbstractCommandDefinition
  */
+@EqualsAndHashCode(callSuper = false)
 public class Command implements Executable {
 
     @Nullable private final Command parent;

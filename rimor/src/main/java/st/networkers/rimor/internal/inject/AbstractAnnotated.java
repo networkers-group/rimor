@@ -1,8 +1,11 @@
 package st.networkers.rimor.internal.inject;
 
+import lombok.EqualsAndHashCode;
+
 import java.lang.annotation.Annotation;
 import java.util.*;
 
+@EqualsAndHashCode
 public abstract class AbstractAnnotated<T extends AbstractAnnotated<T>> implements Annotated {
 
     protected Map<Class<? extends Annotation>, Annotation> annotations;

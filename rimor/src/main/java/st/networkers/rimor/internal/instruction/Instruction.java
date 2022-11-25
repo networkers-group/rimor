@@ -1,5 +1,6 @@
 package st.networkers.rimor.internal.instruction;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import st.networkers.rimor.Executable;
 import st.networkers.rimor.command.CommandDefinition;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
+@EqualsAndHashCode(callSuper = false)
 public class Instruction extends AbstractAnnotated<Instruction> implements Executable {
 
     public static Instruction build(Command command, Method method, Collection<String> aliases) {

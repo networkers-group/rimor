@@ -1,6 +1,7 @@
 package st.networkers.rimor.inject;
 
 import com.google.common.reflect.TypeToken;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import st.networkers.rimor.internal.inject.AbstractAnnotated;
 
@@ -20,6 +21,7 @@ import java.util.Map;
  * </pre>
  */
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class Token<T> extends AbstractAnnotated<Token<T>> {
 
     private final TypeToken<T> type;

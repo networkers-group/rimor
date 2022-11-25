@@ -1,6 +1,7 @@
 package st.networkers.rimor.context;
 
 import com.google.common.reflect.TypeToken;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.internal.inject.AbstractAnnotated;
@@ -8,7 +9,7 @@ import st.networkers.rimor.internal.inject.AbstractAnnotated;
 /**
  * Wraps an object of type {@link T} to inject in instruction methods.
  */
-@Getter
+@EqualsAndHashCode(callSuper = true)
 public class ContextComponent<T> extends AbstractAnnotated<ContextComponent<T>> {
 
     @Getter private final TypeToken<T> type;
