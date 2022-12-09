@@ -10,17 +10,11 @@ import java.util.Map;
 
 public class ExtensionManagerImpl implements ExtensionManager {
 
-    private final Rimor rimor;
-
     private final Map<Class<? extends RimorExtension>, RimorExtension> extensions = new HashMap<>();
     private final Map<Class<? extends RimorEvent>, Collection<RimorEventListener<?>>> listeners = new HashMap<>();
 
-    public ExtensionManagerImpl(Rimor rimor) {
-        this.rimor = rimor;
-    }
-
     @Override
-    public void registerExtension(RimorExtension extension) {
+    public void registerExtension(Rimor rimor, RimorExtension extension) {
         extension.configure(rimor);
         extension.getCommands().forEach(rimor::registerCommand);
         extension.getProviders().forEach(rimor::registerProvider);

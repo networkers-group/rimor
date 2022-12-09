@@ -1,4 +1,4 @@
-package st.networkers.rimor.internal.interpret;
+package st.networkers.rimor.internal.resolve;
 
 import st.networkers.rimor.Executable;
 import st.networkers.rimor.context.ExecutionContext;
@@ -8,19 +8,19 @@ import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.internal.command.Command;
 import st.networkers.rimor.internal.execute.ExecutionEnclosingTaskException;
 import st.networkers.rimor.internal.instruction.Instruction;
-import st.networkers.rimor.interpret.InstructionNotFoundException;
-import st.networkers.rimor.interpret.RimorInterpreter;
+import st.networkers.rimor.resolve.InstructionNotFoundException;
+import st.networkers.rimor.resolve.PathResolver;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class RimorInterpreterImpl implements RimorInterpreter {
+public class PathResolverImpl implements PathResolver {
 
     private final ExecutionEnclosingTaskRegistry executionTaskRegistry;
     private final Injector injector;
 
-    public RimorInterpreterImpl(ExecutionEnclosingTaskRegistry executionTaskRegistry, Injector injector) {
+    public PathResolverImpl(ExecutionEnclosingTaskRegistry executionTaskRegistry, Injector injector) {
         this.executionTaskRegistry = executionTaskRegistry;
         this.injector = injector;
     }

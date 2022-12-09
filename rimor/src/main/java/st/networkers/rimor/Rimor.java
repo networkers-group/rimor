@@ -15,29 +15,56 @@ import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.internal.execute.CommandExecutorImpl;
 import st.networkers.rimor.internal.inject.InjectorImpl;
 import st.networkers.rimor.internal.instruction.Instruction;
-import st.networkers.rimor.internal.interpret.RimorInterpreterImpl;
 import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 import st.networkers.rimor.internal.provide.builtin.OptionalProvider;
 import st.networkers.rimor.internal.resolve.CommandResolver;
-import st.networkers.rimor.interpret.RimorInterpreter;
+import st.networkers.rimor.internal.resolve.PathResolverImpl;
 import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.provide.RimorProvider;
+import st.networkers.rimor.resolve.PathResolver;
 
 @Getter
 public class Rimor {
 
-    private final CommandRegistry commandRegistry = new CommandRegistry();
-    private final ProviderRegistry providerRegistry = new ProviderRegistryImpl();
-    private final ExecutionEnclosingTaskRegistry executionEnclosingTaskRegistry = new ExecutionEnclosingTaskRegistryImpl();
-    private final ExtensionManager extensionManager = new ExtensionManagerImpl(this);
+    private final CommandRegistry commandRegistry;
+    private final ProviderRegistry providerRegistry;
+    private final ExecutionEnclosingTaskRegistry executionEnclosingTaskRegistry;
+    private final ExtensionManager extensionManager;
 
-    private final Injector injector = new InjectorImpl(providerRegistry);
-    private final RimorInterpreter interpreter = new RimorInterpreterImpl(executionEnclosingTaskRegistry, injector);
-    private final CommandExecutor executor = new CommandExecutorImpl(injector);
+    private final Injector injector;
+    private final PathResolver pathResolver;
+    private final CommandExecutor executor;
 
     private final boolean initialized = false;
 
     public Rimor() {
+        this(new CommandRegistry(), new ProviderRegistryImpl(), new ExecutionEnclosingTaskRegistryImpl(), new ExtensionManagerImpl());
+    }
+
+    public Rimor(CommandRegistry commandRegistry, ProviderRegistry providerRegistry,
+                 ExecutionEnclosingTaskRegistry executionEnclosingTaskRegistry,
+                 ExtensionManager extensionManager) {
+        this(commandRegistry, providerRegistry, executionEnclosingTaskRegistry, extensionManager, new InjectorImpl(providerRegistry));
+    }
+
+    public Rimor(CommandRegistry commandRegistry, ProviderRegistry providerRegistry,
+                 ExecutionEnclosingTaskRegistry executionEnclosingTaskRegistry,
+                 ExtensionManager extensionManager, Injector injector) {
+        this(commandRegistry, providerRegistry, executionEnclosingTaskRegistry, extensionManager, injector,
+                new PathResolverImpl(executionEnclosingTaskRegistry, injector), new CommandExecutorImpl(injector));
+    }
+
+    public Rimor(CommandRegistry commandRegistry, ProviderRegistry providerRegistry,
+                 ExecutionEnclosingTaskRegistry executionEnclosingTaskRegistry, ExtensionManager extensionManager,
+                 Injector injector, PathResolver pathResolver, CommandExecutor executor) {
+        this.commandRegistry = commandRegistry;
+        this.providerRegistry = providerRegistry;
+        this.executionEnclosingTaskRegistry = executionEnclosingTaskRegistry;
+        this.extensionManager = extensionManager;
+        this.injector = injector;
+        this.pathResolver = pathResolver;
+        this.executor = executor;
+
         this.registerProvider(new OptionalProvider());
     }
 
@@ -89,7 +116,7 @@ public class Rimor {
      * @param extension the extension to register
      */
     public Rimor registerExtension(RimorExtension extension) {
-        this.extensionManager.registerExtension(extension);
+        this.extensionManager.registerExtension(this, extension);
         return this;
     }
 

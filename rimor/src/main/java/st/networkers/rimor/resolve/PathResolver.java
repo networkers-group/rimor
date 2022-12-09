@@ -1,4 +1,4 @@
-package st.networkers.rimor.interpret;
+package st.networkers.rimor.resolve;
 
 import lombok.Data;
 import st.networkers.rimor.context.ExecutionContext;
@@ -8,14 +8,14 @@ import st.networkers.rimor.internal.instruction.Instruction;
 import java.util.List;
 
 /**
- * Interpreter for simple string commands, like:
+ * Resolver for simple string paths, like:
  * <ul>
  *     <li>["echo", "Hello", "world!"] -> command "echo", main instruction, leftoverPath ["Hello", "world!"]</li>
  *     <li>["git", "checkout", "dev"] -> command "git", instruction "checkout", leftoverPath ["dev"]</li>
  *     <li>["setActive", "true"] -> command "setActive", main instruction, leftoverPath ["true"]</li>
  * </ul>
  */
-public interface RimorInterpreter {
+public interface PathResolver {
 
     @Data
     class Results {

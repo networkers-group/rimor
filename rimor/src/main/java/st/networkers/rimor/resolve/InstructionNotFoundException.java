@@ -1,4 +1,4 @@
-package st.networkers.rimor.interpret;
+package st.networkers.rimor.resolve;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
