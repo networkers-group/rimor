@@ -1,6 +1,5 @@
 package st.networkers.rimor.internal.command;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
  * @see CommandDefinition
  * @see AbstractCommandDefinition
  */
-@EqualsAndHashCode(callSuper = false)
 public class Command extends AbstractAnnotated<Command> implements Executable {
 
     @Nullable private final Command parent;
@@ -79,5 +77,19 @@ public class Command extends AbstractAnnotated<Command> implements Executable {
 
     public Set<String> getAllInstructionAliases() {
         return this.instructions.keySet();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Command)) return false;
+        if (!super.equals(o)) return false;
+        Command command = (Command) o;
+        return definition.equals(command.definition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(definition);
     }
 }

@@ -41,9 +41,9 @@ import java.util.List;
  * rimor-params extension), {@code "pull"} will be passed as a parameter.
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class InstructionNotFoundException extends RuntimeException {
     private @Nullable final Command uberCommand;
-    private @Nullable final Command subCommand;
+    private @Nullable final Command subcommand;
     private final List<String> remainingPath;
 }
