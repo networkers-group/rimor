@@ -24,6 +24,6 @@ public interface RimorInterpreter {
         private final List<String> leftoverPath;
     }
 
-    Results resolveInstruction(Command command, List<String> path, ExecutionContext context);
+    Results resolvePath(Command command, List<String> path, ExecutionContext context);
 
 }

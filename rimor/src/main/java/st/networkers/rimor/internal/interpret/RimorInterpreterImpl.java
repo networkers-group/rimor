@@ -26,7 +26,7 @@ public class RimorInterpreterImpl implements RimorInterpreter {
     }
 
     @Override
-    public Results resolveInstruction(Command command, List<String> path, ExecutionContext context) {
+    public Results resolvePath(Command command, List<String> path, ExecutionContext context) {
         this.runPreExecutionTasks(command, context);
         return this.resolveInstruction(command, command, path, context);
     }
