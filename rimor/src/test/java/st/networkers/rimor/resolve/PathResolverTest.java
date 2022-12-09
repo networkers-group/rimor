@@ -7,7 +7,7 @@ import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.execute.task.ExecutionEnclosingTaskRegistry;
 import st.networkers.rimor.execute.task.ExecutionEnclosingTaskRegistryImpl;
 import st.networkers.rimor.inject.Injector;
-import st.networkers.rimor.internal.command.Command;
+import st.networkers.rimor.internal.command.MappedCommand;
 import st.networkers.rimor.internal.inject.InjectorImpl;
 import st.networkers.rimor.internal.instruction.Instruction;
 import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
@@ -30,7 +30,7 @@ class PathResolverTest {
     static PathResolver resolver = new PathResolverImpl(executionEnclosingTaskRegistry, injector);
 
     static TestCommand testCommand = new TestCommand();
-    static Command command;
+    static MappedCommand command;
 
     @BeforeAll
     static void setUp() {

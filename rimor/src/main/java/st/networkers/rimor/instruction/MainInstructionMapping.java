@@ -1,6 +1,6 @@
 package st.networkers.rimor.instruction;
 
-import st.networkers.rimor.internal.command.Command;
+import st.networkers.rimor.internal.command.MappedCommand;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -8,13 +8,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The main instruction for a {@link Command}. If the command is called without any argument (or the first
+ * The main instruction for a {@link MappedCommand}. If the command is called without any argument (or the first
  * argument doesn't match any instruction or subcommand), the method with this annotation will be executed.
  * <p>
  * For example, having this command:
  * <pre>
  *     &#64;CommandMapping("git")
- *     public class GitCommand extends AbstractCommandDefinition {
+ *     public class GitCommand extends AbstractRimorCommand {
  *
  *         // rimor-params extension for @Params :)
  *         &#64;MainInstructionMapping

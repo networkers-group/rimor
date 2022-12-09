@@ -1,8 +1,8 @@
 package st.networkers.rimor;
 
 import lombok.Getter;
-import st.networkers.rimor.command.CommandDefinition;
 import st.networkers.rimor.command.CommandRegistry;
+import st.networkers.rimor.command.RimorCommand;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.execute.CommandExecutor;
 import st.networkers.rimor.execute.task.ExecutionEnclosingTaskRegistry;
@@ -69,22 +69,22 @@ public class Rimor {
     }
 
     /**
-     * Registers the given {@link CommandDefinition}.
+     * Registers the given {@link RimorCommand}.
      *
      * @param command the command to register
      */
-    public Rimor registerCommand(CommandDefinition command) {
+    public Rimor registerCommand(RimorCommand command) {
         commandRegistry.registerCommand(CommandResolver.resolve(command));
         return this;
     }
 
     /**
-     * Registers the given {@link CommandDefinition}s.
+     * Registers the given {@link RimorCommand}s.
      *
      * @param commands the commands to register
      */
-    public Rimor registerCommands(CommandDefinition... commands) {
-        for (CommandDefinition command : commands)
+    public Rimor registerCommands(RimorCommand... commands) {
+        for (RimorCommand command : commands)
             this.registerCommand(command);
         return this;
     }

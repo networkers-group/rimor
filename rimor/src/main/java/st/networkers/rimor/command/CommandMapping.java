@@ -6,9 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for mapping commands onto {@link CommandDefinition} implementations.
+ * Annotation for mapping commands onto {@link RimorCommand} implementations.
  * <p>
- * If this annotation is not present, the name of the command's definition class is used as an alias for the command.
+ * If this annotation is not present, the name of the command class is used as an alias for the command.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 import st.networkers.rimor.Executable;
-import st.networkers.rimor.command.AbstractCommandDefinition;
-import st.networkers.rimor.command.CommandDefinition;
+import st.networkers.rimor.command.AbstractRimorCommand;
+import st.networkers.rimor.command.RimorCommand;
 import st.networkers.rimor.internal.inject.AbstractAnnotated;
 import st.networkers.rimor.internal.instruction.Instruction;
 
@@ -14,30 +14,30 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Resolved command to use internally. To define a command, check {@link CommandDefinition}.
+ * Resolved command to use internally. To create commands, check {@link RimorCommand}.
  *
- * @see CommandDefinition
- * @see AbstractCommandDefinition
+ * @see RimorCommand
+ * @see AbstractRimorCommand
  */
-public class Command extends AbstractAnnotated<Command> implements Executable {
+public class MappedCommand extends AbstractAnnotated<MappedCommand> implements Executable {
 
-    @Nullable private final Command parent;
-    @Getter private final CommandDefinition definition;
+    @Nullable private final MappedCommand parent;
+    @Getter private final RimorCommand command;
     private final Collection<String> aliases;
 
     @Setter private Instruction mainInstruction;
     private final Map<String, Instruction> instructions = new HashMap<>();
-    private final Map<String, Command> subcommands = new HashMap<>();
+    private final Map<String, MappedCommand> subcommands = new HashMap<>();
 
-    public Command(@Nullable Command parent, CommandDefinition definition, Collection<String> aliases,
-                   Map<Class<? extends Annotation>, Annotation> annotations) {
+    public MappedCommand(@Nullable MappedCommand parent, RimorCommand command, Collection<String> aliases,
+                         Map<Class<? extends Annotation>, Annotation> annotations) {
         super(annotations);
         this.parent = parent;
-        this.definition = definition;
+        this.command = command;
         this.aliases = aliases.stream().map(String::toLowerCase).collect(Collectors.toList());
     }
 
-    public Optional<Command> getParent() {
+    public Optional<MappedCommand> getParent() {
         return Optional.ofNullable(parent);
     }
 
@@ -46,7 +46,7 @@ public class Command extends AbstractAnnotated<Command> implements Executable {
             this.instructions.put(alias, instruction);
     }
 
-    public void registerSubcommand(Command subcommand) {
+    public void registerSubcommand(MappedCommand subcommand) {
         for (String alias : subcommand.getAliases())
             this.subcommands.put(alias, subcommand);
     }
@@ -67,11 +67,11 @@ public class Command extends AbstractAnnotated<Command> implements Executable {
         return Collections.unmodifiableMap(this.instructions);
     }
 
-    public Optional<Command> getSubcommand(String alias) {
+    public Optional<MappedCommand> getSubcommand(String alias) {
         return Optional.ofNullable(this.subcommands.get(alias.toLowerCase()));
     }
 
-    public Map<String, Command> getSubcommands() {
+    public Map<String, MappedCommand> getSubcommands() {
         return Collections.unmodifiableMap(this.subcommands);
     }
 
@@ -82,14 +82,14 @@ public class Command extends AbstractAnnotated<Command> implements Executable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Command)) return false;
+        if (!(o instanceof MappedCommand)) return false;
         if (!super.equals(o)) return false;
-        Command command = (Command) o;
-        return definition.equals(command.definition);
+        MappedCommand command = (MappedCommand) o;
+        return this.command.equals(command.command);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(definition);
+        return Objects.hash(command);
     }
 }

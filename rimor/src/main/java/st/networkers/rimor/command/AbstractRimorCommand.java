@@ -10,16 +10,16 @@ import java.util.Collection;
  * @see st.networkers.rimor.instruction.MainInstructionMapping
  * @see st.networkers.rimor.instruction.InstructionMapping
  */
-public abstract class AbstractCommandDefinition implements CommandDefinition {
+public abstract class AbstractRimorCommand implements RimorCommand {
 
-    private final Collection<CommandDefinition> subcommands = new ArrayList<>();
+    private final Collection<RimorCommand> subcommands = new ArrayList<>();
 
-    protected final void registerSubcommand(@NotNull CommandDefinition subcommand) {
+    protected final void registerSubcommand(@NotNull RimorCommand subcommand) {
         this.subcommands.add(subcommand);
     }
 
     @Override
-    public Collection<CommandDefinition> getSubcommands() {
+    public Collection<RimorCommand> getSubcommands() {
         return subcommands;
     }
 }

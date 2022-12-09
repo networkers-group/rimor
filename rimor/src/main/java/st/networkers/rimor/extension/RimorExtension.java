@@ -1,7 +1,7 @@
 package st.networkers.rimor.extension;
 
 import st.networkers.rimor.Rimor;
-import st.networkers.rimor.command.CommandDefinition;
+import st.networkers.rimor.command.RimorCommand;
 import st.networkers.rimor.extension.event.RimorEvent;
 import st.networkers.rimor.extension.event.RimorEventListener;
 import st.networkers.rimor.provide.RimorProvider;
@@ -16,7 +16,7 @@ public interface RimorExtension {
 
     void configure(Rimor rimor);
 
-    Collection<CommandDefinition> getCommands();
+    Collection<RimorCommand> getCommands();
 
     Collection<RimorProvider<?>> getProviders();
 

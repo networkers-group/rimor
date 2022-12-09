@@ -1,7 +1,7 @@
 package st.networkers.rimor.util;
 
-import st.networkers.rimor.command.CommandDefinition;
 import st.networkers.rimor.command.CommandMapping;
+import st.networkers.rimor.command.RimorCommand;
 import st.networkers.rimor.instruction.InstructionMapping;
 
 import java.lang.annotation.Annotation;
@@ -13,10 +13,10 @@ public final class InspectionUtils {
     private InspectionUtils() {
     }
 
-    public static List<String> getAliases(Class<? extends CommandDefinition> definitionClass) {
-        return Optional.ofNullable(definitionClass.getAnnotation(CommandMapping.class))
+    public static List<String> getAliases(Class<? extends RimorCommand> commandClass) {
+        return Optional.ofNullable(commandClass.getAnnotation(CommandMapping.class))
                 .map(commandMapping -> Arrays.asList(commandMapping.value()))
-                .orElseGet(() -> Collections.singletonList(definitionClass.getSimpleName()));
+                .orElseGet(() -> Collections.singletonList(commandClass.getSimpleName()));
     }
 
     public static List<String> getAliases(Method method) {

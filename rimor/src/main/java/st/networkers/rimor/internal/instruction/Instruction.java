@@ -3,8 +3,8 @@ package st.networkers.rimor.internal.instruction;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import st.networkers.rimor.Executable;
-import st.networkers.rimor.command.CommandDefinition;
-import st.networkers.rimor.internal.command.Command;
+import st.networkers.rimor.command.RimorCommand;
+import st.networkers.rimor.internal.command.MappedCommand;
 import st.networkers.rimor.internal.inject.AbstractAnnotated;
 import st.networkers.rimor.internal.reflect.CachedMethod;
 import st.networkers.rimor.util.ReflectionUtils;
@@ -19,15 +19,15 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = false)
 public class Instruction extends AbstractAnnotated<Instruction> implements Executable {
 
-    public static Instruction build(Command command, Method method, Collection<String> aliases) {
+    public static Instruction build(MappedCommand command, Method method, Collection<String> aliases) {
         return new Instruction(command, CachedMethod.build(method), aliases, ReflectionUtils.getMappedAnnotations(method));
     }
 
-    private final Command command;
+    private final MappedCommand command;
     private final CachedMethod method;
     private final Collection<String> aliases;
 
-    public Instruction(Command command,
+    public Instruction(MappedCommand command,
                        CachedMethod method,
                        Collection<String> aliases,
                        Map<Class<? extends Annotation>, Annotation> annotations) {
@@ -37,7 +37,7 @@ public class Instruction extends AbstractAnnotated<Instruction> implements Execu
         this.aliases = aliases.stream().map(String::toLowerCase).collect(Collectors.toList());
     }
 
-    public CommandDefinition getCommandInstance() {
-        return command.getDefinition();
+    public RimorCommand getCommandInstance() {
+        return command.getCommand();
     }
 }

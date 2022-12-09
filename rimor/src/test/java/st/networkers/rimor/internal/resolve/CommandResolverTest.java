@@ -3,7 +3,7 @@ package st.networkers.rimor.internal.resolve;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import st.networkers.rimor.TestCommand;
-import st.networkers.rimor.internal.command.Command;
+import st.networkers.rimor.internal.command.MappedCommand;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CommandResolverTest {
 
     static TestCommand testCommand = new TestCommand();
-    static Command command;
+    static MappedCommand command;
 
     @BeforeAll
     static void setUp() {
@@ -29,7 +29,7 @@ class CommandResolverTest {
 
     @Test
     void whenCheckingCommandInstance_thenCommandInstanceEqualsSetupInstance() {
-        assertEquals(testCommand, command.getDefinition());
+        assertEquals(testCommand, command.getCommand());
     }
 
     @Test

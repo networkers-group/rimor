@@ -1,14 +1,18 @@
 package st.networkers.rimor.internal.resolve;
 
-import st.networkers.rimor.command.CommandDefinition;
+import lombok.Getter;
+import lombok.Setter;
+import st.networkers.rimor.command.RimorCommand;
 import st.networkers.rimor.instruction.InstructionMapping;
 import st.networkers.rimor.instruction.MainInstructionMapping;
-import st.networkers.rimor.internal.command.Command;
+import st.networkers.rimor.internal.command.MappedCommand;
 import st.networkers.rimor.internal.instruction.Instruction;
 import st.networkers.rimor.util.InspectionUtils;
 import st.networkers.rimor.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,32 +21,42 @@ public final class CommandResolver {
     private CommandResolver() {
     }
 
-    public static Command resolve(CommandDefinition command) {
+    public static MappedCommand resolve(RimorCommand command) {
         return resolve(null, command);
     }
 
-    public static Command resolve(Command parent, CommandDefinition definition) {
-        Command command = new Command(
+    public static MappedCommand resolve(MappedCommand parent, RimorCommand command) {
+        MappedCommand mappedCommand = new MappedCommand(
                 parent,
-                definition,
-                InspectionUtils.getAliases(definition.getClass()),
-                ReflectionUtils.getMappedAnnotations(definition.getClass())
+                command,
+                InspectionUtils.getAliases(command.getClass()),
+                ReflectionUtils.getMappedAnnotations(command.getClass())
         );
 
-        ResolvedInstructions resolvedInstructions = resolveInstructions(command);
-        command.setMainInstruction(resolvedInstructions.getMainInstruction());
-        resolvedInstructions.getInstructions().forEach(command::registerInstruction);
+        InstructionLookupResults results = resolveInstructions(mappedCommand);
+        mappedCommand.setMainInstruction(results.getMainInstruction());
+        results.getInstructions().forEach(mappedCommand::registerInstruction);
 
-        resolveSubcommands(command).forEach(command::registerSubcommand);
+        resolveSubcommands(mappedCommand).forEach(mappedCommand::registerSubcommand);
 
-        return command;
+        return mappedCommand;
     }
 
-    private static ResolvedInstructions resolveInstructions(Command command) {
-        ResolvedInstructions results = new ResolvedInstructions();
+    @Getter
+    private static class InstructionLookupResults {
+        @Setter private Instruction mainInstruction;
+        private final Collection<Instruction> instructions = new ArrayList<>();
 
-        for (Method method : command.getDefinition().getClass().getMethods()) {
-            Instruction instruction = Instruction.build(command, method, InspectionUtils.getAliases(method));
+        public void addInstruction(Instruction instruction) {
+            this.instructions.add(instruction);
+        }
+    }
+
+    private static InstructionLookupResults resolveInstructions(MappedCommand mappedCommand) {
+        InstructionLookupResults results = new InstructionLookupResults();
+
+        for (Method method : mappedCommand.getCommand().getClass().getMethods()) {
+            Instruction instruction = Instruction.build(mappedCommand, method, InspectionUtils.getAliases(method));
 
             if (method.isAnnotationPresent(MainInstructionMapping.class))
                 results.setMainInstruction(instruction);
@@ -54,9 +68,9 @@ public final class CommandResolver {
         return results;
     }
 
-    private static List<Command> resolveSubcommands(Command command) {
-        return command.getDefinition().getSubcommands().stream()
-                .map(subcommand -> resolve(command, subcommand))
+    private static List<MappedCommand> resolveSubcommands(MappedCommand mappedCommand) {
+        return mappedCommand.getCommand().getSubcommands().stream()
+                .map(subcommand -> resolve(mappedCommand, subcommand))
                 .collect(Collectors.toList());
     }
 }
