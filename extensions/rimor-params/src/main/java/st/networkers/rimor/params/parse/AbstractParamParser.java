@@ -4,7 +4,8 @@ import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.internal.instruction.Instruction;
+import st.networkers.rimor.internal.inject.ParameterToken;
+import st.networkers.rimor.internal.reflect.CachedMethod;
 import st.networkers.rimor.internal.reflect.CachedParameter;
 import st.networkers.rimor.params.Param;
 import st.networkers.rimor.params.Params;
@@ -22,8 +23,6 @@ import java.util.List;
 public abstract class AbstractParamParser<T> extends AbstractRimorProvider<T> implements ParamParser<T> {
 
     protected static final Token<List<Object>> PARAMS_TOKEN = new Token<>(new TypeToken<List<Object>>() {}).annotatedWith(Params.class);
-    private static final Token<Instruction> INSTRUCTION_TOKEN = new Token<>(Instruction.class);
-    private static final Token<CachedParameter> PARAMETER_TOKEN = new Token<>(CachedParameter.class);
 
     @SafeVarargs
     protected AbstractParamParser(Class<T>... providedTypes) {
@@ -59,15 +58,16 @@ public abstract class AbstractParamParser<T> extends AbstractRimorProvider<T> im
         if (param.position() > -1)
             return param.position();
 
-        // if not, return the position of the current parameter
-        Instruction instruction = context.get(INSTRUCTION_TOKEN).orElseThrow(IllegalArgumentException::new);
-        CachedParameter parameter = context.get(PARAMETER_TOKEN).orElseThrow(IllegalArgumentException::new);
+        if (token instanceof ParameterToken) {
+            ParameterToken<T> parameterToken = (ParameterToken<T>) token;
+            return this.getPositionFromParameter(parameterToken.getMethod(), parameterToken.getParameter());
+        }
 
-        return this.getPositionFromParameter(instruction, parameter);
+        return -1;
     }
 
-    private int getPositionFromParameter(Instruction instruction, CachedParameter parameter) {
-        List<CachedParameter> parameters = new ArrayList<>(instruction.getMethod().getParameters());
+    private int getPositionFromParameter(CachedMethod method, CachedParameter parameter) {
+        List<CachedParameter> parameters = new ArrayList<>(method.getParameters());
         parameters.removeIf(p -> !p.isAnnotationPresent(Param.class));
 
         return parameters.indexOf(parameter);

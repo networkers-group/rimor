@@ -29,17 +29,16 @@ public class InjectorImpl implements Injector {
     }
 
     @Override
-    public Object invokeMethod(CachedMethod cachedMethod, Object instance, ExecutionContext context) {
-        return ReflectionUtils.invoke(cachedMethod.getMethod(), instance, resolveParameters(cachedMethod, context));
+    public Object invokeMethod(CachedMethod method, Object instance, ExecutionContext context) {
+        return ReflectionUtils.invoke(method.getMethod(), instance, resolveParameters(method, context));
     }
 
-    private Object[] resolveParameters(CachedMethod cachedMethod, ExecutionContext context) {
-        Object[] parameters = new Object[cachedMethod.getParameters().size()];
+    private Object[] resolveParameters(CachedMethod method, ExecutionContext context) {
+        Object[] parameters = new Object[method.getParameters().size()];
 
         int i = 0;
-        for (CachedParameter parameter : cachedMethod.getParameters()) {
-            Token<?> token = new Token<>(parameter.getType(), parameter.getAnnotationsMap());
-            parameters[i++] = this.get(token, context).orElse(null);
+        for (CachedParameter parameter : method.getParameters()) {
+            parameters[i++] = this.get(ParameterToken.build(method, parameter), context).orElse(null);
         }
 
         return parameters;
