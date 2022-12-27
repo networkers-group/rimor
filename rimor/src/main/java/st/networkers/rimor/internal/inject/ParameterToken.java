@@ -2,8 +2,8 @@ package st.networkers.rimor.internal.inject;
 
 import lombok.Getter;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.internal.reflect.CachedMethod;
-import st.networkers.rimor.internal.reflect.CachedParameter;
+import st.networkers.rimor.reflect.CachedMethod;
+import st.networkers.rimor.reflect.CachedParameter;
 
 @Getter
 public class ParameterToken<T> extends Token<T> {

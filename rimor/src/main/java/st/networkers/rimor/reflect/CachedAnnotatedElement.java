@@ -1,4 +1,4 @@
-package st.networkers.rimor.internal.reflect;
+package st.networkers.rimor.reflect;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;

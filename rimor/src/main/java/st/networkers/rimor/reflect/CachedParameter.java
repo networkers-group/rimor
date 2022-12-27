@@ -1,4 +1,4 @@
-package st.networkers.rimor.internal.reflect;
+package st.networkers.rimor.reflect;
 
 import lombok.Getter;
 import st.networkers.rimor.util.ReflectionUtils;

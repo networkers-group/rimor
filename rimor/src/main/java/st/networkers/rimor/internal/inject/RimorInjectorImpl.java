@@ -4,9 +4,9 @@ import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.RimorInjector;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
-import st.networkers.rimor.internal.reflect.CachedMethod;
-import st.networkers.rimor.internal.reflect.CachedParameter;
 import st.networkers.rimor.provide.ProviderRegistry;
+import st.networkers.rimor.reflect.CachedMethod;
+import st.networkers.rimor.reflect.CachedParameter;
 import st.networkers.rimor.util.OptionalUtils;
 import st.networkers.rimor.util.ReflectionUtils;
 

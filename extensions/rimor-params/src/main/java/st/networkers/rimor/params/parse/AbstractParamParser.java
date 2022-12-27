@@ -4,12 +4,12 @@ import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.internal.inject.ParameterToken;
-import st.networkers.rimor.internal.reflect.CachedMethod;
-import st.networkers.rimor.internal.reflect.CachedParameter;
 import st.networkers.rimor.params.Param;
 import st.networkers.rimor.params.Params;
 import st.networkers.rimor.params.parse.builtin.BooleanParamParser;
 import st.networkers.rimor.provide.AbstractRimorProvider;
+import st.networkers.rimor.reflect.CachedMethod;
+import st.networkers.rimor.reflect.CachedParameter;
 
 import java.util.ArrayList;
 import java.util.List;

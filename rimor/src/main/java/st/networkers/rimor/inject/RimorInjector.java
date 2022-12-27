@@ -2,9 +2,9 @@ package st.networkers.rimor.inject;
 
 import st.networkers.rimor.Rimor;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.internal.reflect.CachedMethod;
 import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.provide.RimorProvider;
+import st.networkers.rimor.reflect.CachedMethod;
 
 import java.util.Optional;
 
