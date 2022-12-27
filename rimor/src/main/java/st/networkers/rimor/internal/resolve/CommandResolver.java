@@ -2,11 +2,11 @@ package st.networkers.rimor.internal.resolve;
 
 import lombok.Getter;
 import lombok.Setter;
+import st.networkers.rimor.command.MappedCommand;
 import st.networkers.rimor.command.RimorCommand;
 import st.networkers.rimor.instruction.Instruction;
 import st.networkers.rimor.instruction.InstructionMapping;
 import st.networkers.rimor.instruction.MainInstructionMapping;
-import st.networkers.rimor.internal.command.MappedCommand;
 import st.networkers.rimor.util.InspectionUtils;
 import st.networkers.rimor.util.ReflectionUtils;
 

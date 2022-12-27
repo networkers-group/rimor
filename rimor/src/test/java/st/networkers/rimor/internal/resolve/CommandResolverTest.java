@@ -3,7 +3,7 @@ package st.networkers.rimor.internal.resolve;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import st.networkers.rimor.TestCommand;
-import st.networkers.rimor.internal.command.MappedCommand;
+import st.networkers.rimor.command.MappedCommand;
 
 import java.util.Arrays;
 import java.util.Collections;

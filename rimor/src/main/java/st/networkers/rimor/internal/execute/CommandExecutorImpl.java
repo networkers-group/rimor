@@ -1,6 +1,7 @@
 package st.networkers.rimor.internal.execute;
 
 import st.networkers.rimor.Executable;
+import st.networkers.rimor.command.MappedCommand;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.execute.CommandExecutor;
 import st.networkers.rimor.execute.exception.ExceptionHandlerRegistry;
@@ -8,7 +9,6 @@ import st.networkers.rimor.execute.task.ExecutionTask;
 import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
 import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.instruction.Instruction;
-import st.networkers.rimor.internal.command.MappedCommand;
 
 import java.util.Collection;
 

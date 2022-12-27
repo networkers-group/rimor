@@ -1,6 +1,6 @@
 package st.networkers.rimor.instruction;
 
-import st.networkers.rimor.internal.command.MappedCommand;
+import st.networkers.rimor.command.MappedCommand;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

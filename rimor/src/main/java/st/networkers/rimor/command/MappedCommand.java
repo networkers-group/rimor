@@ -1,11 +1,9 @@
-package st.networkers.rimor.internal.command;
+package st.networkers.rimor.command;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 import st.networkers.rimor.Executable;
-import st.networkers.rimor.command.AbstractRimorCommand;
-import st.networkers.rimor.command.RimorCommand;
 import st.networkers.rimor.inject.AbstractAnnotated;
 import st.networkers.rimor.instruction.Instruction;
 

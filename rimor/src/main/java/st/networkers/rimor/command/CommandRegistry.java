@@ -1,7 +1,5 @@
 package st.networkers.rimor.command;
 
-import st.networkers.rimor.internal.command.MappedCommand;
-
 import java.util.HashMap;
 import java.util.Map;
 

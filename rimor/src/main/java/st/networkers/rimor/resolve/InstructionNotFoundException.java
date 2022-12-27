@@ -3,7 +3,7 @@ package st.networkers.rimor.resolve;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Nullable;
-import st.networkers.rimor.internal.command.MappedCommand;
+import st.networkers.rimor.command.MappedCommand;
 
 import java.util.List;
 

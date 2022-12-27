@@ -1,10 +1,10 @@
 package st.networkers.rimor.internal.resolve;
 
 import st.networkers.rimor.Executable;
+import st.networkers.rimor.command.MappedCommand;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.execute.exception.ExceptionHandlerRegistry;
 import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
-import st.networkers.rimor.internal.command.MappedCommand;
 import st.networkers.rimor.resolve.InstructionNotFoundException;
 import st.networkers.rimor.resolve.PathResolver;
 

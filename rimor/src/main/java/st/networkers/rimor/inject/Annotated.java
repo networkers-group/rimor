@@ -1,5 +1,7 @@
 package st.networkers.rimor.inject;
 
+import st.networkers.rimor.command.MappedCommand;
+
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Map;
@@ -11,7 +13,7 @@ import java.util.Map;
  * @see st.networkers.rimor.provide.RimorProvider
  * @see st.networkers.rimor.execute.task.ExecutionTask
  * @see st.networkers.rimor.instruction.Instruction
- * @see st.networkers.rimor.internal.command.MappedCommand
+ * @see MappedCommand
  */
 public interface Annotated {
 

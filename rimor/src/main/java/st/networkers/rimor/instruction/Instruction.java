@@ -3,9 +3,9 @@ package st.networkers.rimor.instruction;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import st.networkers.rimor.Executable;
+import st.networkers.rimor.command.MappedCommand;
 import st.networkers.rimor.command.RimorCommand;
 import st.networkers.rimor.inject.AbstractAnnotated;
-import st.networkers.rimor.internal.command.MappedCommand;
 import st.networkers.rimor.internal.reflect.CachedMethod;
 import st.networkers.rimor.util.ReflectionUtils;
 

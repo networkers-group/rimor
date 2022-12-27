@@ -1,11 +1,12 @@
 package st.networkers.rimor;
 
+import st.networkers.rimor.command.MappedCommand;
 import st.networkers.rimor.inject.Annotated;
 
 /**
  * Represents everything executed in a command execution.
  *
- * @see st.networkers.rimor.internal.command.MappedCommand
+ * @see MappedCommand
  * @see st.networkers.rimor.instruction.Instruction
  * @see st.networkers.rimor.execute.task.ExecutionTask
  */
