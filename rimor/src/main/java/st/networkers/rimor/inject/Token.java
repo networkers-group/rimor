@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Exchanged in {@link Injector} to obtain an object for the wrapped type {@link T}.
+ * Exchanged in {@link RimorInjector} to obtain an object for the wrapped type {@link T}.
  * <p>
  * For generic types, use the {@link TypeToken} constructor. For example, to construct a Token of type
  * {@literal List<String>} annotated with {@code @Params}, use:

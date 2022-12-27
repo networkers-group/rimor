@@ -2,7 +2,7 @@ package st.networkers.rimor.internal.provide.builtin;
 
 import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.inject.Injector;
+import st.networkers.rimor.inject.RimorInjector;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.provide.AbstractRimorProvider;
 import st.networkers.rimor.util.ReflectionUtils;
@@ -14,9 +14,9 @@ import java.util.Optional;
  */
 public class OptionalProvider extends AbstractRimorProvider<Optional<?>> {
 
-    private final Injector injector;
+    private final RimorInjector injector;
 
-    public OptionalProvider(Injector injector) {
+    public OptionalProvider(RimorInjector injector) {
         super(new TypeToken<Optional<?>>() {});
         this.injector = injector;
     }

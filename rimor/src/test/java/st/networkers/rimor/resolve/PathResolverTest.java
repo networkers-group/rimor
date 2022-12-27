@@ -9,11 +9,11 @@ import st.networkers.rimor.command.MappedCommand;
 import st.networkers.rimor.context.ContextComponent;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
-import st.networkers.rimor.inject.Injector;
+import st.networkers.rimor.inject.RimorInjector;
 import st.networkers.rimor.instruction.Instruction;
 import st.networkers.rimor.internal.execute.exception.ExceptionHandlerRegistryImpl;
 import st.networkers.rimor.internal.execute.task.ExecutionTaskRegistryImpl;
-import st.networkers.rimor.internal.inject.InjectorImpl;
+import st.networkers.rimor.internal.inject.RimorInjectorImpl;
 import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 import st.networkers.rimor.internal.resolve.CommandResolver;
 import st.networkers.rimor.internal.resolve.PathResolverImpl;
@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 class PathResolverTest {
 
-    static Injector injector = new InjectorImpl(new ProviderRegistryImpl());
+    static RimorInjector injector = new RimorInjectorImpl(new ProviderRegistryImpl());
 
     static TestCommand testCommand = new TestCommand();
     static MappedCommand command;

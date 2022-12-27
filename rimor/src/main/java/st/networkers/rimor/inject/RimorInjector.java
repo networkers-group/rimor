@@ -14,7 +14,7 @@ import java.util.Optional;
  * <p>
  * To register a {@link RimorProvider}, see {@link Rimor#registerProvider(RimorProvider)}.
  */
-public interface Injector {
+public interface RimorInjector {
 
     /**
      * Gets an {@link Optional} wrapping the object associated with the given {@link Token} from the given

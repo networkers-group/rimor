@@ -13,7 +13,7 @@ import st.networkers.rimor.instruction.Instruction;
 import st.networkers.rimor.internal.execute.CommandExecutorImpl;
 import st.networkers.rimor.internal.execute.exception.ExceptionHandlerRegistryImpl;
 import st.networkers.rimor.internal.execute.task.ExecutionTaskRegistryImpl;
-import st.networkers.rimor.internal.inject.InjectorImpl;
+import st.networkers.rimor.internal.inject.RimorInjectorImpl;
 import st.networkers.rimor.internal.resolve.CommandResolver;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,7 +34,7 @@ class CommandExecutorTest {
         ExecutionTaskRegistry executionTaskRegistry = new ExecutionTaskRegistryImpl();
         executionTaskRegistry.registerPreExecutionTask(new PresentBarAnnotationExecutionTask());
 
-        commandExecutor = new CommandExecutorImpl(new InjectorImpl(), new ExceptionHandlerRegistryImpl(), executionTaskRegistry);
+        commandExecutor = new CommandExecutorImpl(new RimorInjectorImpl(), new ExceptionHandlerRegistryImpl(), executionTaskRegistry);
     }
 
     @Test

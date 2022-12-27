@@ -14,12 +14,12 @@ import st.networkers.rimor.execute.task.PreExecutionTask;
 import st.networkers.rimor.extension.ExtensionManager;
 import st.networkers.rimor.extension.ExtensionManagerImpl;
 import st.networkers.rimor.extension.RimorExtension;
-import st.networkers.rimor.inject.Injector;
+import st.networkers.rimor.inject.RimorInjector;
 import st.networkers.rimor.instruction.Instruction;
 import st.networkers.rimor.internal.execute.CommandExecutorImpl;
 import st.networkers.rimor.internal.execute.exception.ExceptionHandlerRegistryImpl;
 import st.networkers.rimor.internal.execute.task.ExecutionTaskRegistryImpl;
-import st.networkers.rimor.internal.inject.InjectorImpl;
+import st.networkers.rimor.internal.inject.RimorInjectorImpl;
 import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 import st.networkers.rimor.internal.provide.builtin.OptionalProvider;
 import st.networkers.rimor.internal.resolve.CommandResolver;
@@ -37,24 +37,24 @@ public class Rimor {
     private final ExtensionManager extensionManager;
     private final ProviderRegistry providerRegistry;
 
-    private final Injector injector;
+    private final RimorInjector injector;
     private final PathResolver pathResolver;
     private final CommandExecutor executor;
 
     private boolean initialized = false;
 
     public Rimor() {
-        this(new InjectorImpl(new ProviderRegistryImpl()));
+        this(new RimorInjectorImpl(new ProviderRegistryImpl()));
     }
 
-    public Rimor(Injector injector) {
+    public Rimor(RimorInjector injector) {
         this(new CommandRegistry(), new ExceptionHandlerRegistryImpl(), new ExecutionTaskRegistryImpl(),
                 new ExtensionManagerImpl(), injector.getProviderRegistry(), injector);
     }
 
     public Rimor(CommandRegistry commandRegistry, ExceptionHandlerRegistry exceptionHandlerRegistry,
                  ExecutionTaskRegistry executionTaskRegistry, ExtensionManager extensionManager,
-                 ProviderRegistry providerRegistry, Injector injector) {
+                 ProviderRegistry providerRegistry, RimorInjector injector) {
         this(commandRegistry, exceptionHandlerRegistry, executionTaskRegistry, extensionManager, providerRegistry, injector,
                 new PathResolverImpl(exceptionHandlerRegistry, executionTaskRegistry),
                 new CommandExecutorImpl(injector, exceptionHandlerRegistry, executionTaskRegistry));
@@ -62,7 +62,7 @@ public class Rimor {
 
     public Rimor(CommandRegistry commandRegistry, ExceptionHandlerRegistry exceptionHandlerRegistry,
                  ExecutionTaskRegistry executionTaskRegistry, ExtensionManager extensionManager,
-                 ProviderRegistry providerRegistry, Injector injector, PathResolver pathResolver,
+                 ProviderRegistry providerRegistry, RimorInjector injector, PathResolver pathResolver,
                  CommandExecutor executor) {
         this.commandRegistry = commandRegistry;
         this.exceptionHandlerRegistry = exceptionHandlerRegistry;

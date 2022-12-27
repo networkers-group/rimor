@@ -8,7 +8,7 @@ import st.networkers.rimor.BarAnnotationImpl;
 import st.networkers.rimor.context.ContextComponent;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.internal.inject.InjectorImpl;
+import st.networkers.rimor.internal.inject.RimorInjectorImpl;
 
 import java.util.Optional;
 
@@ -21,7 +21,7 @@ class OptionalProviderTest {
 
     @BeforeAll
     static void setUp() {
-        provider = new OptionalProvider(new InjectorImpl());
+        provider = new OptionalProvider(new RimorInjectorImpl());
     }
 
     @Test

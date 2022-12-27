@@ -7,18 +7,18 @@ import st.networkers.rimor.execute.CommandExecutor;
 import st.networkers.rimor.execute.exception.ExceptionHandlerRegistry;
 import st.networkers.rimor.execute.task.ExecutionTask;
 import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
-import st.networkers.rimor.inject.Injector;
+import st.networkers.rimor.inject.RimorInjector;
 import st.networkers.rimor.instruction.Instruction;
 
 import java.util.Collection;
 
 public class CommandExecutorImpl implements CommandExecutor {
 
-    private final Injector injector;
+    private final RimorInjector injector;
     private final ExceptionHandlerRegistry exceptionHandlerRegistry;
     private final ExecutionTaskRegistry executionTaskRegistry;
 
-    public CommandExecutorImpl(Injector injector, ExceptionHandlerRegistry exceptionHandlerRegistry,
+    public CommandExecutorImpl(RimorInjector injector, ExceptionHandlerRegistry exceptionHandlerRegistry,
                                ExecutionTaskRegistry executionTaskRegistry) {
         this.injector = injector;
         this.exceptionHandlerRegistry = exceptionHandlerRegistry;

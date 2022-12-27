@@ -1,7 +1,7 @@
 package st.networkers.rimor.internal.inject;
 
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.inject.Injector;
+import st.networkers.rimor.inject.RimorInjector;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 import st.networkers.rimor.internal.reflect.CachedMethod;
@@ -12,15 +12,15 @@ import st.networkers.rimor.util.ReflectionUtils;
 
 import java.util.Optional;
 
-public class InjectorImpl implements Injector {
+public class RimorInjectorImpl implements RimorInjector {
 
     private final ProviderRegistry providerRegistry;
 
-    public InjectorImpl() {
+    public RimorInjectorImpl() {
         this(new ProviderRegistryImpl());
     }
 
-    public InjectorImpl(ProviderRegistry providerRegistry) {
+    public RimorInjectorImpl(ProviderRegistry providerRegistry) {
         this.providerRegistry = providerRegistry;
     }
 
