@@ -2,7 +2,6 @@ package st.networkers.rimor.params.parse.builtin;
 
 import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.params.parse.AbstractParamParser;
 
@@ -18,7 +17,7 @@ public class EnumParamParser extends AbstractParamParser<Enum<?>> {
     }
 
     @Override
-    public Enum<?> parse(Object rawParameter, Token<Enum<?>> token, Injector injector, ExecutionContext context) {
+    public Enum<?> parse(Object rawParameter, Token<Enum<?>> token, ExecutionContext context) {
         if (rawParameter instanceof Enum<?>) {
             return (Enum<?>) rawParameter;
         }
@@ -32,7 +31,7 @@ public class EnumParamParser extends AbstractParamParser<Enum<?>> {
     }
 
     @Override
-    public boolean canProvide(Token<?> token, Injector injector, ExecutionContext context) {
+    public boolean canProvide(Token<?> token, ExecutionContext context) {
         return token.getType().isSubtypeOf(ENUM_TYPE)
                && this.matchesAnnotations(token)
                && token.matchesAnnotations(this);

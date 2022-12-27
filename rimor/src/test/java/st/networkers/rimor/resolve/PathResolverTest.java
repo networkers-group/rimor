@@ -2,14 +2,18 @@ package st.networkers.rimor.resolve;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import st.networkers.rimor.BarAnnotation;
+import st.networkers.rimor.PresentBarAnnotationExecutionTask;
 import st.networkers.rimor.TestCommand;
+import st.networkers.rimor.context.ContextComponent;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.execute.task.ExecutionEnclosingTaskRegistry;
-import st.networkers.rimor.execute.task.ExecutionEnclosingTaskRegistryImpl;
+import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
 import st.networkers.rimor.inject.Injector;
+import st.networkers.rimor.instruction.Instruction;
 import st.networkers.rimor.internal.command.MappedCommand;
+import st.networkers.rimor.internal.execute.exception.ExceptionHandlerRegistryImpl;
+import st.networkers.rimor.internal.execute.task.ExecutionTaskRegistryImpl;
 import st.networkers.rimor.internal.inject.InjectorImpl;
-import st.networkers.rimor.internal.instruction.Instruction;
 import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 import st.networkers.rimor.internal.resolve.CommandResolver;
 import st.networkers.rimor.internal.resolve.PathResolverImpl;
@@ -24,17 +28,21 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 class PathResolverTest {
 
-    static ExecutionEnclosingTaskRegistry executionEnclosingTaskRegistry = new ExecutionEnclosingTaskRegistryImpl();
     static Injector injector = new InjectorImpl(new ProviderRegistryImpl());
-
-    static PathResolver resolver = new PathResolverImpl(executionEnclosingTaskRegistry, injector);
 
     static TestCommand testCommand = new TestCommand();
     static MappedCommand command;
 
+    static PathResolver resolver;
+
     @BeforeAll
     static void setUp() {
         command = CommandResolver.resolve(testCommand);
+
+        ExecutionTaskRegistry executionTaskRegistry = new ExecutionTaskRegistryImpl();
+        executionTaskRegistry.registerPreExecutionTask(new PresentBarAnnotationExecutionTask());
+
+        resolver = new PathResolverImpl(new ExceptionHandlerRegistryImpl(), executionTaskRegistry);
     }
 
     @Test
@@ -68,11 +76,19 @@ class PathResolverTest {
 
     @Test
     void givenBarSetPath_whenResolving_thenResultIsSetInstructionInBarSubcommand() {
+        Instruction setInstruction = command.getSubcommand("bar").get().getInstruction("set").get();
         Results results = resolver.resolvePath(command, Arrays.asList("bar", "set", "true"), ExecutionContext.build());
 
-        Instruction setInstruction = command.getSubcommand("bar").get().getInstruction("set").get();
         assertEquals(setInstruction, results.getInstruction());
-
         assertThat(results.getLeftoverPath()).containsExactly("true");
+    }
+
+    @Test
+    void givenBarSetPathWithBarAnnotationAnnotatedString_whenResolving_thenThrowsIllegalStateException() {
+        ExecutionContext context = ExecutionContext.build(
+                new ContextComponent<>(String.class, "").annotatedWith(BarAnnotation.class)
+        );
+
+        assertThrows(IllegalStateException.class, () -> resolver.resolvePath(command, Arrays.asList("bar", "set", "true"), context));
     }
 }

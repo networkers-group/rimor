@@ -2,27 +2,23 @@ package st.networkers.rimor.internal.resolve;
 
 import st.networkers.rimor.Executable;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.execute.task.ExecutionEnclosingTaskRegistry;
-import st.networkers.rimor.execute.task.PreExecutionTask;
-import st.networkers.rimor.inject.Injector;
+import st.networkers.rimor.execute.exception.ExceptionHandlerRegistry;
+import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
 import st.networkers.rimor.internal.command.MappedCommand;
-import st.networkers.rimor.internal.execute.ExecutionEnclosingTaskException;
-import st.networkers.rimor.internal.instruction.Instruction;
 import st.networkers.rimor.resolve.InstructionNotFoundException;
 import st.networkers.rimor.resolve.PathResolver;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class PathResolverImpl implements PathResolver {
 
-    private final ExecutionEnclosingTaskRegistry executionTaskRegistry;
-    private final Injector injector;
+    private final ExceptionHandlerRegistry exceptionHandlerRegistry;
+    private final ExecutionTaskRegistry executionTaskRegistry;
 
-    public PathResolverImpl(ExecutionEnclosingTaskRegistry executionTaskRegistry, Injector injector) {
+    public PathResolverImpl(ExceptionHandlerRegistry exceptionHandlerRegistry, ExecutionTaskRegistry executionTaskRegistry) {
+        this.exceptionHandlerRegistry = exceptionHandlerRegistry;
         this.executionTaskRegistry = executionTaskRegistry;
-        this.injector = injector;
     }
 
     @Override
@@ -54,25 +50,17 @@ public class PathResolverImpl implements PathResolver {
                 .orElseGet(() -> this.resolveMainInstruction(uberCommand, command, path, context));
     }
 
-    private MappedCommand runPreExecutionTasks(MappedCommand command, ExecutionContext context) {
-        this.forEachPreExecutionTask(command, preExecutionTask -> preExecutionTask.run(command, injector, context));
-        return command;
-    }
+    private <T extends Executable> T runPreExecutionTasks(T executable, ExecutionContext context) {
+        try {
+            executionTaskRegistry.getPreExecutionTasks().forEach(task -> {
+                if (executable.matchesAnnotations(task))
+                    task.run(executable, context);
+            });
+        } catch (Throwable throwable) {
+            exceptionHandlerRegistry.handleException(throwable);
+        }
 
-    private Instruction runPreExecutionTasks(Instruction instruction, ExecutionContext context) {
-        this.forEachPreExecutionTask(instruction, preExecutionTask -> preExecutionTask.run(instruction, injector, context));
-        return instruction;
-    }
-
-    private void forEachPreExecutionTask(Executable executable, Consumer<PreExecutionTask> runnable) {
-        for (PreExecutionTask preExecutionTask : executionTaskRegistry.getPreExecutionTasks())
-            if (executable.matchesAnnotations(preExecutionTask)) {
-                try {
-                    runnable.accept(preExecutionTask);
-                } catch (Throwable throwable) {
-                    throw new ExecutionEnclosingTaskException(executable, preExecutionTask, throwable);
-                }
-            }
+        return executable;
     }
 
     private List<String> nextPath(List<String> path) {

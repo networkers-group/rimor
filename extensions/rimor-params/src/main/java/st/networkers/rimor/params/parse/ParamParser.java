@@ -1,7 +1,6 @@
 package st.networkers.rimor.params.parse;
 
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.params.Params;
 import st.networkers.rimor.params.parse.builtin.BooleanParamParser;
@@ -19,8 +18,8 @@ import st.networkers.rimor.provide.RimorProvider;
  */
 public interface ParamParser<T> extends RimorProvider<T> {
 
-    Object getParameter(Token<T> token, Injector injector, ExecutionContext context);
+    Object getParameter(Token<T> token, ExecutionContext context);
 
-    T parse(Object parameter, Token<T> token, Injector injector, ExecutionContext context);
+    T parse(Object parameter, Token<T> token, ExecutionContext context);
 
 }

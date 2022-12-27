@@ -3,8 +3,8 @@ package st.networkers.rimor.context;
 import com.google.common.reflect.TypeToken;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import st.networkers.rimor.inject.AbstractAnnotated;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.internal.inject.AbstractAnnotated;
 
 /**
  * Wraps an object of type {@link T} to inject in instruction methods.

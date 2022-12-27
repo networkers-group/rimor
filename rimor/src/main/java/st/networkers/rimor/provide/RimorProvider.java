@@ -2,9 +2,8 @@ package st.networkers.rimor.provide;
 
 import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.inject.Injector;
+import st.networkers.rimor.inject.Annotated;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.internal.inject.Annotated;
 
 import java.util.Collection;
 
@@ -17,8 +16,8 @@ public interface RimorProvider<T> extends Annotated {
 
     Collection<TypeToken<? extends T>> getProvidedTypes();
 
-    boolean canProvide(Token<?> token, Injector injector, ExecutionContext context);
+    boolean canProvide(Token<?> token, ExecutionContext context);
 
-    T get(Token<T> token, Injector injector, ExecutionContext context);
+    T get(Token<T> token, ExecutionContext context);
 
 }

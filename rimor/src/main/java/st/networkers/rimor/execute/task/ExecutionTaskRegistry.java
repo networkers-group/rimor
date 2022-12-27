@@ -2,7 +2,7 @@ package st.networkers.rimor.execute.task;
 
 import java.util.Collection;
 
-public interface ExecutionEnclosingTaskRegistry {
+public interface ExecutionTaskRegistry {
 
     void registerPreExecutionTask(PreExecutionTask task);
 

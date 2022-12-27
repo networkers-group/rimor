@@ -20,13 +20,17 @@ public class TestCommand extends AbstractRimorCommand {
     }
 
     @InstructionMapping("fooAlias")
-    public void foo(@FooAnnotation List<String> params, String param0, String param1) {
+    @FooAnnotation
+    public void foo(@FooAnnotation List<String> list, String param0, String param1) {
     }
 
     @InstructionMapping(value = "bazAlias", ignoreMethodName = true)
-    public void baz() {
+    @BarAnnotation
+    public int baz(int i) {
+        return i;
     }
 
+    @BarAnnotation
     public static class Bar extends AbstractRimorCommand {
 
         @InstructionMapping

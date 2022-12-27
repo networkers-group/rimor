@@ -6,8 +6,8 @@ import org.jetbrains.annotations.Nullable;
 import st.networkers.rimor.Executable;
 import st.networkers.rimor.command.AbstractRimorCommand;
 import st.networkers.rimor.command.RimorCommand;
-import st.networkers.rimor.internal.inject.AbstractAnnotated;
-import st.networkers.rimor.internal.instruction.Instruction;
+import st.networkers.rimor.inject.AbstractAnnotated;
+import st.networkers.rimor.instruction.Instruction;
 
 import java.lang.annotation.Annotation;
 import java.util.*;

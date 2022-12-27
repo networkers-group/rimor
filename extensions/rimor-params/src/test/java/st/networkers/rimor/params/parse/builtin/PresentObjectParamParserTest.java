@@ -1,6 +1,7 @@
 package st.networkers.rimor.params.parse.builtin;
 
 import com.google.common.reflect.TypeToken;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import st.networkers.rimor.context.ContextComponent;
 import st.networkers.rimor.context.ExecutionContext;
@@ -15,40 +16,40 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PresentObjectParamParserTest {
 
-    static PresentObjectParamParser objectParamParser = new PresentObjectParamParser();
+    static PresentObjectParamParser objectParamParser;
+    static ExecutionContext context;
 
-    @Test
-    void parse() {
-        assertEquals("test", objectParamParser.parse("test", null, null, null));
+    @BeforeAll
+    static void setUp() {
+        objectParamParser = new PresentObjectParamParser();
 
-        Object o = new Object();
-        assertEquals(o, objectParamParser.parse(o, null, null, null));
+        ContextComponent<List<Object>> params = new ContextComponent<>(new TypeToken<List<Object>>() {}, Arrays.asList("foo", -1))
+                .annotatedWith(Params.class);
+        context = ExecutionContext.build(params);
     }
 
     @Test
-    void canProvide() {
-        List<Object> params = Arrays.asList("foo", objectParamParser);
+    void parse() {
+        Object object = new Object();
+        assertEquals(object, objectParamParser.parse(object, null, null));
+        assertEquals("test", objectParamParser.parse("test", null, null));
+    }
 
-        ExecutionContext context = ExecutionContext.build(
-                new ContextComponent<>(new TypeToken<List<Object>>() {}, params).annotatedWith(Params.class)
-        );
+    @Test
+    void givenStringTokenAnnotatedWithParamWithPosition0_whenCheckingCanProvide_thenTrue() {
+        Token<String> token = new Token<>(String.class).annotatedWith(new ParamImpl(0));
+        assertTrue(objectParamParser.canProvide(token, context));
+    }
 
-        assertTrue(objectParamParser.canProvide(
-                new Token<>(String.class).annotatedWith(new ParamImpl(0)),
-                null,
-                context
-        ));
+    @Test
+    void givenIntegerTokenAnnotatedWithParamWithPosition1_whenCheckingCanProvide_thenTrue() {
+        Token<Integer> token = new Token<>(Integer.class).annotatedWith(new ParamImpl(1));
+        assertTrue(objectParamParser.canProvide(token, context));
+    }
 
-        assertTrue(objectParamParser.canProvide(
-                new Token<>(PresentObjectParamParser.class).annotatedWith(new ParamImpl(1)),
-                null,
-                context
-        ));
-
-        assertFalse(objectParamParser.canProvide(
-                new Token<>(Integer.class).annotatedWith(new ParamImpl(0)),
-                null,
-                context
-        ));
+    @Test
+    void givenIntegerTokenAnnotatedWithParamWithPosition0_whenCheckingCanProvide_thenFalse() {
+        Token<Integer> token = new Token<>(Integer.class).annotatedWith(new ParamImpl(0));
+        assertFalse(objectParamParser.canProvide(token, context));
     }
 }

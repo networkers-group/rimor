@@ -2,15 +2,12 @@ package st.networkers.rimor.provide;
 
 import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.inject.Injector;
+import st.networkers.rimor.inject.AbstractAnnotated;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.internal.inject.AbstractAnnotated;
-import st.networkers.rimor.util.InspectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,8 +20,7 @@ import java.util.stream.Stream;
  * <pre>
  * public class UserProvider extends {@literal AbstractRimorProvider<User>} {
  *
- *     // from injection, passing as parameter... whatever.
- *     private final {@literal Database<User>} userDatabase;
+ *     private final {@literal Database<User>} userDatabase = ...;
  *
  *     public UserProvider() {
  *         super(User.class); // the provided types, also can use TypeToken
@@ -32,7 +28,7 @@ import java.util.stream.Stream;
  *     }
  *
  *     &#64;Override
- *     public User get({@literal Token<User>} token, Injector injector, ExecutionContext context) {
+ *     public User get({@literal Token<User>} token, ExecutionContext context) {
  *         {@literal Token<CommandSender>} senderToken = new Token<>(CommandSender.class)
  *                 .annotatedWith(Sender.class);
  *
@@ -75,7 +71,7 @@ public abstract class AbstractRimorProvider<T>
     }
 
     @Override
-    public boolean canProvide(Token<?> token, Injector injector, ExecutionContext context) {
+    public boolean canProvide(Token<?> token, ExecutionContext context) {
         for (TypeToken<? extends T> providedType : this.providedTypes)
             if (token.getType().isSupertypeOf(providedType))
                 return this.matchesAnnotations(token) && token.matchesAnnotations(this);
@@ -83,20 +79,11 @@ public abstract class AbstractRimorProvider<T>
     }
 
     private void inspectAnnotations() {
-        Method method;
         try {
-            method = this.getClass().getMethod("get", Token.class, Injector.class, ExecutionContext.class);
+            Method method = this.getClass().getMethod("get", Token.class, ExecutionContext.class);
+            this.inspectAnnotations(method);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
-
-        if (method.isAnnotationPresent(RequireAnnotations.class))
-            Collections.addAll(this.requiredAnnotations, method.getAnnotation(RequireAnnotations.class).value());
-
-        this.annotations.putAll(InspectionUtils.getMappedAnnotations(
-                Arrays.stream(method.getAnnotations())
-                        .filter(annotation -> !(annotation instanceof RequireAnnotations))
-                        .collect(Collectors.toList())
-        ));
     }
 }

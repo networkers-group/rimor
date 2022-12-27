@@ -1,4 +1,7 @@
 package st.networkers.rimor.execute.task;
 
-public interface PostExecutionTask extends ExecutionEnclosingTask {
+/**
+ * @see AbstractPostExecutionTask
+ */
+public interface PostExecutionTask extends ExecutionTask {
 }

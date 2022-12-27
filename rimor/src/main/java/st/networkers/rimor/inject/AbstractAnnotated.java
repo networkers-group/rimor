@@ -1,9 +1,12 @@
-package st.networkers.rimor.internal.inject;
+package st.networkers.rimor.inject;
 
 import lombok.EqualsAndHashCode;
+import st.networkers.rimor.util.InspectionUtils;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @EqualsAndHashCode
 public abstract class AbstractAnnotated<T extends AbstractAnnotated<T>> implements Annotated {
@@ -76,6 +79,17 @@ public abstract class AbstractAnnotated<T extends AbstractAnnotated<T>> implemen
     @Override
     public boolean isAnnotationPresent(Class<? extends Annotation> annotation) {
         return this.annotations.containsKey(annotation) || requiredAnnotations.contains(annotation);
+    }
+
+    protected void inspectAnnotations(AnnotatedElement annotatedElement) {
+        if (annotatedElement.isAnnotationPresent(RequireAnnotations.class))
+            Collections.addAll(this.requiredAnnotations, annotatedElement.getAnnotation(RequireAnnotations.class).value());
+
+        this.annotations.putAll(InspectionUtils.getMappedAnnotations(
+                Arrays.stream(annotatedElement.getAnnotations())
+                        .filter(annotation -> !(annotation instanceof RequireAnnotations))
+                        .collect(Collectors.toList())
+        ));
     }
 
     @SuppressWarnings("unchecked")

@@ -2,7 +2,6 @@ package st.networkers.rimor.params.parse.builtin;
 
 import st.networkers.rimor.Rimor;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.params.parse.AbstractParamParser;
 import st.networkers.rimor.provide.RimorProvider;
@@ -36,7 +35,7 @@ public class BooleanParamParser extends AbstractParamParser<Boolean> {
     }
 
     @Override
-    public Boolean parse(Object rawParameter, Token<Boolean> token, Injector injector, ExecutionContext context) {
+    public Boolean parse(Object rawParameter, Token<Boolean> token, ExecutionContext context) {
         if (rawParameter instanceof Boolean) {
             return (Boolean) rawParameter;
         }

@@ -1,4 +1,4 @@
-package st.networkers.rimor.provide;
+package st.networkers.rimor.inject;
 
 import java.lang.annotation.*;
 

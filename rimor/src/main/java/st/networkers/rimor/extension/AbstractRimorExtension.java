@@ -1,17 +1,29 @@
 package st.networkers.rimor.extension;
 
+import st.networkers.rimor.Rimor;
 import st.networkers.rimor.command.RimorCommand;
-import st.networkers.rimor.extension.event.RimorEvent;
-import st.networkers.rimor.extension.event.RimorEventListener;
 import st.networkers.rimor.provide.RimorProvider;
-
-import java.util.*;
 
 public abstract class AbstractRimorExtension implements RimorExtension {
 
-    private final Collection<RimorCommand> commands = new ArrayList<>();
-    private final Collection<RimorProvider<?>> providers = new ArrayList<>();
-    private final Map<Class<? extends RimorEvent>, Collection<RimorEventListener<?>>> listeners = new HashMap<>();
+    private Rimor rimor = null;
+
+    @Override
+    public void configure(Rimor rimor) {
+        this.rimor = rimor;
+        this.configure();
+    }
+
+    /**
+     * Called when the extension is going to be registered into a {@link Rimor} instance.
+     * <p>
+     * This is the right place to register the extension commands, providers or execution tasks.
+     */
+    protected abstract void configure();
+
+    protected Rimor getRimor() {
+        return rimor;
+    }
 
     /**
      * Registers the given {@link RimorCommand}.
@@ -19,7 +31,8 @@ public abstract class AbstractRimorExtension implements RimorExtension {
      * @param command the command to register
      */
     protected void registerCommand(RimorCommand command) {
-        this.commands.add(command);
+        checkRimorState();
+        this.rimor.registerCommand(command);
     }
 
     /**
@@ -28,7 +41,8 @@ public abstract class AbstractRimorExtension implements RimorExtension {
      * @param commands the commands to register
      */
     protected void registerCommands(RimorCommand... commands) {
-        Collections.addAll(this.commands, commands);
+        checkRimorState();
+        this.rimor.registerCommands(commands);
     }
 
     /**
@@ -37,7 +51,8 @@ public abstract class AbstractRimorExtension implements RimorExtension {
      * @param provider the provider to register into this injector
      */
     protected void registerProvider(RimorProvider<?> provider) {
-        this.providers.add(provider);
+        checkRimorState();
+        this.rimor.registerProvider(provider);
     }
 
     /**
@@ -46,31 +61,17 @@ public abstract class AbstractRimorExtension implements RimorExtension {
      * @param providers the providers to register into this injector
      */
     protected void registerProviders(RimorProvider<?>... providers) {
-        Collections.addAll(this.providers, providers);
+        checkRimorState();
+        this.rimor.registerProviders(providers);
     }
 
-    /**
-     * Registers the given {@link RimorEventListener}.
-     *
-     * @param eventClass the event to listen to
-     * @param listener the listener to register
-     */
-    protected <T extends RimorEvent> void registerListener(Class<T> eventClass, RimorEventListener<T> listener) {
-        this.listeners.computeIfAbsent(eventClass, c -> new ArrayList<>()).add(listener);
-    }
+    // TODO execution tasks
 
-    @Override
-    public Collection<RimorCommand> getCommands() {
-        return this.commands;
-    }
-
-    @Override
-    public Collection<RimorProvider<?>> getProviders() {
-        return this.providers;
-    }
-
-    @Override
-    public Map<Class<? extends RimorEvent>, Collection<RimorEventListener<?>>> getEventListeners() {
-        return this.listeners;
+    private void checkRimorState() {
+        String msg = "Register commands, providers and execution tasks inside the #configure() method!";
+        if (this.rimor == null)
+            throw new IllegalStateException("this extension has not been configured yet! " + msg);
+        if (this.rimor.isInitialized())
+            throw new IllegalStateException("this extension has already been configured! " + msg);
     }
 }

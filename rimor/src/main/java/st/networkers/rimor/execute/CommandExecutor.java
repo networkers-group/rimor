@@ -2,7 +2,7 @@ package st.networkers.rimor.execute;
 
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.execute.task.PreExecutionTask;
-import st.networkers.rimor.internal.instruction.Instruction;
+import st.networkers.rimor.instruction.Instruction;
 
 public interface CommandExecutor {
 

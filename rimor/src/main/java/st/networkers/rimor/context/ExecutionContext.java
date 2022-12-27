@@ -6,7 +6,6 @@ import st.networkers.rimor.inject.Token;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Contains injectable objects relative to the execution of a command (for example, its parameters, the sender...).
@@ -17,17 +16,11 @@ import java.util.stream.Stream;
 public class ExecutionContext {
 
     public static ExecutionContext build(ContextComponent<?>... components) {
-        return build(Arrays.stream(components));
+        return new ExecutionContext(Arrays.stream(components).collect(Collectors.groupingBy(ContextComponent::getType)));
     }
 
     public static ExecutionContext build(Collection<ContextComponent<?>> components) {
-        return build(components.stream());
-    }
-
-    public static ExecutionContext build(Stream<ContextComponent<?>> components) {
-        return new ExecutionContext(components
-                .collect(Collectors.groupingBy(ContextComponent::getType))
-        );
+        return new ExecutionContext(components.stream().collect(Collectors.groupingBy(ContextComponent::getType)));
     }
 
     private final Map<TypeToken<?>, List<ContextComponent<?>>> components;

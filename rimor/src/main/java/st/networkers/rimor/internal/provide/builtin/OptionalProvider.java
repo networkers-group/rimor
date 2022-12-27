@@ -14,12 +14,15 @@ import java.util.Optional;
  */
 public class OptionalProvider extends AbstractRimorProvider<Optional<?>> {
 
-    public OptionalProvider() {
+    private final Injector injector;
+
+    public OptionalProvider(Injector injector) {
         super(new TypeToken<Optional<?>>() {});
+        this.injector = injector;
     }
 
     @Override
-    public Optional<?> get(Token<Optional<?>> token, Injector injector, ExecutionContext context) {
+    public Optional<?> get(Token<Optional<?>> token, ExecutionContext context) {
         // the type wrapped in the optional
         TypeToken<?> wrappedType = ReflectionUtils.unwrapOptional(token.getType());
 

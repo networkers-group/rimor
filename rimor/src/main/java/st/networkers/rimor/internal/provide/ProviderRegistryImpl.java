@@ -2,7 +2,6 @@ package st.networkers.rimor.internal.provide;
 
 import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.provide.RimorProvider;
@@ -22,9 +21,9 @@ public class ProviderRegistryImpl implements ProviderRegistry {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Optional<RimorProvider<T>> findFor(Token<T> token, Injector injector, ExecutionContext context) {
+    public <T> Optional<RimorProvider<T>> findFor(Token<T> token, ExecutionContext context) {
         return this.get(token)
-                .filter(provider -> provider.canProvide(token, injector, context))
+                .filter(provider -> provider.canProvide(token, context))
                 .map(provider -> (RimorProvider<T>) provider)
                 .findAny();
     }

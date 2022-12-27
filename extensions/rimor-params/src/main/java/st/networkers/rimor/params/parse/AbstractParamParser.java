@@ -2,7 +2,6 @@ package st.networkers.rimor.params.parse;
 
 import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.inject.Injector;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.internal.inject.ParameterToken;
 import st.networkers.rimor.internal.reflect.CachedMethod;
@@ -37,12 +36,12 @@ public abstract class AbstractParamParser<T> extends AbstractRimorProvider<T> im
     }
 
     @Override
-    public T get(Token<T> token, Injector injector, ExecutionContext context) {
-        return this.parse(this.getParameter(token, injector, context), token, injector, context);
+    public T get(Token<T> token, ExecutionContext context) {
+        return this.parse(this.getParameter(token, context), token, context);
     }
 
     @Override
-    public Object getParameter(Token<T> token, Injector injector, ExecutionContext context) {
+    public Object getParameter(Token<T> token, ExecutionContext context) {
         int position = this.getPosition(token, context);
         List<Object> commandParameters = context.get(PARAMS_TOKEN).orElseGet(ArrayList::new);
 

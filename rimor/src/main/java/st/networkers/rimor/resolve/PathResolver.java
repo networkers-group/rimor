@@ -2,8 +2,8 @@ package st.networkers.rimor.resolve;
 
 import lombok.Data;
 import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.instruction.Instruction;
 import st.networkers.rimor.internal.command.MappedCommand;
-import st.networkers.rimor.internal.instruction.Instruction;
 
 import java.util.List;
 

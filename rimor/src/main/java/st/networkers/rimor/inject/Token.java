@@ -3,7 +3,6 @@ package st.networkers.rimor.inject;
 import com.google.common.reflect.TypeToken;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import st.networkers.rimor.internal.inject.AbstractAnnotated;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
