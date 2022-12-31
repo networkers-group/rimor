@@ -6,7 +6,6 @@ import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.internal.inject.ParameterToken;
 import st.networkers.rimor.params.Param;
 import st.networkers.rimor.params.Params;
-import st.networkers.rimor.params.parse.builtin.BooleanParamParser;
 import st.networkers.rimor.provide.AbstractRimorProvider;
 import st.networkers.rimor.reflect.CachedMethod;
 import st.networkers.rimor.reflect.CachedParameter;
@@ -17,7 +16,7 @@ import java.util.List;
 /**
  * Abstract useful class for implementing {@link ParamParser}s.
  * <p>
- * Check {@link BooleanParamParser} for a quick example.
+ * Check {@link st.networkers.rimor.params.parse.builtin.StringParamParser} for a quick example.
  */
 public abstract class AbstractParamParser<T> extends AbstractRimorProvider<T> implements ParamParser<T> {
 
