@@ -1,13 +1,11 @@
 package st.networkers.rimor.reflect;
 
-import lombok.Getter;
 import st.networkers.rimor.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
 import java.util.Map;
 
-@Getter
 public class CachedParameter extends CachedAnnotatedElement {
 
     public static CachedParameter build(Parameter parameter) {
@@ -21,5 +19,13 @@ public class CachedParameter extends CachedAnnotatedElement {
         super(annotations);
         this.parameter = parameter;
         this.type = type;
+    }
+
+    public Parameter getParameter() {
+        return parameter;
+    }
+
+    public Class<?> getType() {
+        return type;
     }
 }

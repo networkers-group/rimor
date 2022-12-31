@@ -1,19 +1,18 @@
 package st.networkers.rimor.context;
 
 import com.google.common.reflect.TypeToken;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import st.networkers.rimor.inject.AbstractAnnotated;
 import st.networkers.rimor.inject.Token;
+
+import java.util.Objects;
 
 /**
  * Wraps an object of type {@link T} to inject in instruction methods.
  */
-@EqualsAndHashCode(callSuper = true)
 public class ContextComponent<T> extends AbstractAnnotated<ContextComponent<T>> {
 
-    @Getter private final TypeToken<T> type;
-    @Getter private final T object;
+    private final TypeToken<T> type;
+    private final T object;
 
     /**
      * Constructs a ContextComponent that needs no annotations to be injected
@@ -40,5 +39,27 @@ public class ContextComponent<T> extends AbstractAnnotated<ContextComponent<T>> 
         return token.getType().isSupertypeOf(this.type)
                && this.matchesAnnotations(token)
                && token.matchesAnnotations(this);
+    }
+
+    public TypeToken<T> getType() {
+        return type;
+    }
+
+    public T getObject() {
+        return object;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ContextComponent)) return false;
+        if (!super.equals(o)) return false;
+        ContextComponent<?> that = (ContextComponent<?>) o;
+        return Objects.equals(type, that.type) && Objects.equals(object, that.object);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), type, object);
     }
 }

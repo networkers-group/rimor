@@ -1,7 +1,5 @@
 package st.networkers.rimor.instruction;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import st.networkers.rimor.Executable;
 import st.networkers.rimor.command.MappedCommand;
 import st.networkers.rimor.command.RimorCommand;
@@ -13,10 +11,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Getter
-@EqualsAndHashCode(callSuper = false)
 public class Instruction extends AbstractAnnotated<Instruction> implements Executable {
 
     public static Instruction build(MappedCommand command, Method method, Collection<String> aliases) {
@@ -39,5 +36,31 @@ public class Instruction extends AbstractAnnotated<Instruction> implements Execu
 
     public RimorCommand getCommandInstance() {
         return command.getCommand();
+    }
+
+    public MappedCommand getCommand() {
+        return command;
+    }
+
+    public CachedMethod getMethod() {
+        return method;
+    }
+
+    public Collection<String> getAliases() {
+        return aliases;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Instruction)) return false;
+        if (!super.equals(o)) return false;
+        Instruction that = (Instruction) o;
+        return Objects.equals(command, that.command) && Objects.equals(method, that.method) && Objects.equals(aliases, that.aliases);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), command, method, aliases);
     }
 }

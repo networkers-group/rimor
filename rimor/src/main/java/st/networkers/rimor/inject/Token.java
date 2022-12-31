@@ -1,14 +1,9 @@
 package st.networkers.rimor.inject;
 
 import com.google.common.reflect.TypeToken;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Exchanged in {@link RimorInjector} to obtain an object for the wrapped type {@link T}.
@@ -19,8 +14,6 @@ import java.util.Map;
  *     new Token<>(new{@literal TypeToken<List<String>>}() {}).annotatedWith(Params.class);
  * </pre>
  */
-@Getter
-@EqualsAndHashCode(callSuper = true)
 public class Token<T> extends AbstractAnnotated<Token<T>> {
 
     private final TypeToken<T> type;
@@ -64,5 +57,23 @@ public class Token<T> extends AbstractAnnotated<Token<T>> {
     ) {
         super(annotations, requiredAnnotations);
         this.type = type.wrap();
+    }
+
+    public TypeToken<T> getType() {
+        return type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Token)) return false;
+        if (!super.equals(o)) return false;
+        Token<?> token = (Token<?>) o;
+        return Objects.equals(type, token.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), type);
     }
 }

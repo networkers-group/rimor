@@ -1,7 +1,6 @@
 package st.networkers.rimor.context;
 
 import com.google.common.reflect.TypeToken;
-import lombok.EqualsAndHashCode;
 import st.networkers.rimor.inject.Token;
 
 import java.util.*;
@@ -12,7 +11,6 @@ import java.util.stream.Collectors;
  * <p>
  * Every injectable object is wrapped in a {@link ContextComponent}.
  */
-@EqualsAndHashCode
 public class ExecutionContext {
 
     public static ExecutionContext build(ContextComponent<?>... components) {
@@ -39,5 +37,18 @@ public class ExecutionContext {
                 .map(component -> (ContextComponent<T>) component)
                 .map(ContextComponent::getObject)
                 .findAny();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ExecutionContext)) return false;
+        ExecutionContext context = (ExecutionContext) o;
+        return Objects.equals(components, context.components);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(components);
     }
 }

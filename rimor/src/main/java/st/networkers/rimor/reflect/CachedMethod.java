@@ -1,6 +1,5 @@
 package st.networkers.rimor.reflect;
 
-import lombok.Getter;
 import st.networkers.rimor.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
@@ -23,7 +22,7 @@ public class CachedMethod extends CachedAnnotatedElement {
         );
     }
 
-    @Getter private final Method method;
+    private final Method method;
     private final List<CachedParameter> parameters;
 
     public CachedMethod(Method method, Map<Class<? extends Annotation>, Annotation> annotations, List<CachedParameter> parameters) {
@@ -34,5 +33,9 @@ public class CachedMethod extends CachedAnnotatedElement {
 
     public List<CachedParameter> getParameters() {
         return Collections.unmodifiableList(this.parameters);
+    }
+
+    public Method getMethod() {
+        return method;
     }
 }

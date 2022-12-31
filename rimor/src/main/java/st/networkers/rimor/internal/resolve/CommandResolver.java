@@ -1,7 +1,5 @@
 package st.networkers.rimor.internal.resolve;
 
-import lombok.Getter;
-import lombok.Setter;
 import st.networkers.rimor.command.MappedCommand;
 import st.networkers.rimor.command.RimorCommand;
 import st.networkers.rimor.instruction.Instruction;
@@ -42,13 +40,24 @@ public final class CommandResolver {
         return mappedCommand;
     }
 
-    @Getter
     private static class InstructionLookupResults {
-        @Setter private Instruction mainInstruction;
+        private Instruction mainInstruction;
         private final Collection<Instruction> instructions = new ArrayList<>();
+
+        public Instruction getMainInstruction() {
+            return mainInstruction;
+        }
+
+        public void setMainInstruction(Instruction mainInstruction) {
+            this.mainInstruction = mainInstruction;
+        }
 
         public void addInstruction(Instruction instruction) {
             this.instructions.add(instruction);
+        }
+
+        public Collection<Instruction> getInstructions() {
+            return instructions;
         }
     }
 

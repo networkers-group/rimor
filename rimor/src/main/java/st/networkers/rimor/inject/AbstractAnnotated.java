@@ -1,6 +1,5 @@
 package st.networkers.rimor.inject;
 
-import lombok.EqualsAndHashCode;
 import st.networkers.rimor.util.InspectionUtils;
 
 import java.lang.annotation.Annotation;
@@ -8,7 +7,6 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@EqualsAndHashCode
 public abstract class AbstractAnnotated<T extends AbstractAnnotated<T>> implements Annotated {
 
     protected Map<Class<? extends Annotation>, Annotation> annotations;
@@ -95,5 +93,18 @@ public abstract class AbstractAnnotated<T extends AbstractAnnotated<T>> implemen
     @SuppressWarnings("unchecked")
     private T impl() {
         return (T) this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AbstractAnnotated)) return false;
+        AbstractAnnotated<?> that = (AbstractAnnotated<?>) o;
+        return Objects.equals(annotations, that.annotations) && Objects.equals(requiredAnnotations, that.requiredAnnotations);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(annotations, requiredAnnotations);
     }
 }

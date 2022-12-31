@@ -3,7 +3,7 @@ package st.networkers.rimor.command;
 import java.util.Collection;
 
 /**
- * Contains a command instruction and subcommands mappings.
+ * Contains instruction and subcommand mappings.
  *
  * @see AbstractRimorCommand
  */

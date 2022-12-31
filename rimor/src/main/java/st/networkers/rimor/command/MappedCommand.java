@@ -1,7 +1,5 @@
 package st.networkers.rimor.command;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 import st.networkers.rimor.Executable;
 import st.networkers.rimor.inject.AbstractAnnotated;
@@ -20,10 +18,10 @@ import java.util.stream.Collectors;
 public class MappedCommand extends AbstractAnnotated<MappedCommand> implements Executable {
 
     @Nullable private final MappedCommand parent;
-    @Getter private final RimorCommand command;
+    private final RimorCommand command;
     private final Collection<String> aliases;
 
-    @Setter private Instruction mainInstruction;
+    private Instruction mainInstruction;
     private final Map<String, Instruction> instructions = new HashMap<>();
     private final Map<String, MappedCommand> subcommands = new HashMap<>();
 
@@ -37,6 +35,10 @@ public class MappedCommand extends AbstractAnnotated<MappedCommand> implements E
 
     public Optional<MappedCommand> getParent() {
         return Optional.ofNullable(parent);
+    }
+
+    public RimorCommand getCommand() {
+        return command;
     }
 
     public void registerInstruction(Instruction instruction) {
@@ -55,6 +57,10 @@ public class MappedCommand extends AbstractAnnotated<MappedCommand> implements E
 
     public Optional<Instruction> getMainInstruction() {
         return Optional.ofNullable(this.mainInstruction);
+    }
+
+    public void setMainInstruction(Instruction mainInstruction) {
+        this.mainInstruction = mainInstruction;
     }
 
     public Optional<Instruction> getInstruction(String alias) {

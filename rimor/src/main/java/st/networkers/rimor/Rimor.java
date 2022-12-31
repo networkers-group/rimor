@@ -1,6 +1,5 @@
 package st.networkers.rimor;
 
-import lombok.Getter;
 import st.networkers.rimor.command.CommandRegistry;
 import st.networkers.rimor.command.RimorCommand;
 import st.networkers.rimor.context.ExecutionContext;
@@ -28,7 +27,6 @@ import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.provide.RimorProvider;
 import st.networkers.rimor.resolve.PathResolver;
 
-@Getter
 public class Rimor {
 
     private final CommandRegistry commandRegistry;
@@ -244,5 +242,37 @@ public class Rimor {
 
     public Object execute(Instruction instruction, ExecutionContext context) {
         return this.executor.execute(instruction, context);
+    }
+
+    public CommandRegistry getCommandRegistry() {
+        return commandRegistry;
+    }
+
+    public ExceptionHandlerRegistry getExceptionHandlerRegistry() {
+        return exceptionHandlerRegistry;
+    }
+
+    public ExecutionTaskRegistry getExecutionTaskRegistry() {
+        return executionTaskRegistry;
+    }
+
+    public ExtensionManager getExtensionManager() {
+        return extensionManager;
+    }
+
+    public ProviderRegistry getProviderRegistry() {
+        return providerRegistry;
+    }
+
+    public RimorInjector getInjector() {
+        return injector;
+    }
+
+    public PathResolver getPathResolver() {
+        return pathResolver;
+    }
+
+    public CommandExecutor getExecutor() {
+        return executor;
     }
 }
