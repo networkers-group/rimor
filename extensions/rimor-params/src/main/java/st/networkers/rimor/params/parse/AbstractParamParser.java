@@ -24,13 +24,13 @@ public abstract class AbstractParamParser<T> extends AbstractRimorProvider<T> im
     protected static final Token<List<Object>> PARAMS_TOKEN = new Token<>(new TypeToken<List<Object>>() {}).annotatedWith(Params.class);
 
     @SafeVarargs
-    protected AbstractParamParser(Class<T>... providedTypes) {
+    protected AbstractParamParser(Class<? extends T>... providedTypes) {
         super(providedTypes);
         annotatedWith(Param.class);
     }
 
     @SafeVarargs
-    protected AbstractParamParser(TypeToken<T>... providedTypes) {
+    protected AbstractParamParser(TypeToken<? extends T>... providedTypes) {
         super(providedTypes);
         annotatedWith(Param.class);
     }

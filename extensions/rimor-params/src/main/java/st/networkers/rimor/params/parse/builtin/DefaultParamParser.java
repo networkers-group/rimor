@@ -7,9 +7,9 @@ import st.networkers.rimor.params.parse.AbstractParamParser;
 /**
  * Built-in basic param parser.
  */
-public class PresentObjectParamParser extends AbstractParamParser<Object> {
+public class DefaultParamParser extends AbstractParamParser<Object> {
 
-    public PresentObjectParamParser() {
+    public DefaultParamParser() {
         super(Object.class);
     }
 

@@ -14,14 +14,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PresentObjectParamParserTest {
+class DefaultParamParserTest {
 
-    static PresentObjectParamParser objectParamParser;
+    static DefaultParamParser defaultParamParser;
     static ExecutionContext context;
 
     @BeforeAll
     static void setUp() {
-        objectParamParser = new PresentObjectParamParser();
+        defaultParamParser = new DefaultParamParser();
 
         ContextComponent<List<Object>> params = new ContextComponent<>(new TypeToken<List<Object>>() {}, Arrays.asList("foo", -1))
                 .annotatedWith(Params.class);
@@ -31,25 +31,25 @@ class PresentObjectParamParserTest {
     @Test
     void parse() {
         Object object = new Object();
-        assertEquals(object, objectParamParser.parse(object, null, null));
-        assertEquals("test", objectParamParser.parse("test", null, null));
+        assertEquals(object, defaultParamParser.parse(object, null, null));
+        assertEquals("test", defaultParamParser.parse("test", null, null));
     }
 
     @Test
     void givenStringTokenAnnotatedWithParamWithPosition0_whenCheckingCanProvide_thenTrue() {
         Token<String> token = new Token<>(String.class).annotatedWith(new ParamImpl(0));
-        assertTrue(objectParamParser.canProvide(token, context));
+        assertTrue(defaultParamParser.canProvide(token, context));
     }
 
     @Test
     void givenIntegerTokenAnnotatedWithParamWithPosition1_whenCheckingCanProvide_thenTrue() {
         Token<Integer> token = new Token<>(Integer.class).annotatedWith(new ParamImpl(1));
-        assertTrue(objectParamParser.canProvide(token, context));
+        assertTrue(defaultParamParser.canProvide(token, context));
     }
 
     @Test
     void givenIntegerTokenAnnotatedWithParamWithPosition0_whenCheckingCanProvide_thenFalse() {
         Token<Integer> token = new Token<>(Integer.class).annotatedWith(new ParamImpl(0));
-        assertFalse(objectParamParser.canProvide(token, context));
+        assertFalse(defaultParamParser.canProvide(token, context));
     }
 }

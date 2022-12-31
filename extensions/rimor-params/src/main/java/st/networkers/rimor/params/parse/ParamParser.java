@@ -4,8 +4,8 @@ import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.params.Params;
 import st.networkers.rimor.params.parse.builtin.BooleanParamParser;
+import st.networkers.rimor.params.parse.builtin.DefaultParamParser;
 import st.networkers.rimor.params.parse.builtin.EnumParamParser;
-import st.networkers.rimor.params.parse.builtin.PresentObjectParamParser;
 import st.networkers.rimor.provide.RimorProvider;
 
 /**
@@ -14,7 +14,7 @@ import st.networkers.rimor.provide.RimorProvider;
  * @see AbstractParamParser
  * @see BooleanParamParser
  * @see EnumParamParser
- * @see PresentObjectParamParser
+ * @see DefaultParamParser
  */
 public interface ParamParser<T> extends RimorProvider<T> {
 
