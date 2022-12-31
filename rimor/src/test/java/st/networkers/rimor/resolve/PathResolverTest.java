@@ -17,7 +17,6 @@ import st.networkers.rimor.internal.inject.RimorInjectorImpl;
 import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 import st.networkers.rimor.internal.resolve.CommandResolver;
 import st.networkers.rimor.internal.resolve.PathResolverImpl;
-import st.networkers.rimor.resolve.PathResolver.Results;
 
 import java.util.Arrays;
 
@@ -47,7 +46,7 @@ class PathResolverTest {
 
     @Test
     void givenPathWithNoMapping_whenResolving_thenResultIsMainInstruction() {
-        Results results = resolver.resolvePath(command, Arrays.asList("test", "param0", "param1"), ExecutionContext.build());
+        ResolvedPath results = resolver.resolvePath(command, Arrays.asList("test", "param0", "param1"), ExecutionContext.build());
 
         assertEquals(command.getMainInstruction().get(), results.getInstruction());
         assertThat(results.getLeftoverPath()).containsExactly("test", "param0", "param1");
@@ -55,7 +54,7 @@ class PathResolverTest {
 
     @Test
     void givenFooPath_whenResolving_thenResultIsFooInstruction() {
-        Results results = resolver.resolvePath(command, Arrays.asList("foo", "param0", "param1"), ExecutionContext.build());
+        ResolvedPath results = resolver.resolvePath(command, Arrays.asList("foo", "param0", "param1"), ExecutionContext.build());
 
         assertEquals(command.getInstruction("foo").get(), results.getInstruction());
         assertThat(results.getLeftoverPath()).containsExactly("param0", "param1");
@@ -77,7 +76,7 @@ class PathResolverTest {
     @Test
     void givenBarSetPath_whenResolving_thenResultIsSetInstructionInBarSubcommand() {
         Instruction setInstruction = command.getSubcommand("bar").get().getInstruction("set").get();
-        Results results = resolver.resolvePath(command, Arrays.asList("bar", "set", "true"), ExecutionContext.build());
+        ResolvedPath results = resolver.resolvePath(command, Arrays.asList("bar", "set", "true"), ExecutionContext.build());
 
         assertEquals(setInstruction, results.getInstruction());
         assertThat(results.getLeftoverPath()).containsExactly("true");

@@ -7,6 +7,7 @@ import st.networkers.rimor.execute.exception.ExceptionHandlerRegistry;
 import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
 import st.networkers.rimor.resolve.InstructionNotFoundException;
 import st.networkers.rimor.resolve.PathResolver;
+import st.networkers.rimor.resolve.ResolvedPath;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,28 +23,28 @@ public class PathResolverImpl implements PathResolver {
     }
 
     @Override
-    public Results resolvePath(MappedCommand command, List<String> path, ExecutionContext context) {
+    public ResolvedPath resolvePath(MappedCommand command, List<String> path, ExecutionContext context) {
         this.runPreExecutionTasks(command, context);
         return this.resolveInstruction(command, command, path, context);
     }
 
-    private Results resolveInstruction(MappedCommand uberCommand, MappedCommand command, List<String> path, ExecutionContext context) {
+    private ResolvedPath resolveInstruction(MappedCommand uberCommand, MappedCommand command, List<String> path, ExecutionContext context) {
         if (path.isEmpty())
             return this.resolveMainInstruction(uberCommand, command, path, context);
 
         return command.getInstruction(path.get(0))
                 .map(instruction -> this.runPreExecutionTasks(instruction, context))
-                .map(instruction -> new Results(uberCommand, instruction, Collections.unmodifiableList(this.nextPath(path))))
+                .map(instruction -> new ResolvedPath(uberCommand, instruction, Collections.unmodifiableList(this.nextPath(path))))
                 .orElseGet(() -> this.resolveSubcommand(uberCommand, command, path, context));
     }
 
-    private Results resolveMainInstruction(MappedCommand uberCommand, MappedCommand command, List<String> path, ExecutionContext context) {
+    private ResolvedPath resolveMainInstruction(MappedCommand uberCommand, MappedCommand command, List<String> path, ExecutionContext context) {
         return command.getMainInstruction()
-                .map(instruction -> new Results(uberCommand, instruction, Collections.unmodifiableList(path)))
+                .map(instruction -> new ResolvedPath(uberCommand, instruction, Collections.unmodifiableList(path)))
                 .orElseThrow(() -> new InstructionNotFoundException(uberCommand, command, Collections.unmodifiableList(path)));
     }
 
-    private Results resolveSubcommand(MappedCommand uberCommand, MappedCommand command, List<String> path, ExecutionContext context) {
+    private ResolvedPath resolveSubcommand(MappedCommand uberCommand, MappedCommand command, List<String> path, ExecutionContext context) {
         return command.getSubcommand(path.get(0))
                 .map(subcommand -> this.runPreExecutionTasks(subcommand, context))
                 .map(subcommand -> this.resolveInstruction(uberCommand, subcommand, this.nextPath(path), context))
