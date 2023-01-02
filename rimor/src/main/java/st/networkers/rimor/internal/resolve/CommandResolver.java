@@ -11,6 +11,7 @@ import st.networkers.rimor.util.ReflectionUtils;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,29 +25,29 @@ public final class CommandResolver {
     }
 
     public static MappedCommand resolve(MappedCommand parent, RimorCommand command) {
-        MappedCommand mappedCommand = new MappedCommand(
-                parent,
-                command,
-                InspectionUtils.getAliases(command.getClass()),
-                ReflectionUtils.getMappedAnnotations(command.getClass())
-        );
+        List<String> aliases = InspectionUtils.getAliases(command.getClass());
 
-        InstructionLookupResults results = resolveInstructions(mappedCommand);
-        mappedCommand.setMainInstruction(results.getMainInstruction());
-        results.getInstructions().forEach(mappedCommand::registerInstruction);
+        MappedCommand mappedCommand = new MappedCommand(parent,
+                command,
+                InspectionUtils.getName(command.getClass()).orElseGet(() -> aliases.get(0)),
+                aliases,
+                ReflectionUtils.getMappedAnnotations(command.getClass()));
 
         resolveSubcommands(mappedCommand).forEach(mappedCommand::registerSubcommand);
+        resolveInstructions(mappedCommand).apply(mappedCommand);
 
         return mappedCommand;
+    }
+
+    private static List<MappedCommand> resolveSubcommands(MappedCommand mappedCommand) {
+        return mappedCommand.getCommand().getSubcommands().stream()
+                .map(subcommand -> resolve(mappedCommand, subcommand))
+                .collect(Collectors.toList());
     }
 
     private static class InstructionLookupResults {
         private Instruction mainInstruction;
         private final Collection<Instruction> instructions = new ArrayList<>();
-
-        public Instruction getMainInstruction() {
-            return mainInstruction;
-        }
 
         public void setMainInstruction(Instruction mainInstruction) {
             this.mainInstruction = mainInstruction;
@@ -56,8 +57,9 @@ public final class CommandResolver {
             this.instructions.add(instruction);
         }
 
-        public Collection<Instruction> getInstructions() {
-            return instructions;
+        public void apply(MappedCommand command) {
+            command.setMainInstruction(mainInstruction);
+            instructions.forEach(command::registerInstruction);
         }
     }
 
@@ -65,21 +67,13 @@ public final class CommandResolver {
         InstructionLookupResults results = new InstructionLookupResults();
 
         for (Method method : mappedCommand.getCommand().getClass().getMethods()) {
-            Instruction instruction = Instruction.build(mappedCommand, method, InspectionUtils.getAliases(method));
-
             if (method.isAnnotationPresent(MainInstructionMapping.class))
-                results.setMainInstruction(instruction);
+                results.setMainInstruction(Instruction.build(mappedCommand, method, Collections.emptyList()));
 
             if (method.isAnnotationPresent(InstructionMapping.class))
-                results.addInstruction(instruction);
+                results.addInstruction(Instruction.build(mappedCommand, method, InspectionUtils.getAliases(method)));
         }
 
         return results;
-    }
-
-    private static List<MappedCommand> resolveSubcommands(MappedCommand mappedCommand) {
-        return mappedCommand.getCommand().getSubcommands().stream()
-                .map(subcommand -> resolve(mappedCommand, subcommand))
-                .collect(Collectors.toList());
     }
 }

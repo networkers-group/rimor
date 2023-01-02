@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 import st.networkers.rimor.TestCommand;
 import st.networkers.rimor.command.MappedCommand;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -33,8 +30,13 @@ class CommandResolverTest {
     }
 
     @Test
+    void whenCheckingName_thenNameEqualsToFirstAlias() {
+        assertEquals("test", command.getName());
+    }
+
+    @Test
     void whenCheckingAliases_thenAliasesEqualsToAnnotated() {
-        assertThat(command.getAliases()).hasSameElementsAs(Arrays.asList("test", "testcommand"));
+        assertThat(command.getAliases()).containsOnly("test", "testcommand");
     }
 
     @Test
@@ -45,7 +47,7 @@ class CommandResolverTest {
     @Test
     void whenGettingFooInstruction_thenAliasesAreFooAndFooAlias() {
         assertThat(command.getInstruction("foo")).isPresent();
-        assertThat(command.getInstruction("foo").get().getAliases()).hasSameElementsAs(Arrays.asList("foo", "fooalias"));
+        assertThat(command.getInstruction("foo").get().getAliases()).containsOnly("foo", "fooalias");
     }
 
     @Test
@@ -53,7 +55,7 @@ class CommandResolverTest {
     void whenGettingBazInstruction_thenAliasesAreOnlyBazAlias() {
         assertThat(command.getInstruction("baz")).isNotPresent();
         assertThat(command.getInstruction("bazalias")).isPresent();
-        assertEquals(Collections.singletonList("bazalias"), command.getInstruction("bazalias").get().getAliases());
+        assertThat(command.getInstruction("bazalias").get().getAliases()).containsExactly("bazalias");
     }
 
     @Test
@@ -70,6 +72,6 @@ class CommandResolverTest {
     // the Bar subcommand has no aliases, so the alias is the class name, Bar.
     @Test
     void whenGettingBarSubcommand_thenAliasesAreOnlyBar() {
-        assertThat(command.getSubcommand("bar").get().getAliases()).contains("bar");
+        assertThat(command.getSubcommand("bar").get().getAliases()).containsExactly("bar");
     }
 }

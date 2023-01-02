@@ -19,17 +19,23 @@ public class MappedCommand extends AbstractAnnotated<MappedCommand> implements E
 
     @Nullable private final MappedCommand parent;
     private final RimorCommand command;
-    private final Collection<String> aliases;
+
+    private final String name;
+    private final List<String> aliases;
 
     private Instruction mainInstruction;
     private final Map<String, Instruction> instructions = new HashMap<>();
     private final Map<String, MappedCommand> subcommands = new HashMap<>();
 
-    public MappedCommand(@Nullable MappedCommand parent, RimorCommand command, Collection<String> aliases,
+    public MappedCommand(@Nullable MappedCommand parent,
+                         RimorCommand command,
+                         String name,
+                         List<String> aliases,
                          Map<Class<? extends Annotation>, Annotation> annotations) {
         super(annotations);
         this.parent = parent;
         this.command = command;
+        this.name = name.toLowerCase();
         this.aliases = aliases.stream().map(String::toLowerCase).collect(Collectors.toList());
     }
 
@@ -41,14 +47,21 @@ public class MappedCommand extends AbstractAnnotated<MappedCommand> implements E
         return command;
     }
 
+    public void setMainInstruction(Instruction mainInstruction) {
+        this.mainInstruction = mainInstruction;
+    }
+
     public void registerInstruction(Instruction instruction) {
-        for (String alias : instruction.getAliases())
-            this.instructions.put(alias, instruction);
+        instruction.getAliases().forEach(alias -> this.instructions.put(alias, instruction));
     }
 
     public void registerSubcommand(MappedCommand subcommand) {
-        for (String alias : subcommand.getAliases())
-            this.subcommands.put(alias, subcommand);
+        this.subcommands.put(subcommand.getName(), subcommand);
+        subcommand.getAliases().forEach(alias -> this.subcommands.put(alias, subcommand));
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public Collection<String> getAliases() {
@@ -57,10 +70,6 @@ public class MappedCommand extends AbstractAnnotated<MappedCommand> implements E
 
     public Optional<Instruction> getMainInstruction() {
         return Optional.ofNullable(this.mainInstruction);
-    }
-
-    public void setMainInstruction(Instruction mainInstruction) {
-        this.mainInstruction = mainInstruction;
     }
 
     public Optional<Instruction> getInstruction(String alias) {
@@ -88,12 +97,12 @@ public class MappedCommand extends AbstractAnnotated<MappedCommand> implements E
         if (this == o) return true;
         if (!(o instanceof MappedCommand)) return false;
         if (!super.equals(o)) return false;
-        MappedCommand command = (MappedCommand) o;
-        return this.command.equals(command.command);
+        MappedCommand that = (MappedCommand) o;
+        return Objects.equals(parent, that.parent) && Objects.equals(command, that.command) && Objects.equals(name, that.name) && Objects.equals(aliases, that.aliases) && Objects.equals(mainInstruction, that.mainInstruction) && Objects.equals(instructions, that.instructions) && Objects.equals(subcommands, that.subcommands);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(command);
+        return Objects.hash(super.hashCode(), parent, command, name, aliases, mainInstruction, instructions, subcommands);
     }
 }

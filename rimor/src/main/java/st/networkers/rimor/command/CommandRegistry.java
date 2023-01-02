@@ -9,8 +9,8 @@ public class CommandRegistry {
     private final Map<String, MappedCommand> commands = new HashMap<>();
 
     public void registerCommand(MappedCommand command) {
-        for (String alias : command.getAliases())
-            this.commands.put(alias.toLowerCase(), command);
+        this.commands.put(command.getName().toLowerCase(), command);
+        command.getAliases().forEach(alias -> this.commands.put(alias.toLowerCase(), command));
     }
 
     public Collection<MappedCommand> getRegisteredCommands() {
