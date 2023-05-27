@@ -4,10 +4,9 @@ import st.networkers.rimor.command.MappedCommand;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
-import java.util.Map;
 
 /**
- * Represents a dynamically annotated type.
+ * Represents an annotated type.
  *
  * @see st.networkers.rimor.inject.Token
  * @see st.networkers.rimor.provide.RimorProvider
@@ -18,29 +17,23 @@ import java.util.Map;
 public interface Annotated {
 
     /**
-     * Checks if this Annotated matches the annotations of the specified {@code Annotated} parameter, i.e. if this
-     * Annotated has the same annotations and the required annotations of the specified {@code Annotated} parameter.
-     *
-     * @param annotated the Annotated to check if this matches its annotations
-     * @return {@code true} if this Annotated matches the annotations of the specified {@code Annotated} parameter,
-     * {@code false} otherwise
+     * The properties of this {@link Annotated}
      */
-    boolean matchesAnnotations(Annotated annotated);
+    AnnotatedProperties getAnnotatedProperties();
 
     /**
-     * The annotation instances of this {@link Annotated}.
+     * The annotations of this {@link Annotated}.
      */
-    Collection<Annotation> getAnnotations();
+    default Collection<Annotation> getAnnotations() {
+        return this.getAnnotatedProperties().getAnnotations().values();
+    }
 
     /**
-     * The annotation instances of this {@link Annotated}, mapped by the annotation classes.
+     * The required annotation types of this {@link Annotated}.
      */
-    Map<Class<? extends Annotation>, Annotation> getMappedAnnotations();
-
-    /**
-     * The classes of the required annotations of this {@link Annotated}.
-     */
-    Collection<Class<? extends Annotation>> getRequiredAnnotations();
+    default Collection<Class<? extends Annotation>> getRequiredAnnotations() {
+        return this.getAnnotatedProperties().getRequiredAnnotations();
+    }
 
     /**
      * Gets the annotation instance present in this {@link Annotated} for the given {@link Annotation} type.
@@ -48,7 +41,10 @@ public interface Annotated {
      * @param annotationClass class of the annotation to get
      * @return the annotation present in this {@link Annotated}, or null if not present.
      */
-    <A extends Annotation> A getAnnotation(Class<A> annotationClass);
+    @SuppressWarnings("unchecked")
+    default <A extends Annotation> A getAnnotation(Class<A> annotationClass) {
+        return (A) this.getAnnotatedProperties().getAnnotations().get(annotationClass);
+    }
 
     /**
      * Whether this {@link Annotated} contains the given {@link Annotation}, or contains the given {@link Annotation}
@@ -57,7 +53,9 @@ public interface Annotated {
      * @param annotation the annotation to check
      * @return if this {@link Annotated} contains the given {@link Annotation}
      */
-    boolean isAnnotationPresent(Annotation annotation);
+    default boolean isAnnotationPresent(Annotation annotation) {
+        return this.getAnnotations().contains(annotation) || this.getRequiredAnnotations().contains(annotation.annotationType());
+    }
 
     /**
      * Whether this {@link Annotated} contains an instance of the given {@link Annotation} class, or contains the given
@@ -66,5 +64,27 @@ public interface Annotated {
      * @param annotationClass the annotation type to check
      * @return if this {@link Annotated} contains the given {@link Annotation}
      */
-    boolean isAnnotationPresent(Class<? extends Annotation> annotationClass);
+    default boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
+        return this.getAnnotatedProperties().getAnnotations().containsKey(annotationClass) || this.getRequiredAnnotations().contains(annotationClass);
+    }
+
+    /**
+     * Checks if this Annotated matches the annotations of the specified {@code Annotated} parameter, i.e. if this
+     * Annotated has the same annotations and the required annotations of the specified {@code Annotated} parameter.
+     *
+     * @param annotated the Annotated to check if this matches its annotations
+     * @return {@code true} if this Annotated matches the annotations of the specified {@code Annotated} parameter,
+     * {@code false} otherwise
+     */
+    default boolean matchesAnnotations(Annotated annotated) {
+        for (Class<? extends Annotation> annotation : annotated.getRequiredAnnotations())
+            if (!this.isAnnotationPresent(annotation))
+                return false;
+
+        for (Annotation annotation : annotated.getAnnotations())
+            if (!this.isAnnotationPresent(annotation))
+                return false;
+
+        return true;
+    }
 }

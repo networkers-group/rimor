@@ -25,13 +25,13 @@ public abstract class AbstractParamParser<T> extends AbstractRimorProvider<T> im
     @SafeVarargs
     protected AbstractParamParser(Class<? extends T>... providedTypes) {
         super(providedTypes);
-        annotatedWith(Param.class);
+        this.annotatedWith(Param.class);
     }
 
     @SafeVarargs
     protected AbstractParamParser(TypeToken<? extends T>... providedTypes) {
         super(providedTypes);
-        annotatedWith(Param.class);
+        this.annotatedWith(Param.class);
     }
 
     @Override

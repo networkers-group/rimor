@@ -1,14 +1,15 @@
 package st.networkers.rimor.util;
 
 import com.google.common.reflect.TypeToken;
+import st.networkers.rimor.inject.RequireAnnotations;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public final class ReflectionUtils {
 
@@ -16,7 +17,9 @@ public final class ReflectionUtils {
     }
 
     public static Map<Class<? extends Annotation>, Annotation> getMappedAnnotations(AnnotatedElement element) {
-        return InspectionUtils.getMappedAnnotations(Arrays.asList(element.getAnnotations()));
+        List<Annotation> annotations = new ArrayList<>(Arrays.asList(element.getAnnotations()));
+        annotations.removeIf(annotation -> annotation instanceof RequireAnnotations);
+        return annotations.stream().collect(Collectors.toMap(Annotation::annotationType, Function.identity()));
     }
 
     public static TypeToken<?> unwrapOptional(TypeToken<Optional<?>> optionalTypeToken) {

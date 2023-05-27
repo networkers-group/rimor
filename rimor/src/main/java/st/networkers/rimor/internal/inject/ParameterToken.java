@@ -1,8 +1,11 @@
 package st.networkers.rimor.internal.inject;
 
+import st.networkers.rimor.inject.AnnotatedProperties;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.reflect.CachedMethod;
 import st.networkers.rimor.reflect.CachedParameter;
+
+import java.util.Objects;
 
 public class ParameterToken<T> extends Token<T> {
 
@@ -13,8 +16,8 @@ public class ParameterToken<T> extends Token<T> {
     private final CachedMethod method;
     private final CachedParameter parameter;
 
-    public ParameterToken(CachedMethod method, CachedParameter parameter, Class<T> type) {
-        super(type, parameter.getAnnotationsMap());
+    private ParameterToken(CachedMethod method, CachedParameter parameter, Class<T> type) {
+        super(type, AnnotatedProperties.build(parameter));
         this.method = method;
         this.parameter = parameter;
     }
@@ -25,5 +28,19 @@ public class ParameterToken<T> extends Token<T> {
 
     public CachedParameter getParameter() {
         return parameter;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ParameterToken)) return false;
+        if (!super.equals(o)) return false;
+        ParameterToken<?> that = (ParameterToken<?>) o;
+        return Objects.equals(method, that.method) && Objects.equals(parameter, that.parameter);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), method, parameter);
     }
 }

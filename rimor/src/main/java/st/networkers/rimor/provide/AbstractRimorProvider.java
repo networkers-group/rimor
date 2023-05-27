@@ -2,10 +2,10 @@ package st.networkers.rimor.provide;
 
 import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.inject.AbstractAnnotated;
+import st.networkers.rimor.inject.AnnotatedProperties;
+import st.networkers.rimor.inject.DinamicallyAnnotated;
 import st.networkers.rimor.inject.Token;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  * <pre>
  * public class UserProvider extends {@literal AbstractRimorProvider<User>} {
  *
- *     private final {@literal Database<User>} userDatabase = ...;
+ *     private final UserRepository userRepository = ...;
  *
  *     public UserProvider() {
  *         super(User.class); // the provided types, also can use TypeToken
@@ -35,13 +35,13 @@ import java.util.stream.Stream;
  *         CommandSender sender = context.get(senderToken)
  *                 .orElseThrow(new IllegalArgumentException());
  *
- *         return userDatabase.fromId(sender.getId());
+ *         return userRepository.findById(sender.getId());
  *     }
  * }
  * </pre>
  */
 public abstract class AbstractRimorProvider<T>
-        extends AbstractAnnotated<AbstractRimorProvider<T>>
+        extends DinamicallyAnnotated<AbstractRimorProvider<T>>
         implements RimorProvider<T> {
 
     private final Collection<TypeToken<? extends T>> providedTypes;
@@ -62,7 +62,7 @@ public abstract class AbstractRimorProvider<T>
 
     private AbstractRimorProvider(Stream<TypeToken<? extends T>> providedTypes) {
         this.providedTypes = providedTypes.map(TypeToken::wrap).collect(Collectors.toList());
-        this.inspectAnnotations();
+        this.withProperties(this.inspectAnnotations());
     }
 
     @Override
@@ -78,10 +78,10 @@ public abstract class AbstractRimorProvider<T>
         return false;
     }
 
-    private void inspectAnnotations() {
+    private AnnotatedProperties inspectAnnotations() {
         try {
-            Method method = this.getClass().getMethod("get", Token.class, ExecutionContext.class);
-            this.inspectAnnotations(method);
+            return AnnotatedProperties.build(this.getClass().getMethod("get", Token.class, ExecutionContext.class))
+                    .merge(AnnotatedProperties.build(this.getClass()));
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }

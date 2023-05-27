@@ -1,7 +1,7 @@
 package st.networkers.rimor.context;
 
 import com.google.common.reflect.TypeToken;
-import st.networkers.rimor.inject.AbstractAnnotated;
+import st.networkers.rimor.inject.DinamicallyAnnotated;
 import st.networkers.rimor.inject.Token;
 
 import java.util.Objects;
@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * Wraps an object of type {@link T} to inject in instruction methods.
  */
-public class ContextComponent<T> extends AbstractAnnotated<ContextComponent<T>> {
+public class ContextComponent<T> extends DinamicallyAnnotated<ContextComponent<T>> {
 
     private final TypeToken<T> type;
     private final T object;

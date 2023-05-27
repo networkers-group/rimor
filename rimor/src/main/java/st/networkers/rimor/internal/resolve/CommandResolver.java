@@ -2,11 +2,11 @@ package st.networkers.rimor.internal.resolve;
 
 import st.networkers.rimor.command.MappedCommand;
 import st.networkers.rimor.command.RimorCommand;
+import st.networkers.rimor.inject.AnnotatedProperties;
 import st.networkers.rimor.instruction.Instruction;
 import st.networkers.rimor.instruction.InstructionMapping;
 import st.networkers.rimor.instruction.MainInstructionMapping;
 import st.networkers.rimor.util.InspectionUtils;
-import st.networkers.rimor.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -29,9 +29,9 @@ public final class CommandResolver {
 
         MappedCommand mappedCommand = new MappedCommand(parent,
                 command,
+                AnnotatedProperties.build(command.getClass()),
                 InspectionUtils.getName(command.getClass()).orElseGet(() -> aliases.get(0)),
-                aliases,
-                ReflectionUtils.getMappedAnnotations(command.getClass()));
+                aliases);
 
         resolveSubcommands(mappedCommand).forEach(mappedCommand::registerSubcommand);
         resolveInstructions(mappedCommand).apply(mappedCommand);

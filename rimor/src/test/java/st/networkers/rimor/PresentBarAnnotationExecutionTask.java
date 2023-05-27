@@ -7,7 +7,7 @@ import st.networkers.rimor.inject.Token;
 public class PresentBarAnnotationExecutionTask extends AbstractPreExecutionTask {
 
     public PresentBarAnnotationExecutionTask() {
-        annotatedWith(BarAnnotation.class);
+        this.annotatedWith(BarAnnotation.class);
     }
 
     @Override

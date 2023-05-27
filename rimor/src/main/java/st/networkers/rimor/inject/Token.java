@@ -3,7 +3,7 @@ package st.networkers.rimor.inject;
 import com.google.common.reflect.TypeToken;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.Objects;
 
 /**
  * Exchanged in {@link RimorInjector} to obtain an object for the wrapped type {@link T}.
@@ -14,7 +14,7 @@ import java.util.*;
  *     new Token<>(new{@literal TypeToken<List<String>>}() {}).annotatedWith(Params.class);
  * </pre>
  */
-public class Token<T> extends AbstractAnnotated<Token<T>> {
+public class Token<T> extends DinamicallyAnnotated<Token<T>> {
 
     private final TypeToken<T> type;
 
@@ -24,7 +24,7 @@ public class Token<T> extends AbstractAnnotated<Token<T>> {
      * @param type the type of the token
      */
     public Token(Class<T> type) {
-        this(type, new HashMap<>());
+        this(TypeToken.of(type));
     }
 
     /**
@@ -33,29 +33,31 @@ public class Token<T> extends AbstractAnnotated<Token<T>> {
      * @param type the type of the token
      */
     public Token(TypeToken<T> type) {
-        this(type, new HashMap<>());
+        this.type = type.wrap();
     }
 
-    public Token(Class<T> type, Map<Class<? extends Annotation>, Annotation> annotations) {
-        this(type, annotations, new ArrayList<>());
+    /**
+     * Constructs a Token of a given type with the specified {@link AnnotatedProperties}.
+     * <p>
+     * For a programmatic use of Token, use the {@link Token#Token(Class)} or {@link Token#Token(TypeToken)} constructor
+     * along with the {@link #annotatedWith(Annotation)} and {@link #annotatedWith(Class)} methods.
+     *
+     * @param type the type of the token
+     */
+    public Token(Class<T> type, AnnotatedProperties annotatedProperties) {
+        this(TypeToken.of(type), annotatedProperties);
     }
 
-    public Token(TypeToken<T> type, Map<Class<? extends Annotation>, Annotation> annotations) {
-        this(type, annotations, new ArrayList<>());
-    }
-
-    public Token(Class<T> type,
-                 Map<Class<? extends Annotation>, Annotation> annotations,
-                 Collection<Class<? extends Annotation>> requiredAnnotations
-    ) {
-        this(TypeToken.of(type), annotations, requiredAnnotations);
-    }
-
-    public Token(TypeToken<T> type,
-                 Map<Class<? extends Annotation>, Annotation> annotations,
-                 Collection<Class<? extends Annotation>> requiredAnnotations
-    ) {
-        super(annotations, requiredAnnotations);
+    /**
+     * Constructs a Token of a given type with the specified {@link AnnotatedProperties}.
+     * <p>
+     * For a programmatic use of Token, use the {@link Token#Token(Class)} or {@link Token#Token(TypeToken)} constructor
+     * along with the {@link #annotatedWith(Annotation)} and {@link #annotatedWith(Class)} methods.
+     *
+     * @param type the type of the token
+     */
+    public Token(TypeToken<T> type, AnnotatedProperties annotatedProperties) {
+        super(annotatedProperties);
         this.type = type.wrap();
     }
 

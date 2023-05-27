@@ -47,8 +47,4 @@ public final class InspectionUtils {
 
         return aliases;
     }
-
-    public static Map<Class<? extends Annotation>, Annotation> getMappedAnnotations(Collection<Annotation> annotations) {
-        return annotations.stream().collect(Collectors.toMap(Annotation::annotationType, Function.identity()));
-    }
 }

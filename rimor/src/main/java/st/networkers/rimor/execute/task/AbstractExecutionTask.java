@@ -1,7 +1,7 @@
 package st.networkers.rimor.execute.task;
 
-import st.networkers.rimor.inject.AbstractAnnotated;
+import st.networkers.rimor.inject.DinamicallyAnnotated;
 
 public abstract class AbstractExecutionTask
-        extends AbstractAnnotated<AbstractExecutionTask>
+        extends DinamicallyAnnotated<AbstractExecutionTask>
         implements ExecutionTask {}

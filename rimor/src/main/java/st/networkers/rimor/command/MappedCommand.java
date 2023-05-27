@@ -2,10 +2,10 @@ package st.networkers.rimor.command;
 
 import org.jetbrains.annotations.Nullable;
 import st.networkers.rimor.Executable;
-import st.networkers.rimor.inject.AbstractAnnotated;
+import st.networkers.rimor.inject.Annotated;
+import st.networkers.rimor.inject.AnnotatedProperties;
 import st.networkers.rimor.instruction.Instruction;
 
-import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -15,10 +15,11 @@ import java.util.stream.Collectors;
  * @see RimorCommand
  * @see AbstractRimorCommand
  */
-public class MappedCommand extends AbstractAnnotated<MappedCommand> implements Executable {
+public class MappedCommand implements Annotated, Executable {
 
     @Nullable private final MappedCommand parent;
     private final RimorCommand command;
+    private final AnnotatedProperties annotatedProperties;
 
     private final String name;
     private final List<String> aliases;
@@ -29,12 +30,12 @@ public class MappedCommand extends AbstractAnnotated<MappedCommand> implements E
 
     public MappedCommand(@Nullable MappedCommand parent,
                          RimorCommand command,
+                         AnnotatedProperties annotatedProperties,
                          String name,
-                         List<String> aliases,
-                         Map<Class<? extends Annotation>, Annotation> annotations) {
-        super(annotations);
+                         List<String> aliases) {
         this.parent = parent;
         this.command = command;
+        this.annotatedProperties = annotatedProperties;
         this.name = name.toLowerCase();
         this.aliases = aliases.stream().map(String::toLowerCase).collect(Collectors.toList());
     }
@@ -45,6 +46,11 @@ public class MappedCommand extends AbstractAnnotated<MappedCommand> implements E
 
     public RimorCommand getCommand() {
         return command;
+    }
+
+    @Override
+    public AnnotatedProperties getAnnotatedProperties() {
+        return annotatedProperties;
     }
 
     public void setMainInstruction(Instruction mainInstruction) {
@@ -96,13 +102,12 @@ public class MappedCommand extends AbstractAnnotated<MappedCommand> implements E
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof MappedCommand)) return false;
-        if (!super.equals(o)) return false;
         MappedCommand that = (MappedCommand) o;
-        return Objects.equals(parent, that.parent) && Objects.equals(command, that.command) && Objects.equals(name, that.name) && Objects.equals(aliases, that.aliases) && Objects.equals(mainInstruction, that.mainInstruction) && Objects.equals(instructions, that.instructions) && Objects.equals(subcommands, that.subcommands);
+        return Objects.equals(parent, that.parent) && Objects.equals(command, that.command) && Objects.equals(annotatedProperties, that.annotatedProperties) && Objects.equals(name, that.name) && Objects.equals(aliases, that.aliases) && Objects.equals(mainInstruction, that.mainInstruction) && Objects.equals(instructions, that.instructions) && Objects.equals(subcommands, that.subcommands);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), parent, command, name, aliases, mainInstruction, instructions, subcommands);
+        return Objects.hash(parent, command, annotatedProperties, name, aliases, mainInstruction, instructions, subcommands);
     }
 }
