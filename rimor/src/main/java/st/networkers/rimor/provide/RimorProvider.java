@@ -8,7 +8,7 @@ import st.networkers.rimor.inject.Token;
 import java.util.Collection;
 
 /**
- * Provides injectable objects that can be calculated in execution time.
+ * Provides injectable objects that are generated in execution time.
  *
  * @see AbstractRimorProvider
  */

@@ -58,7 +58,7 @@ public class PathResolverImpl implements PathResolver {
                     task.run(executable, context);
             });
         } catch (Throwable throwable) {
-            exceptionHandlerRegistry.handleException(throwable);
+            exceptionHandlerRegistry.handleException(throwable, context);
         }
 
         return executable;

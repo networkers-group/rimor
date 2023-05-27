@@ -41,7 +41,7 @@ public class CommandExecutorImpl implements CommandExecutor {
             this.runExecutionTasks(instruction, context, executionTaskRegistry.getPostExecutionTasks());
             return result;
         } catch (Throwable throwable) {
-            exceptionHandlerRegistry.handleException(throwable);
+            exceptionHandlerRegistry.handleException(throwable, context);
             return null;
         }
     }

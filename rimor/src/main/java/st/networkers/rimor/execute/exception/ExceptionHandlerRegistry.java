@@ -1,5 +1,7 @@
 package st.networkers.rimor.execute.exception;
 
+import st.networkers.rimor.context.ExecutionContext;
+
 public interface ExceptionHandlerRegistry {
 
     /**
@@ -15,5 +17,5 @@ public interface ExceptionHandlerRegistry {
      *
      * @param throwable the throwable to handle
      */
-    <T extends Throwable> void handleException(T throwable);
+    <T extends Throwable> void handleException(T throwable, ExecutionContext executionContext);
 }
