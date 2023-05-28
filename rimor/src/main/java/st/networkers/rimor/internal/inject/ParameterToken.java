@@ -1,5 +1,6 @@
 package st.networkers.rimor.internal.inject;
 
+import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.inject.AnnotatedProperties;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.reflect.CachedMethod;
@@ -10,13 +11,13 @@ import java.util.Objects;
 public class ParameterToken<T> extends Token<T> {
 
     public static ParameterToken<?> build(CachedMethod method, CachedParameter parameter) {
-        return new ParameterToken<>(method, parameter, parameter.getType());
+        return new ParameterToken<>(method, parameter, TypeToken.of(parameter.getType()));
     }
 
     private final CachedMethod method;
     private final CachedParameter parameter;
 
-    private ParameterToken(CachedMethod method, CachedParameter parameter, Class<T> type) {
+    private ParameterToken(CachedMethod method, CachedParameter parameter, TypeToken<T> type) {
         super(type, AnnotatedProperties.build(parameter));
         this.method = method;
         this.parameter = parameter;
