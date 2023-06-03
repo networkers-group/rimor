@@ -1,10 +1,13 @@
 package st.networkers.rimor.command;
 
-import org.jetbrains.annotations.Nullable;
-import st.networkers.rimor.Executable;
+import st.networkers.rimor.executable.Executable;
+import st.networkers.rimor.executable.ExecutableProperties;
+import st.networkers.rimor.execute.exception.ExceptionHandlerRegistry;
+import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
 import st.networkers.rimor.inject.Annotated;
 import st.networkers.rimor.inject.AnnotatedProperties;
 import st.networkers.rimor.instruction.Instruction;
+import st.networkers.rimor.provide.ProviderRegistry;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,35 +20,34 @@ import java.util.stream.Collectors;
  */
 public class MappedCommand implements Annotated, Executable {
 
-    @Nullable private final MappedCommand parent;
-    private final RimorCommand command;
+    private final Object commandInstance;
     private final AnnotatedProperties annotatedProperties;
+    private final ExecutableProperties executableProperties;
 
-    private final String name;
-    private final List<String> aliases;
+    private final List<String> identifiers;
 
-    private Instruction mainInstruction;
-    private final Map<String, Instruction> instructions = new HashMap<>();
-    private final Map<String, MappedCommand> subcommands = new HashMap<>();
+    private final Instruction mainInstruction;
+    private final Map<String, Instruction> instructions;
+    private final Map<String, MappedCommand> subcommands;
 
-    public MappedCommand(@Nullable MappedCommand parent,
-                         RimorCommand command,
+    public MappedCommand(Object commandInstance,
                          AnnotatedProperties annotatedProperties,
-                         String name,
-                         List<String> aliases) {
-        this.parent = parent;
-        this.command = command;
+                         ExecutableProperties executableProperties,
+                         List<String> identifiers,
+                         Instruction mainInstruction,
+                         Map<String, Instruction> instructions,
+                         Map<String, MappedCommand> subcommands) {
+        this.commandInstance = commandInstance;
         this.annotatedProperties = annotatedProperties;
-        this.name = name.toLowerCase();
-        this.aliases = aliases.stream().map(String::toLowerCase).collect(Collectors.toList());
+        this.executableProperties = executableProperties;
+        this.identifiers = identifiers.stream().map(String::toLowerCase).collect(Collectors.toList());
+        this.mainInstruction = mainInstruction;
+        this.instructions = instructions;
+        this.subcommands = subcommands;
     }
 
-    public Optional<MappedCommand> getParent() {
-        return Optional.ofNullable(parent);
-    }
-
-    public RimorCommand getCommand() {
-        return command;
+    public Object getCommandInstance() {
+        return commandInstance;
     }
 
     @Override
@@ -53,48 +55,46 @@ public class MappedCommand implements Annotated, Executable {
         return annotatedProperties;
     }
 
-    public void setMainInstruction(Instruction mainInstruction) {
-        this.mainInstruction = mainInstruction;
+    @Override
+    public ExceptionHandlerRegistry getExceptionHandlerRegistry() {
+        return executableProperties.getExceptionHandlerRegistry();
     }
 
-    public void registerInstruction(Instruction instruction) {
-        instruction.getAliases().forEach(alias -> this.instructions.put(alias, instruction));
+    @Override
+    public ExecutionTaskRegistry getExecutionTaskRegistry() {
+        return executableProperties.getExecutionTaskRegistry();
     }
 
-    public void registerSubcommand(MappedCommand subcommand) {
-        this.subcommands.put(subcommand.getName(), subcommand);
-        subcommand.getAliases().forEach(alias -> this.subcommands.put(alias, subcommand));
+    @Override
+    public ProviderRegistry getProviderRegistry() {
+        return executableProperties.getProviderRegistry();
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public Collection<String> getAliases() {
-        return Collections.unmodifiableCollection(this.aliases);
+    public Collection<String> getIdentifiers() {
+        return Collections.unmodifiableCollection(this.identifiers);
     }
 
     public Optional<Instruction> getMainInstruction() {
         return Optional.ofNullable(this.mainInstruction);
     }
 
-    public Optional<Instruction> getInstruction(String alias) {
-        return Optional.ofNullable(this.instructions.get(alias.toLowerCase()));
+    public Optional<Instruction> getInstruction(String identifier) {
+        return Optional.ofNullable(this.instructions.get(identifier.toLowerCase()));
     }
 
     public Map<String, Instruction> getInstructions() {
         return Collections.unmodifiableMap(this.instructions);
     }
 
-    public Optional<MappedCommand> getSubcommand(String alias) {
-        return Optional.ofNullable(this.subcommands.get(alias.toLowerCase()));
+    public Optional<MappedCommand> getSubcommand(String identifier) {
+        return Optional.ofNullable(this.subcommands.get(identifier.toLowerCase()));
     }
 
     public Map<String, MappedCommand> getSubcommands() {
         return Collections.unmodifiableMap(this.subcommands);
     }
 
-    public Set<String> getAllInstructionAliases() {
+    public Set<String> getAllInstructionIdentifiers() {
         return this.instructions.keySet();
     }
 
@@ -103,11 +103,11 @@ public class MappedCommand implements Annotated, Executable {
         if (this == o) return true;
         if (!(o instanceof MappedCommand)) return false;
         MappedCommand that = (MappedCommand) o;
-        return Objects.equals(parent, that.parent) && Objects.equals(command, that.command) && Objects.equals(annotatedProperties, that.annotatedProperties) && Objects.equals(name, that.name) && Objects.equals(aliases, that.aliases) && Objects.equals(mainInstruction, that.mainInstruction) && Objects.equals(instructions, that.instructions) && Objects.equals(subcommands, that.subcommands);
+        return Objects.equals(commandInstance, that.commandInstance) && Objects.equals(annotatedProperties, that.annotatedProperties) && Objects.equals(executableProperties, that.executableProperties) && Objects.equals(identifiers, that.identifiers) && Objects.equals(mainInstruction, that.mainInstruction) && Objects.equals(instructions, that.instructions) && Objects.equals(subcommands, that.subcommands);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(parent, command, annotatedProperties, name, aliases, mainInstruction, instructions, subcommands);
+        return Objects.hash(commandInstance, annotatedProperties, executableProperties, identifiers, mainInstruction, instructions, subcommands);
     }
 }

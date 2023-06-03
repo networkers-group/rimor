@@ -6,21 +6,59 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for mapping commands onto {@link RimorCommand} implementations.
+ * Declares that a class is a Rimor command definition and contains instruction and subcommand mappings for it.
  * <p>
- * If this annotation is not present, the class name is used for the command name.
+ * If it is an inner class within another command definition class, it will be treated as a subcommand of that command.
+ * The inner class has to be public and have a no-arg constructor. It can be whether static or not.
+ * <p>
+ * The path {@code "myCommand mySubcommand myInstruction"} leads to {@code MyCommand.MySubcommand#instruction()} in
+ * this example:
+ * <pre>
+ * &#64;CommandMapping("myCommand")
+ * public class MyCommand {
+ *
+ *     &#64;CommandMapping("mySubcommand")
+ *     public class MySubcommand {
+ *
+ *         &#64;InstructionMapping("myInstruction")
+ *         public void instruction() {
+ *             ...
+ *         }
+ *     }
+ * }
+ * </pre>
+ * <p>
+ * If you need to manually instantiate {@code MySubcommand}, make the parent command class extend {@link AbstractRimorCommand}
+ * and use {@link AbstractRimorCommand#registerSubcommand(Object)} in the constructor:
+ * <pre>
+ * &#64;CommandMapping("myCommand")
+ * public class MyCommand extends AbstractRimorCommand {
+ *
+ *     public MyCommand() {
+ *         registerSubcommand(new MySubcommand(new MyServiceImpl()));
+ *     }
+ *
+ *     &#64;CommandMapping("mySubcommand")
+ *     public static class MySubcommand {
+ *
+ *         public MySubcommand(MyService myService) {
+ *             ...
+ *         }
+ *
+ *         &#64;InstructionMapping("myInstruction")
+ *         public void instruction() {
+ *             ...
+ *         }
+ *     }
+ * }
+ * </pre>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface CommandMapping {
 
     /**
-     * The name of the command. Must be unique. If empty (default), the first item of {@link #value()} is chosen.
-     */
-    String name() default "";
-
-    /**
-     * The aliases of the command.
+     * The identifiers of the command.
      */
     String[] value();
 }

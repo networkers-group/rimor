@@ -15,12 +15,7 @@ import java.lang.annotation.Target;
 public @interface InstructionMapping {
 
     /**
-     * The aliases of the instruction.
+     * The identifiers of the instruction. If empty, the method name will be used.
      */
     String[] value() default {};
-
-    /**
-     * Whether the method's name should be discarded as an alias. {@code false} by default.
-     */
-    boolean ignoreMethodName() default false;
 }

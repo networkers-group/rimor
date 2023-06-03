@@ -11,7 +11,7 @@ import java.util.Objects;
  * For generic types, use the {@link TypeToken} constructor. For example, to construct a Token of type
  * {@literal List<String>} annotated with {@code @Params}, use:
  * <pre>
- *     new Token<>(new{@literal TypeToken<List<String>>}() {}).annotatedWith(Params.class);
+ * new Token<>(new{@literal TypeToken<List<String>>}() {}).annotatedWith(Params.class);
  * </pre>
  */
 public class Token<T> extends DinamicallyAnnotated<Token<T>> {

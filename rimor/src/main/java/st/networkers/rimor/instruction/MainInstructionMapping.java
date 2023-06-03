@@ -9,32 +9,32 @@ import java.lang.annotation.Target;
 
 /**
  * The main instruction for a {@link MappedCommand}. If the command is called without any argument (or the first
- * argument doesn't match any instruction or subcommand), the method with this annotation will be executed.
+ * argument doesn't match any instruction or subcommand), this instruction will be executed.
  * <p>
- * For example, having this command:
+ * For example, having this command with mappings for {@code commit} and {@code push} instructions:
  * <pre>
- *     &#64;CommandMapping("git")
- *     public class GitCommand extends AbstractRimorCommand {
+ * &#64;CommandMapping("git")
+ * public class GitCommand {
  *
+ *     &#64;MainInstructionMapping
+ *     public void displayGitInstructions(@Params {@literal List<Object>} params) {
  *         // rimor-params extension for @Params :)
- *         &#64;MainInstructionMapping
- *         public void main(@Params {@literal List<Object>} params) {
- *              // whatever
- *         }
- *
- *         &#64;InstructionMapping
- *         public void commit() {
- *              // whatever
- *         }
- *
- *         &#64;InstructionMapping
- *         public void push() {
- *              // whatever
- *         }
+ *         ...
  *     }
+ *
+ *     &#64;InstructionMapping
+ *     public void commit() {
+ *         ...
+ *     }
+ *
+ *     &#64;InstructionMapping
+ *     public void push() {
+ *         ...
+ *     }
+ * }
  * </pre>
- * The main instruction will be called if {@code git}, {@code git foo}, or {@code git pull} is executed (note that the
- * {@code pull} instruction is not declared), and {@code "foo"} or {@code "pull"} will be passed as params in {@code #main}
+ * The main instruction will be called if {@code "git"}, {@code "git foo"}, or {@code "git bar"} is executed (as
+ * {@code "foo"} and {@code "bar"} don't have any mappings for this command), and they will be passed as params
  * if using the rimor-params extension.
  */
 @Retention(RetentionPolicy.RUNTIME)

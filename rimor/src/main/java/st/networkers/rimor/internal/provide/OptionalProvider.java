@@ -1,4 +1,4 @@
-package st.networkers.rimor.internal.provide.builtin;
+package st.networkers.rimor.internal.provide;
 
 import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.context.ExecutionContext;

@@ -6,7 +6,7 @@ import java.lang.annotation.Annotation;
 import java.util.Collection;
 
 /**
- * Represents an annotated type.
+ * Represents a type to be injected based on its annotations.
  *
  * @see st.networkers.rimor.inject.Token
  * @see st.networkers.rimor.provide.RimorProvider
@@ -70,7 +70,7 @@ public interface Annotated {
 
     /**
      * Checks if this Annotated matches the annotations of the specified {@code Annotated} parameter, i.e. if this
-     * Annotated has the same annotations and the required annotations of the specified {@code Annotated} parameter.
+     * {@link Annotated} has all the annotations and required annotations of the specified {@code Annotated} parameter.
      *
      * @param annotated the Annotated to check if this matches its annotations
      * @return {@code true} if this Annotated matches the annotations of the specified {@code Annotated} parameter,

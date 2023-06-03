@@ -3,7 +3,6 @@ package st.networkers.rimor.internal.inject;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.RimorInjector;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.reflect.CachedMethod;
 import st.networkers.rimor.reflect.CachedParameter;
@@ -17,7 +16,7 @@ public class RimorInjectorImpl implements RimorInjector {
     private final ProviderRegistry providerRegistry;
 
     public RimorInjectorImpl() {
-        this(new ProviderRegistryImpl());
+        this(new ProviderRegistry());
     }
 
     public RimorInjectorImpl(ProviderRegistry providerRegistry) {

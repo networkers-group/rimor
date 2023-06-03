@@ -1,57 +1,45 @@
 package st.networkers.rimor.instruction;
 
-import st.networkers.rimor.Executable;
-import st.networkers.rimor.command.MappedCommand;
-import st.networkers.rimor.command.RimorCommand;
+import st.networkers.rimor.executable.Executable;
+import st.networkers.rimor.executable.ExecutableProperties;
+import st.networkers.rimor.execute.exception.ExceptionHandlerRegistry;
+import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
 import st.networkers.rimor.inject.Annotated;
 import st.networkers.rimor.inject.AnnotatedProperties;
+import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.reflect.CachedMethod;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class Instruction implements Annotated, Executable {
 
-    public static Instruction build(MappedCommand command, Method method, Collection<String> aliases) {
-        return new Instruction(
-                command,
-                CachedMethod.build(method),
-                aliases.stream().map(String::toLowerCase).collect(Collectors.toList()),
-                AnnotatedProperties.build(method)
-        );
-    }
-
-    private final MappedCommand command;
+    private final Object commandInstance;
     private final CachedMethod method;
-    private final Collection<String> aliases;
+
     private final AnnotatedProperties annotatedProperties;
+    private final ExecutableProperties executableProperties;
 
-    private Instruction(MappedCommand command,
-                        CachedMethod method,
-                        Collection<String> aliases,
-                        AnnotatedProperties annotatedProperties) {
-        this.command = command;
-        this.method = method;
-        this.aliases = aliases;
-        this.annotatedProperties = annotatedProperties;
+    private final Collection<String> identifiers;
+
+    public Instruction(Object commandInstance,
+                       Method method,
+                       ExecutableProperties executableProperties,
+                       Collection<String> identifiers) {
+        this.commandInstance = commandInstance;
+        this.method = CachedMethod.build(method);
+        this.annotatedProperties = AnnotatedProperties.build(method);
+        this.executableProperties = executableProperties;
+        this.identifiers = identifiers;
     }
 
-    public RimorCommand getCommandInstance() {
-        return command.getCommand();
-    }
-
-    public MappedCommand getCommand() {
-        return command;
+    public Object getCommandInstance() {
+        return commandInstance;
     }
 
     public CachedMethod getMethod() {
         return method;
-    }
-
-    public Collection<String> getAliases() {
-        return aliases;
     }
 
     @Override
@@ -60,15 +48,34 @@ public class Instruction implements Annotated, Executable {
     }
 
     @Override
+    public ExceptionHandlerRegistry getExceptionHandlerRegistry() {
+        return executableProperties.getExceptionHandlerRegistry();
+    }
+
+    @Override
+    public ExecutionTaskRegistry getExecutionTaskRegistry() {
+        return executableProperties.getExecutionTaskRegistry();
+    }
+
+    @Override
+    public ProviderRegistry getProviderRegistry() {
+        return executableProperties.getProviderRegistry();
+    }
+
+    public Collection<String> getIdentifiers() {
+        return identifiers;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Instruction)) return false;
         Instruction that = (Instruction) o;
-        return Objects.equals(command, that.command) && Objects.equals(method, that.method) && Objects.equals(aliases, that.aliases) && Objects.equals(annotatedProperties, that.annotatedProperties);
+        return Objects.equals(commandInstance, that.commandInstance) && Objects.equals(method, that.method) && Objects.equals(annotatedProperties, that.annotatedProperties) && Objects.equals(executableProperties, that.executableProperties) && Objects.equals(identifiers, that.identifiers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(command, method, aliases, annotatedProperties);
+        return Objects.hash(commandInstance, method, annotatedProperties, executableProperties, identifiers);
     }
 }

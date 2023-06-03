@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PARAMETER, ElementType.METHOD})
+@Target({ElementType.TYPE, ElementType.PARAMETER, ElementType.METHOD})
 public @interface FooAnnotation {
+    String value();
 }

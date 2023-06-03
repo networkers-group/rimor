@@ -6,20 +6,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
+ * Contains instruction and subcommand mappings.
+ * <p>
+ * There is no need to extend this in order to define a command. This is only intended to allow registering
+ * subcommand instances. See the {@link CommandMapping} documentation for instructions on how to define a command.
+ *
  * @see CommandMapping
- * @see st.networkers.rimor.instruction.MainInstructionMapping
- * @see st.networkers.rimor.instruction.InstructionMapping
  */
 public abstract class AbstractRimorCommand implements RimorCommand {
 
-    private final Collection<RimorCommand> subcommands = new ArrayList<>();
+    private final Collection<Object> subcommands = new ArrayList<>();
 
-    protected final void registerSubcommand(@NotNull RimorCommand subcommand) {
+    protected final void registerSubcommand(@NotNull Object subcommand) {
         this.subcommands.add(subcommand);
     }
 
     @Override
-    public Collection<RimorCommand> getSubcommands() {
+    public Collection<Object> getSubcommands() {
         return subcommands;
     }
 }

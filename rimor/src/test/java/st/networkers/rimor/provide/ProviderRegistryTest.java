@@ -3,18 +3,17 @@ package st.networkers.rimor.provide;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import st.networkers.rimor.BarAnnotation;
-import st.networkers.rimor.BarAnnotationImpl;
 import st.networkers.rimor.FooAnnotation;
+import st.networkers.rimor.FooAnnotationImpl;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.RequireAnnotations;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.internal.provide.ProviderRegistryImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ProviderRegistryTest {
 
-    static ProviderRegistry providerRegistry = new ProviderRegistryImpl();
+    static ProviderRegistry providerRegistry = new ProviderRegistry();
 
     static RimorProvider<String> simpleProvider = new AbstractRimorProvider<String>(String.class) {
         @Override
@@ -28,11 +27,11 @@ class ProviderRegistryTest {
         public String get(Token<String> token, ExecutionContext context) {
             return "foo";
         }
-    }.annotatedWith(FooAnnotation.class);
+    }.annotatedWith(BarAnnotation.class);
 
     static RimorProvider<String> annotationRequiredProvider = new AbstractRimorProvider<String>(String.class) {
         @Override
-        @RequireAnnotations(BarAnnotation.class)
+        @RequireAnnotations(FooAnnotation.class)
         public String get(Token<String> token, ExecutionContext context) {
             return "bar";
         }
@@ -46,7 +45,7 @@ class ProviderRegistryTest {
     }
 
     @Test
-    void givenAStringToken_whenFindingProvider_thenSimpleProvider() {
+    void givenAStringToken_whenFindingProvider_findsSimpleProvider() {
         assertEquals(
                 simpleProvider,
                 providerRegistry.findFor(new Token<>(String.class), null).orElse(null)
@@ -54,7 +53,7 @@ class ProviderRegistryTest {
     }
 
     @Test
-    void givenAStringSuperclassToken_whenFindingProvider_thenSimpleProvider() {
+    void givenAStringSuperclassToken_whenFindingProvider_findsSimpleProvider() {
         assertEquals(
                 simpleProvider,
                 providerRegistry.findFor(new Token<>(CharSequence.class), null).orElse(null)
@@ -62,21 +61,21 @@ class ProviderRegistryTest {
     }
 
     @Test
-    void givenAStringTokenAnnotatedWithDeprecated_whenFindingProvider_thenAnnotatedProvider() {
+    void givenAStringTokenAnnotatedWithBarAnnotation_whenFindingProvider_findsAnnotatedProvider() {
         assertEquals(
                 annotatedProvider,
                 providerRegistry.findFor(
-                        new Token<>(String.class).annotatedWith(FooAnnotation.class), null
+                        new Token<>(String.class).annotatedWith(BarAnnotation.class), null
                 ).orElse(null)
         );
     }
 
     @Test
-    void givenAStringTokenAnnotatedWithParam_whenFindingProvider_thenAnnotationRequiredProvider() {
+    void givenAStringTokenAnnotatedWithFooAnnotation_whenFindingProvider_findsAnnotationRequiredProvider() {
         assertEquals(
                 annotationRequiredProvider,
                 providerRegistry.findFor(
-                        new Token<>(String.class).annotatedWith(new BarAnnotationImpl(0)), null
+                        new Token<>(String.class).annotatedWith(new FooAnnotationImpl("bar")), null
                 ).orElse(null)
         );
     }

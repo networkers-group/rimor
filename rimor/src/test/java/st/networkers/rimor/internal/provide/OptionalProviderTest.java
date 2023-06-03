@@ -1,10 +1,9 @@
-package st.networkers.rimor.internal.provide.builtin;
+package st.networkers.rimor.internal.provide;
 
 import com.google.common.reflect.TypeToken;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import st.networkers.rimor.BarAnnotation;
-import st.networkers.rimor.BarAnnotationImpl;
+import st.networkers.rimor.FooAnnotationImpl;
 import st.networkers.rimor.context.ContextComponent;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Token;
@@ -13,7 +12,6 @@ import st.networkers.rimor.internal.inject.RimorInjectorImpl;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class OptionalProviderTest {
 
@@ -25,44 +23,44 @@ class OptionalProviderTest {
     }
 
     @Test
-    void givenContextWithFooStringComponent_whenGettingFooWrappedInOptional_thenOptionalWrapsFoo() {
+    void givenContextWithStringComponent_whenGettingStringWrappedInOptional_optionalContainsGivenString() {
         ExecutionContext context = ExecutionContext.build(
                 new ContextComponent<>(String.class, "foo")
         );
 
-        Token<Optional<?>> token = buildToken(new TypeToken<Optional<String>>() {});
-        assertEquals(provider.get(token, context), Optional.of("foo"));
+        TypeToken<Optional<String>> type = new TypeToken<Optional<String>>() {};
+        assertThat(provider.get(buildToken(type), context)).isEqualTo(Optional.of("foo"));
     }
 
     @Test
-    void givenContextWithFooStringComponentAnnotatedWithBar_whenGettingFooWrappedInOptionalAnnotatedWithBar_thenOptionalWrapsFoo() {
+    void givenContextWithStringAnnotatedWithFooAnnotation_whenGettingOptionalStringAnnotatedWithFooAnnotation_optionalContainsGivenString() {
         ExecutionContext context = ExecutionContext.build(
-                new ContextComponent<>(String.class, "foo").annotatedWith(new BarAnnotationImpl(0))
+                new ContextComponent<>(String.class, "foo").annotatedWith(new FooAnnotationImpl("bar"))
         );
 
         Token<Optional<?>> token = buildToken(new TypeToken<Optional<String>>() {})
-                .annotatedWith(BarAnnotation.class);
-        assertEquals(provider.get(token, context), Optional.of("foo"));
+                .annotatedWith(new FooAnnotationImpl("bar"));
+        assertThat(provider.get(token, context)).isEqualTo(Optional.of("foo"));
     }
 
     @Test
-    void givenContextWithIntComponent_whenGettingIntegerWrappedInOptional_thenOptionalWrapsGivenInteger() {
+    void givenContextWithIntComponent_whenGettingIntegerWrappedInOptional_optionalContainsGivenInteger() {
         ExecutionContext context = ExecutionContext.build(
                 new ContextComponent<>(int.class, 3)
         );
 
-        Token<Optional<?>> token = buildToken(new TypeToken<Optional<Integer>>() {});
-        assertEquals(provider.get(token, context), Optional.of(3));
+        TypeToken<Optional<Integer>> type = new TypeToken<Optional<Integer>>() {};
+        assertThat(provider.get(buildToken(type), context)).isEqualTo(Optional.of(3));
     }
 
     @Test
-    void givenContextWithIntComponent_whenGettingStringWrappedInOptional_thenOptionalIsEmpty() {
+    void givenContextWithIntComponent_whenGettingStringWrappedInOptional_optionalIsEmpty() {
         ExecutionContext context = ExecutionContext.build(
                 new ContextComponent<>(int.class, 3)
         );
 
-        Token<Optional<?>> token = buildToken(new TypeToken<Optional<String>>() {});
-        assertThat(provider.get(token, context)).isEmpty();
+        TypeToken<Optional<String>> type = new TypeToken<Optional<String>>() {};
+        assertThat(provider.get(buildToken(type), context)).isEmpty();
     }
 
     @SuppressWarnings("unchecked")

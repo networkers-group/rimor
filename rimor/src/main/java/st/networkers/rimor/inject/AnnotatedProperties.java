@@ -8,7 +8,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.*;
 
 /**
- * Contains the annotations and required annotation types of an {@link AnnotatedElement}.
+ * Contains the annotations and required annotation types of an {@link Annotated}.
  */
 public class AnnotatedProperties {
 
