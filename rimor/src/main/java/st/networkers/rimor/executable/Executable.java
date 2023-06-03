@@ -1,10 +1,10 @@
 package st.networkers.rimor.executable;
 
+import st.networkers.rimor.annotated.Annotated;
 import st.networkers.rimor.execute.exception.ExceptionHandler;
 import st.networkers.rimor.execute.exception.ExceptionHandlerRegistry;
 import st.networkers.rimor.execute.task.ExecutionTask;
 import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
-import st.networkers.rimor.inject.Annotated;
 import st.networkers.rimor.provide.ProviderRegistry;
 
 /**

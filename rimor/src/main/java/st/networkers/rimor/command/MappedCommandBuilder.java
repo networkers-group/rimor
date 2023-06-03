@@ -1,7 +1,7 @@
 package st.networkers.rimor.command;
 
+import st.networkers.rimor.annotated.AnnotatedProperties;
 import st.networkers.rimor.executable.ExecutableProperties;
-import st.networkers.rimor.inject.AnnotatedProperties;
 import st.networkers.rimor.instruction.Instruction;
 
 import java.util.Collection;

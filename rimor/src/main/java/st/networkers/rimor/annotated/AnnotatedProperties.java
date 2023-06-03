@@ -1,4 +1,4 @@
-package st.networkers.rimor.inject;
+package st.networkers.rimor.annotated;
 
 import st.networkers.rimor.reflect.CachedAnnotatedElement;
 import st.networkers.rimor.util.ReflectionUtils;
@@ -26,8 +26,8 @@ public class AnnotatedProperties {
     public static AnnotatedProperties build(AnnotatedElement annotatedElement) {
         return new AnnotatedProperties(
                 ReflectionUtils.getMappedAnnotations(annotatedElement),
-                Optional.ofNullable(annotatedElement.getAnnotation(RequireAnnotations.class))
-                        .map(requireAnnotations -> Arrays.asList(requireAnnotations.value()))
+                Optional.ofNullable(annotatedElement.getAnnotation(RequireAnnotationTypes.class))
+                        .map(requireAnnotationTypes -> Arrays.asList(requireAnnotationTypes.value()))
                         .orElseGet(Collections::emptyList)
         );
     }

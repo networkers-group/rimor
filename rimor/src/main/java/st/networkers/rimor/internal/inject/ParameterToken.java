@@ -1,13 +1,16 @@
 package st.networkers.rimor.internal.inject;
 
 import com.google.common.reflect.TypeToken;
-import st.networkers.rimor.inject.AnnotatedProperties;
+import st.networkers.rimor.annotated.AnnotatedProperties;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.reflect.CachedMethod;
 import st.networkers.rimor.reflect.CachedParameter;
 
 import java.util.Objects;
 
+/**
+ * A token that represents a method parameter.
+ */
 public class ParameterToken<T> extends Token<T> {
 
     public static ParameterToken<?> build(CachedMethod method, CachedParameter parameter) {

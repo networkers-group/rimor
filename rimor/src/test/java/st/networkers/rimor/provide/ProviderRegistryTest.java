@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import st.networkers.rimor.BarAnnotation;
 import st.networkers.rimor.FooAnnotation;
 import st.networkers.rimor.FooAnnotationImpl;
+import st.networkers.rimor.annotated.RequireAnnotationTypes;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.inject.RequireAnnotations;
 import st.networkers.rimor.inject.Token;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,7 +31,7 @@ class ProviderRegistryTest {
 
     static RimorProvider<String> annotationRequiredProvider = new AbstractRimorProvider<String>(String.class) {
         @Override
-        @RequireAnnotations(FooAnnotation.class)
+        @RequireAnnotationTypes(FooAnnotation.class)
         public String get(Token<String> token, ExecutionContext context) {
             return "bar";
         }

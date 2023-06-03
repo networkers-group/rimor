@@ -1,13 +1,31 @@
 package st.networkers.rimor.context;
 
 import com.google.common.reflect.TypeToken;
-import st.networkers.rimor.inject.DinamicallyAnnotated;
+import st.networkers.rimor.annotated.DinamicallyAnnotated;
 import st.networkers.rimor.inject.Token;
 
 import java.util.Objects;
 
 /**
- * Wraps an object of type {@link T} to inject in instruction methods.
+ * Wraps an object of type {@link T} to inject in instruction handlers. Every component be annotated to distinguish
+ * components of the same type. For example:
+ * <pre>
+ * // to distinguish between a command sender and the user the sender is replying to:
+ * &#064;InstructionMapping("myInstruction")
+ * public void myInstruction(@CommandSender User user,
+ *                           &#064;ReplyingTo User replyingTo) {
+ *     ...
+ * }
+ *
+ * // the {@link ContextComponent} would have:
+ * // @CommandSender annotated User
+ * ... = new ContextComponent<>(User.class, sender)
+ *     .annotatedWith(CommandSender.class);
+ *
+ * // @ReplyingTo annotated User
+ * ... = new ContextComponent<>(User.class, replyingTo)
+ *     .annotatedWith(ReplyingTo.class);
+ * </pre>
  */
 public class ContextComponent<T> extends DinamicallyAnnotated<ContextComponent<T>> {
 

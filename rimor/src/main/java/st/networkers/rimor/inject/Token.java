@@ -1,6 +1,8 @@
 package st.networkers.rimor.inject;
 
 import com.google.common.reflect.TypeToken;
+import st.networkers.rimor.annotated.AnnotatedProperties;
+import st.networkers.rimor.annotated.DinamicallyAnnotated;
 
 import java.lang.annotation.Annotation;
 import java.util.Objects;

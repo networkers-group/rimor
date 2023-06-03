@@ -1,11 +1,11 @@
 package st.networkers.rimor.command;
 
+import st.networkers.rimor.annotated.Annotated;
+import st.networkers.rimor.annotated.AnnotatedProperties;
 import st.networkers.rimor.executable.Executable;
 import st.networkers.rimor.executable.ExecutableProperties;
 import st.networkers.rimor.execute.exception.ExceptionHandlerRegistry;
 import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
-import st.networkers.rimor.inject.Annotated;
-import st.networkers.rimor.inject.AnnotatedProperties;
 import st.networkers.rimor.instruction.Instruction;
 import st.networkers.rimor.provide.ProviderRegistry;
 

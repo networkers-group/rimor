@@ -1,7 +1,7 @@
 package st.networkers.rimor.util;
 
 import com.google.common.reflect.TypeToken;
-import st.networkers.rimor.inject.RequireAnnotations;
+import st.networkers.rimor.annotated.RequireAnnotationTypes;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -19,7 +19,7 @@ public final class ReflectionUtils {
 
     public static Map<Class<? extends Annotation>, Annotation> getMappedAnnotations(AnnotatedElement element) {
         List<Annotation> annotations = new ArrayList<>(Arrays.asList(element.getAnnotations()));
-        annotations.removeIf(annotation -> annotation instanceof RequireAnnotations);
+        annotations.removeIf(annotation -> annotation instanceof RequireAnnotationTypes);
         return annotations.stream().collect(Collectors.toMap(Annotation::annotationType, Function.identity()));
     }
 

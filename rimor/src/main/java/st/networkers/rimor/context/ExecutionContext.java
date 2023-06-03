@@ -7,9 +7,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Contains injectable objects relative to the execution of a command (for example, its parameters, the sender...).
+ * Contains injectable objects relative to the execution of a command (for example, its parameters, the executor...).
  * <p>
- * Every injectable object is wrapped in a {@link ContextComponent}.
+ * Every object is wrapped in a {@link ContextComponent}.
  */
 public class ExecutionContext {
 

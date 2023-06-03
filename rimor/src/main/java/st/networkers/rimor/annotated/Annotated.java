@@ -1,18 +1,16 @@
-package st.networkers.rimor.inject;
-
-import st.networkers.rimor.command.MappedCommand;
+package st.networkers.rimor.annotated;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 
 /**
- * Represents a type to be injected based on its annotations.
- *
- * @see st.networkers.rimor.inject.Token
- * @see st.networkers.rimor.provide.RimorProvider
- * @see st.networkers.rimor.execute.task.ExecutionTask
- * @see st.networkers.rimor.instruction.Instruction
- * @see MappedCommand
+ * Interface to be implemented by objects that differ from others of the same type based on their annotations.
+ * <p>
+ * This is used for:
+ * <ul>
+ *     <li>injection: distinguish tokens of the same type</li>
+ *     <li>aspects: define aspect pointcuts</li>
+ * </ul>
  */
 public interface Annotated {
 

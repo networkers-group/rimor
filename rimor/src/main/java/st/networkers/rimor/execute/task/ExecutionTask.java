@@ -1,8 +1,8 @@
 package st.networkers.rimor.execute.task;
 
+import st.networkers.rimor.annotated.Annotated;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.executable.Executable;
-import st.networkers.rimor.inject.Annotated;
 
 /**
  * Represents a task to be automatically run along with every command execution. It can be annotated, so that it will

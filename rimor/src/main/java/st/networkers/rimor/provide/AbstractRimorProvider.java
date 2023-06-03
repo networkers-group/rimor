@@ -1,9 +1,9 @@
 package st.networkers.rimor.provide;
 
 import com.google.common.reflect.TypeToken;
+import st.networkers.rimor.annotated.AnnotatedProperties;
+import st.networkers.rimor.annotated.DinamicallyAnnotated;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.inject.AnnotatedProperties;
-import st.networkers.rimor.inject.DinamicallyAnnotated;
 import st.networkers.rimor.inject.Token;
 
 import java.util.Arrays;

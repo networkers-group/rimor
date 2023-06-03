@@ -1,8 +1,11 @@
-package st.networkers.rimor.inject;
+package st.networkers.rimor.annotated;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
 
+/**
+ * Abstract class for objects to be able to be programmatically annotated at runtime.
+ */
 public abstract class DinamicallyAnnotated<T extends DinamicallyAnnotated<T>> implements Annotated {
 
     private final Map<Class<? extends Annotation>, Annotation> annotations;
