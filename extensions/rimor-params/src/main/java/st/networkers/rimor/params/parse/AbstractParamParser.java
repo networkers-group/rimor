@@ -1,9 +1,9 @@
 package st.networkers.rimor.params.parse;
 
 import com.google.common.reflect.TypeToken;
-import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.inject.ExecutionContext;
+import st.networkers.rimor.inject.ParameterToken;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.internal.inject.ParameterToken;
 import st.networkers.rimor.params.Param;
 import st.networkers.rimor.params.Params;
 import st.networkers.rimor.provide.AbstractRimorProvider;

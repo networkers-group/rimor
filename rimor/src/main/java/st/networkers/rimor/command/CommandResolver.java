@@ -1,7 +1,7 @@
 package st.networkers.rimor.command;
 
-import st.networkers.rimor.executable.ExecutableProperties;
-import st.networkers.rimor.inject.AnnotatedProperties;
+import st.networkers.rimor.annotated.AnnotatedProperties;
+import st.networkers.rimor.execute.ExecutableScope;
 import st.networkers.rimor.instruction.InstructionResolver;
 import st.networkers.rimor.instruction.ResolvedInstructions;
 import st.networkers.rimor.util.ReflectionUtils;
@@ -24,26 +24,26 @@ public class CommandResolver {
     }
 
     public MappedCommand resolve(Object commandInstance) {
-        return resolve(new ExecutableProperties(), commandInstance);
+        return resolve(new ExecutableScope(), commandInstance);
     }
 
-    public MappedCommand resolve(ExecutableProperties parentProperties, Object commandInstance) {
+    public MappedCommand resolve(ExecutableScope parentProperties, Object commandInstance) {
         if (!commandInstance.getClass().isAnnotationPresent(CommandMapping.class))
             throw new IllegalArgumentException("there is no CommandMapping annotation in " + commandInstance.getClass().getName());
 
         AnnotatedProperties annotatedProperties = AnnotatedProperties.build(commandInstance.getClass());
-        ExecutableProperties executableProperties = parentProperties.clone();
+        ExecutableScope executableScope = parentProperties.clone();
         List<String> identifiers = this.resolveIdentifiers(commandInstance);
 
         // TODO exception handlers, execution tasks and providers
 
-        ResolvedInstructions instructions = instructionResolver.resolveInstructions(commandInstance, executableProperties);
-        Collection<MappedCommand> subcommands = this.resolveSubcommands(commandInstance, executableProperties);
+        ResolvedInstructions instructions = instructionResolver.resolveInstructions(commandInstance, executableScope);
+        Collection<MappedCommand> subcommands = this.resolveSubcommands(commandInstance, executableScope);
 
         return new MappedCommandBuilder()
                 .setCommandInstance(commandInstance)
                 .setAnnotatedProperties(annotatedProperties)
-                .setExecutableProperties(executableProperties)
+                .setExecutableProperties(executableScope)
                 .setIdentifiers(identifiers)
                 .setMainInstruction(instructions.getMainInstruction())
                 .setInstructions(instructions.getInstructions())
@@ -65,7 +65,7 @@ public class CommandResolver {
         return identifiers;
     }
 
-    private Collection<MappedCommand> resolveSubcommands(Object commandInstance, ExecutableProperties properties) {
+    private Collection<MappedCommand> resolveSubcommands(Object commandInstance, ExecutableScope properties) {
         Collection<MappedCommand> subcommands = this.resolveDeclaredSubcommands(commandInstance, properties);
 
         if (commandInstance instanceof RimorCommand)
@@ -74,7 +74,7 @@ public class CommandResolver {
         return subcommands;
     }
 
-    private Collection<MappedCommand> resolveDeclaredSubcommands(Object commandInstance, ExecutableProperties properties) {
+    private Collection<MappedCommand> resolveDeclaredSubcommands(Object commandInstance, ExecutableScope properties) {
         return Arrays.stream(commandInstance.getClass().getClasses())
                 .filter(subcommandClass -> subcommandClass.isAnnotationPresent(CommandMapping.class))
                 .filter(subcommandClass -> !(commandInstance instanceof RimorCommand)
@@ -84,7 +84,7 @@ public class CommandResolver {
                 .collect(Collectors.toList());
     }
 
-    private Collection<MappedCommand> resolveRegisteredSubcommands(RimorCommand commandInstance, ExecutableProperties properties) {
+    private Collection<MappedCommand> resolveRegisteredSubcommands(RimorCommand commandInstance, ExecutableScope properties) {
         return commandInstance.getSubcommands().stream()
                 .map(subcommandInstance -> this.resolve(properties, subcommandInstance))
                 .collect(Collectors.toList());

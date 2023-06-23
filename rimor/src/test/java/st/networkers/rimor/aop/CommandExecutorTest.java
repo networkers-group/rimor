@@ -1,4 +1,4 @@
-package st.networkers.rimor.execute;
+package st.networkers.rimor.aop;
 
 class CommandExecutorTest {
 

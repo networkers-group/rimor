@@ -1,7 +1,6 @@
-package st.networkers.rimor.context;
+package st.networkers.rimor.inject;
 
 import com.google.common.reflect.TypeToken;
-import st.networkers.rimor.inject.Token;
 
 import java.util.*;
 import java.util.stream.Collectors;

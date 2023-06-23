@@ -1,21 +1,22 @@
-package st.networkers.rimor.execute.exception;
+package st.networkers.rimor.aop.exception;
 
-import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.aop.ExceptionHandler;
+import st.networkers.rimor.execute.ExecutableScope;
+import st.networkers.rimor.inject.ExecutionContext;
+import st.networkers.rimor.instruction.Instruction;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ExceptionHandlerRegistry implements Cloneable {
 
-    private Map<Class<?>, Collection<ExceptionHandler<?>>> handlers;
+    private Map<Class<?>, ExceptionHandler<?>> handlers;
 
     public ExceptionHandlerRegistry() {
         this(new HashMap<>());
     }
 
-    public ExceptionHandlerRegistry(Map<Class<?>, Collection<ExceptionHandler<?>>> handlers) {
+    public ExceptionHandlerRegistry(Map<Class<?>, ExceptionHandler<?>> handlers) {
         this.handlers = handlers;
     }
 
@@ -26,7 +27,7 @@ public class ExceptionHandlerRegistry implements Cloneable {
      */
     public void registerExceptionHandler(ExceptionHandler<?> handler) {
         for (Class<?> handledType : handler.getHandledTypes())
-            this.handlers.computeIfAbsent(handledType, t -> new ArrayList<>()).add(handler);
+            this.handlers.putIfAbsent(handledType, handler);
     }
 
     /**
@@ -35,17 +36,18 @@ public class ExceptionHandlerRegistry implements Cloneable {
      *
      * @param throwable the throwable to handle
      */
-    public <T extends Throwable> void handleException(T throwable, ExecutionContext executionContext) {
-        Collection<ExceptionHandler<?>> handlers = this.handlers.get(throwable.getClass());
-        if (handlers == null)
-            throw throwable instanceof RuntimeException ? (RuntimeException) throwable : new RuntimeException(throwable);
-
-        handlers.forEach(handler -> this.handleException(handler, throwable, executionContext));
-    }
-
     @SuppressWarnings("unchecked")
-    private <T extends Throwable> void handleException(ExceptionHandler<T> handler, Throwable throwable, ExecutionContext executionContext) {
-        handler.handle((T) throwable, executionContext);
+    public <T extends Throwable> void handleException(T throwable, Instruction instruction,
+                                                      ExecutableScope executableScope, ExecutionContext executionContext) {
+        ExceptionHandler<?> handler = executableScope.getExceptionHandlerRegistry().handlers.get(throwable.getClass());
+
+        if (handler == null)
+            handler = this.handlers.get(throwable.getClass());
+
+        if (handler != null)
+            ((ExceptionHandler<T>) handler).handle(throwable, instruction, executableScope, executionContext);
+
+        throw throwable instanceof RuntimeException ? (RuntimeException) throwable : new RuntimeException(throwable);
     }
 
     @Override

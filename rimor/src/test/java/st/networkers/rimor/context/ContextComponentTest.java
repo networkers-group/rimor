@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import st.networkers.rimor.BarAnnotation;
 import st.networkers.rimor.FooAnnotation;
 import st.networkers.rimor.FooAnnotationImpl;
+import st.networkers.rimor.inject.ContextComponent;
 import st.networkers.rimor.inject.Token;
 
 import java.util.ArrayList;

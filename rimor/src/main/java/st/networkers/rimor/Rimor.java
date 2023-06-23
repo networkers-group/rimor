@@ -1,15 +1,13 @@
 package st.networkers.rimor;
 
+import st.networkers.rimor.aop.Advice;
+import st.networkers.rimor.aop.AdviceRegistry;
+import st.networkers.rimor.aop.CommandExecutor;
+import st.networkers.rimor.aop.ExceptionHandler;
+import st.networkers.rimor.aop.exception.ExceptionHandlerRegistry;
 import st.networkers.rimor.command.CommandRegistry;
 import st.networkers.rimor.command.CommandResolver;
 import st.networkers.rimor.command.RimorCommand;
-import st.networkers.rimor.execute.CommandExecutor;
-import st.networkers.rimor.execute.exception.ExceptionHandler;
-import st.networkers.rimor.execute.exception.ExceptionHandlerRegistry;
-import st.networkers.rimor.execute.task.ExecutionTask;
-import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
-import st.networkers.rimor.execute.task.PostExecutionTask;
-import st.networkers.rimor.execute.task.PreExecutionTask;
 import st.networkers.rimor.extension.ExtensionManager;
 import st.networkers.rimor.extension.ExtensionManagerImpl;
 import st.networkers.rimor.extension.RimorExtension;
@@ -30,7 +28,7 @@ public class Rimor {
 
     private final CommandRegistry commandRegistry;
     private final ExceptionHandlerRegistry exceptionHandlerRegistry;
-    private final ExecutionTaskRegistry executionTaskRegistry;
+    private final AdviceRegistry adviceRegistry;
     private final ExtensionManager extensionManager;
     private final ProviderRegistry providerRegistry;
 
@@ -41,29 +39,29 @@ public class Rimor {
     private boolean initialized = false;
 
     public Rimor() {
-        this(new RimorInjectorImpl(new ProviderRegistry()));
+        this(new ProviderRegistry());
     }
 
-    public Rimor(RimorInjector injector) {
-        this(injector, new ExceptionHandlerRegistry(), new ExecutionTaskRegistry(), injector.getProviderRegistry());
+    public Rimor(ProviderRegistry providerRegistry) {
+        this(new RimorInjectorImpl(providerRegistry), new ExceptionHandlerRegistry(), new AdviceRegistry(advice, exceptionHandlers), providerRegistry);
     }
 
     public Rimor(RimorInjector injector,
                  ExceptionHandlerRegistry exceptionHandlerRegistry,
-                 ExecutionTaskRegistry executionTaskRegistry,
+                 AdviceRegistry adviceRegistry,
                  ProviderRegistry providerRegistry) {
-        this(injector, new CommandRegistry(), exceptionHandlerRegistry, executionTaskRegistry, new ExtensionManagerImpl(),
-                new ProviderRegistry(), new CommandExecutorImpl(injector, exceptionHandlerRegistry, executionTaskRegistry),
+        this(injector, new CommandRegistry(), exceptionHandlerRegistry, adviceRegistry, new ExtensionManagerImpl(),
+                new ProviderRegistry(), new CommandExecutorImpl(injector, exceptionHandlerRegistry, adviceRegistry),
                 new CommandResolver(), new PathResolverImpl());
     }
 
     public Rimor(RimorInjector injector, CommandRegistry commandRegistry, ExceptionHandlerRegistry exceptionHandlerRegistry,
-                 ExecutionTaskRegistry executionTaskRegistry, ExtensionManager extensionManager, ProviderRegistry providerRegistry,
+                 AdviceRegistry adviceRegistry, ExtensionManager extensionManager, ProviderRegistry providerRegistry,
                  CommandExecutor executor, CommandResolver commandResolver, PathResolver pathResolver) {
         this.injector = injector;
         this.commandRegistry = commandRegistry;
         this.exceptionHandlerRegistry = exceptionHandlerRegistry;
-        this.executionTaskRegistry = executionTaskRegistry;
+        this.adviceRegistry = adviceRegistry;
         this.extensionManager = extensionManager;
         this.providerRegistry = providerRegistry;
         this.executor = executor;
@@ -141,67 +139,67 @@ public class Rimor {
     }
 
     /**
-     * Registers the given {@link ExecutionTask}.
+     * Registers the given {@link Advice}.
      *
-     * @param executionTask the execution task to register
+     * @param advice the execution task to register
      */
-    public Rimor registerExecutionTask(ExecutionTask executionTask) {
-        if (executionTask instanceof PreExecutionTask)
-            return this.registerPreExecutionTask((PreExecutionTask) executionTask);
-        else if (executionTask instanceof PostExecutionTask)
-            return this.registerPostExecutionTask((PostExecutionTask) executionTask);
-        throw new IllegalArgumentException(executionTask + " is neither a PreExecutionTask nor a PostExecutionTask");
+    public Rimor registerExecutionTask(Advice advice) {
+        if (advice instanceof PreAdvice)
+            return this.registerPreExecutionTask((PreAdvice) advice);
+        else if (advice instanceof PostAdvice)
+            return this.registerPostExecutionTask((PostAdvice) advice);
+        throw new IllegalArgumentException(advice + " is neither a PreExecutionTask nor a PostExecutionTask");
     }
 
     /**
-     * Registers the given {@link ExecutionTask}s.
+     * Registers the given {@link Advice}s.
      *
-     * @param executionTasks the execution tasks to register
+     * @param advice the execution tasks to register
      */
-    public Rimor registerExecutionTasks(ExecutionTask... executionTasks) {
-        for (ExecutionTask executionTask : executionTasks)
-            this.registerExecutionTask(executionTask);
+    public Rimor registerExecutionTasks(Advice... advice) {
+        for (Advice advice : advice)
+            this.registerExecutionTask(advice);
         return this;
     }
 
     /**
-     * Registers the given {@link PreExecutionTask}.
+     * Registers the given {@link PreAdvice}.
      *
      * @param executionTask the pre-execution task to register
      */
-    public Rimor registerPreExecutionTask(PreExecutionTask executionTask) {
-        this.executionTaskRegistry.registerPreExecutionTask(executionTask);
+    public Rimor registerPreExecutionTask(PreAdvice executionTask) {
+        this.adviceRegistry.registerPreExecutionTask(executionTask);
         return this;
     }
 
     /**
-     * Registers the given {@link PreExecutionTask}s.
+     * Registers the given {@link PreAdvice}s.
      *
      * @param executionTasks the pre-execution tasks to register
      */
-    public Rimor registerPreExecutionTasks(PreExecutionTask... executionTasks) {
-        for (PreExecutionTask executionTask : executionTasks)
+    public Rimor registerPreExecutionTasks(PreAdvice... executionTasks) {
+        for (PreAdvice executionTask : executionTasks)
             this.registerPreExecutionTask(executionTask);
         return this;
     }
 
     /**
-     * Registers the given {@link PostExecutionTask}.
+     * Registers the given {@link PostAdvice}.
      *
      * @param executionTask the post-execution task to register
      */
-    public Rimor registerPostExecutionTask(PostExecutionTask executionTask) {
-        this.executionTaskRegistry.registerPostExecutionTask(executionTask);
+    public Rimor registerPostExecutionTask(PostAdvice executionTask) {
+        this.adviceRegistry.registerPostExecutionTask(executionTask);
         return this;
     }
 
     /**
-     * Registers the given {@link PostExecutionTask}s.
+     * Registers the given {@link PostAdvice}s.
      *
      * @param executionTasks the post-execution tasks to register
      */
-    public Rimor registerPostExecutionTasks(PostExecutionTask... executionTasks) {
-        for (PostExecutionTask executionTask : executionTasks)
+    public Rimor registerPostExecutionTasks(PostAdvice... executionTasks) {
+        for (PostAdvice executionTask : executionTasks)
             this.registerPostExecutionTask(executionTask);
         return this;
     }
@@ -255,8 +253,8 @@ public class Rimor {
         return exceptionHandlerRegistry;
     }
 
-    public ExecutionTaskRegistry getExecutionTaskRegistry() {
-        return executionTaskRegistry;
+    public AdviceRegistry getExecutionTaskRegistry() {
+        return adviceRegistry;
     }
 
     public ExtensionManager getExtensionManager() {

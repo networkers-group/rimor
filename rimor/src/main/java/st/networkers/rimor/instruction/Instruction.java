@@ -1,45 +1,35 @@
 package st.networkers.rimor.instruction;
 
-import st.networkers.rimor.executable.Executable;
-import st.networkers.rimor.executable.ExecutableProperties;
-import st.networkers.rimor.execute.exception.ExceptionHandlerRegistry;
-import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
-import st.networkers.rimor.inject.Annotated;
-import st.networkers.rimor.inject.AnnotatedProperties;
+import st.networkers.rimor.annotated.Annotated;
+import st.networkers.rimor.annotated.AnnotatedProperties;
+import st.networkers.rimor.aop.AdviceRegistry;
+import st.networkers.rimor.aop.exception.ExceptionHandlerRegistry;
+import st.networkers.rimor.execute.Executable;
+import st.networkers.rimor.execute.ExecutableScope;
 import st.networkers.rimor.provide.ProviderRegistry;
-import st.networkers.rimor.reflect.CachedMethod;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Objects;
 
 public class Instruction implements Annotated, Executable {
 
-    private final Object commandInstance;
-    private final CachedMethod method;
-
+    private final MappingFunction mappingFunction;
     private final AnnotatedProperties annotatedProperties;
-    private final ExecutableProperties executableProperties;
-
+    private final ExecutableScope executableScope;
     private final Collection<String> identifiers;
 
-    public Instruction(Object commandInstance,
-                       Method method,
-                       ExecutableProperties executableProperties,
+    public Instruction(MappingFunction mappingFunction,
+                       AnnotatedProperties annotatedProperties,
+                       ExecutableScope executableScope,
                        Collection<String> identifiers) {
-        this.commandInstance = commandInstance;
-        this.method = CachedMethod.build(method);
-        this.annotatedProperties = AnnotatedProperties.build(method);
-        this.executableProperties = executableProperties;
+        this.mappingFunction = mappingFunction;
+        this.annotatedProperties = annotatedProperties;
+        this.executableScope = executableScope;
         this.identifiers = identifiers;
     }
 
-    public Object getCommandInstance() {
-        return commandInstance;
-    }
-
-    public CachedMethod getMethod() {
-        return method;
+    public MappingFunction getMappingFunction() {
+        return mappingFunction;
     }
 
     @Override
@@ -49,17 +39,17 @@ public class Instruction implements Annotated, Executable {
 
     @Override
     public ExceptionHandlerRegistry getExceptionHandlerRegistry() {
-        return executableProperties.getExceptionHandlerRegistry();
+        return executableScope.getExceptionHandlerRegistry();
     }
 
     @Override
-    public ExecutionTaskRegistry getExecutionTaskRegistry() {
-        return executableProperties.getExecutionTaskRegistry();
+    public AdviceRegistry getExecutionTaskRegistry() {
+        return executableScope.getExecutionTaskRegistry();
     }
 
     @Override
     public ProviderRegistry getProviderRegistry() {
-        return executableProperties.getProviderRegistry();
+        return executableScope.getProviderRegistry();
     }
 
     public Collection<String> getIdentifiers() {
@@ -71,11 +61,11 @@ public class Instruction implements Annotated, Executable {
         if (this == o) return true;
         if (!(o instanceof Instruction)) return false;
         Instruction that = (Instruction) o;
-        return Objects.equals(commandInstance, that.commandInstance) && Objects.equals(method, that.method) && Objects.equals(annotatedProperties, that.annotatedProperties) && Objects.equals(executableProperties, that.executableProperties) && Objects.equals(identifiers, that.identifiers);
+        return Objects.equals(mappingFunction, that.mappingFunction) && Objects.equals(annotatedProperties, that.annotatedProperties) && Objects.equals(executableScope, that.executableScope) && Objects.equals(identifiers, that.identifiers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(commandInstance, method, annotatedProperties, executableProperties, identifiers);
+        return Objects.hash(mappingFunction, annotatedProperties, executableScope, identifiers);
     }
 }

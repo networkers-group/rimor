@@ -1,6 +1,6 @@
 package st.networkers.rimor.instruction;
 
-import st.networkers.rimor.executable.ExecutableProperties;
+import st.networkers.rimor.execute.ExecutableScope;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -9,7 +9,7 @@ public class InstructionBuilder {
 
     private Object commandInstance;
     private Method method;
-    private ExecutableProperties executableProperties;
+    private ExecutableScope executableScope;
     private Collection<String> identifiers;
 
     public InstructionBuilder setCommandInstance(Object commandInstance) {
@@ -22,8 +22,8 @@ public class InstructionBuilder {
         return this;
     }
 
-    public InstructionBuilder setExecutableProperties(ExecutableProperties executableProperties) {
-        this.executableProperties = executableProperties;
+    public InstructionBuilder setExecutableProperties(ExecutableScope executableScope) {
+        this.executableScope = executableScope;
         return this;
     }
 
@@ -33,6 +33,6 @@ public class InstructionBuilder {
     }
 
     public Instruction create() {
-        return new Instruction(commandInstance, method, executableProperties, identifiers);
+        return new Instruction(commandInstance, method, executableScope, identifiers);
     }
 }

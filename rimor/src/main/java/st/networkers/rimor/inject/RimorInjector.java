@@ -1,8 +1,7 @@
 package st.networkers.rimor.inject;
 
 import st.networkers.rimor.Rimor;
-import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.provide.ProviderRegistry;
+import st.networkers.rimor.execute.ExecutableScope;
 import st.networkers.rimor.provide.RimorProvider;
 import st.networkers.rimor.reflect.CachedMethod;
 
@@ -18,7 +17,7 @@ public interface RimorInjector {
 
     /**
      * Gets an {@link Optional} wrapping the object associated with the given {@link Token} from the given
-     * {@link ExecutionContext}, if able. Otherwise, gets it from a registered provider, or an empty optional if there
+     * {@link ExecutionContext}, if able. Otherwise, gets it from a global provider, or an empty optional if there
      * are no providers that provide the given token.
      *
      * @param token   the token to get its associated object
@@ -28,14 +27,25 @@ public interface RimorInjector {
     <T> Optional<T> get(Token<T> token, ExecutionContext context);
 
     /**
+     * Gets an {@link Optional} wrapping the object associated with the given {@link Token} from the given
+     * {@link ExecutionContext}, if able. Otherwise, gets it from a registered provider in the given scope, a global
+     * provider, or returns an empty optional, in this order.
+     *
+     * @param token           the token to get its associated object
+     * @param context         the context of a command execution
+     * @param executableScope the execution scope properties
+     * @return an {@link Optional} wrapping the object associated with the token, or empty
+     */
+    <T> Optional<T> get(Token<T> token, ExecutionContext context, ExecutableScope executableScope);
+
+    /**
      * Invokes the given method injecting all its parameters.
      *
-     * @param cachedMethod the method to invoke
-     * @param instance     an instance of the method's class to invoke it on, or {@code null} if static
-     * @param context      the context of a command execution
+     * @param cachedMethod    the method to invoke
+     * @param instance        an instance of the method's class to invoke it on, or {@code null} if static
+     * @param context         the context of a command execution
+     * @param executableScope the execution scope properties
      * @return the result of executing the method
      */
-    Object invokeMethod(CachedMethod cachedMethod, Object instance, ExecutionContext context);
-
-    ProviderRegistry getProviderRegistry();
+    Object invokeMethod(CachedMethod cachedMethod, Object instance, ExecutionContext context, ExecutableScope executableScope);
 }

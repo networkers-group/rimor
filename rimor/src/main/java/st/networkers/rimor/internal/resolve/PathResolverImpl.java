@@ -1,7 +1,7 @@
 package st.networkers.rimor.internal.resolve;
 
 import st.networkers.rimor.command.MappedCommand;
-import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.inject.ExecutionContext;
 import st.networkers.rimor.resolve.InstructionNotFoundException;
 import st.networkers.rimor.resolve.PathResolver;
 import st.networkers.rimor.resolve.ResolvedPath;

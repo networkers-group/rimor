@@ -1,4 +1,6 @@
-package st.networkers.rimor.execute.exception;
+package st.networkers.rimor.aop.exception;
+
+import st.networkers.rimor.aop.ExceptionHandler;
 
 import java.util.Arrays;
 import java.util.Collection;

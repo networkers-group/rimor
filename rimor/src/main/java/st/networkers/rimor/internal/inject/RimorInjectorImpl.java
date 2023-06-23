@@ -1,6 +1,8 @@
 package st.networkers.rimor.internal.inject;
 
-import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.execute.ExecutableScope;
+import st.networkers.rimor.inject.ExecutionContext;
+import st.networkers.rimor.inject.ParameterToken;
 import st.networkers.rimor.inject.RimorInjector;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.provide.ProviderRegistry;
@@ -32,13 +34,21 @@ public class RimorInjectorImpl implements RimorInjector {
     }
 
     @Override
-    public Object invokeMethod(CachedMethod method, Object instance, ExecutionContext context) {
-        return ReflectionUtils.invoke(method.getMethod(), instance, resolveParameters(method, context));
+    public <T> Optional<T> get(Token<T> token, ExecutionContext context, ExecutableScope executableScope) {
+        return OptionalUtils.firstPresent(
+                context.get(token),
+                () -> this.fromProvider(token, context, executableScope.getProviderRegistry()),
+                () -> this.fromProvider(token, context, this.providerRegistry)
+        );
     }
 
     @Override
-    public ProviderRegistry getProviderRegistry() {
-        return providerRegistry;
+    public Object invokeMethod(CachedMethod method, Object instance, ExecutionContext context, ExecutableScope executableScope) {
+        return ReflectionUtils.invoke(method.getMethod(), instance, resolveParameters(method, context));
+    }
+
+    private <T> Optional<T> fromProvider(Token<T> token, ExecutionContext context, ProviderRegistry providerRegistry) {
+        return providerRegistry.findFor(token, context).map(provider -> provider.get(token, context));
     }
 
     private Object[] resolveParameters(CachedMethod method, ExecutionContext context) {

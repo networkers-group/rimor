@@ -1,6 +1,6 @@
 package st.networkers.rimor.instruction;
 
-import st.networkers.rimor.executable.ExecutableProperties;
+import st.networkers.rimor.execute.ExecutableScope;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -10,14 +10,14 @@ import java.util.List;
 
 public class InstructionResolver {
 
-    public ResolvedInstructions resolveInstructions(Object commandInstance, ExecutableProperties executableProperties) {
+    public ResolvedInstructions resolveInstructions(Object commandInstance, ExecutableScope executableScope) {
         ResolvedInstructions results = new ResolvedInstructions();
 
         for (Method method : commandInstance.getClass().getMethods()) {
             if (!method.isAnnotationPresent(MainInstructionMapping.class) && !method.isAnnotationPresent(InstructionMapping.class))
                 continue;
 
-            Instruction instruction = this.resolveInstruction(commandInstance, executableProperties, method);
+            Instruction instruction = this.resolveInstruction(commandInstance, executableScope, method);
             if (method.isAnnotationPresent(MainInstructionMapping.class))
                 results.setMainInstruction(instruction);
 
@@ -27,11 +27,11 @@ public class InstructionResolver {
         return results;
     }
 
-    public Instruction resolveInstruction(Object commandInstance, ExecutableProperties executableProperties, Method method) {
+    public Instruction resolveInstruction(Object commandInstance, ExecutableScope executableScope, Method method) {
         return new InstructionBuilder()
                 .setCommandInstance(commandInstance)
                 .setMethod(method)
-                .setExecutableProperties(executableProperties)
+                .setExecutableProperties(executableScope)
                 .setIdentifiers(this.resolveIdentifiers(method))
                 .create();
     }

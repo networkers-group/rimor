@@ -1,9 +1,9 @@
 package st.networkers.rimor.internal.execute;
 
-import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.execute.CommandExecutor;
-import st.networkers.rimor.execute.exception.ExceptionHandlerRegistry;
-import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
+import st.networkers.rimor.aop.AdviceRegistry;
+import st.networkers.rimor.aop.CommandExecutor;
+import st.networkers.rimor.aop.exception.ExceptionHandlerRegistry;
+import st.networkers.rimor.inject.ExecutionContext;
 import st.networkers.rimor.inject.RimorInjector;
 import st.networkers.rimor.instruction.Instruction;
 
@@ -11,13 +11,13 @@ public class CommandExecutorImpl implements CommandExecutor {
 
     private final RimorInjector injector;
     private final ExceptionHandlerRegistry exceptionHandlerRegistry;
-    private final ExecutionTaskRegistry executionTaskRegistry;
+    private final AdviceRegistry adviceRegistry;
 
     public CommandExecutorImpl(RimorInjector injector, ExceptionHandlerRegistry exceptionHandlerRegistry,
-                               ExecutionTaskRegistry executionTaskRegistry) {
+                               AdviceRegistry adviceRegistry) {
         this.injector = injector;
         this.exceptionHandlerRegistry = exceptionHandlerRegistry;
-        this.executionTaskRegistry = executionTaskRegistry;
+        this.adviceRegistry = adviceRegistry;
     }
 
     @Override
@@ -36,12 +36,12 @@ public class CommandExecutorImpl implements CommandExecutor {
 
     private void runPreExecutionTasks(Instruction instruction, ExecutionContext context) {
         instruction.getExecutionTaskRegistry().runPreExecutionTasks(instruction, context);
-        executionTaskRegistry.runPreExecutionTasks(instruction, context);
+        adviceRegistry.runPreExecutionTasks(instruction, context);
     }
 
     private void runPostExecutionTasks(Instruction instruction, ExecutionContext context) {
         instruction.getExecutionTaskRegistry().runPostExecutionTasks(instruction, context);
-        executionTaskRegistry.runPostExecutionTasks(instruction, context);
+        adviceRegistry.runPostExecutionTasks(instruction, context);
     }
 
     private void handleThrowable(Throwable throwable, Instruction instruction, ExecutionContext context) {
