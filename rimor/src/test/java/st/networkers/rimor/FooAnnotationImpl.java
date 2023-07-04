@@ -17,6 +17,11 @@ public class FooAnnotationImpl implements FooAnnotation {
     }
 
     @Override
+    public Class<? extends Annotation> annotationType() {
+        return FooAnnotation.class;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof FooAnnotation)) return false;
@@ -25,7 +30,7 @@ public class FooAnnotationImpl implements FooAnnotation {
     }
 
     @Override
-    public Class<? extends Annotation> annotationType() {
-        return FooAnnotation.class;
+    public int hashCode() {
+        return 127 * "value".hashCode() ^ value.hashCode();
     }
 }

@@ -1,44 +1,60 @@
 package st.networkers.rimor.provide;
 
-import com.google.common.reflect.TypeToken;
-import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.annotated.AnnotatedProperties;
 import st.networkers.rimor.inject.Token;
+import st.networkers.rimor.util.MatchingMap;
+import st.networkers.rimor.util.OptionalUtils;
 
+import java.lang.reflect.Type;
 import java.util.*;
-import java.util.stream.Stream;
+import java.util.Map.Entry;
 
 public class ProviderRegistry implements Cloneable {
 
-    private Map<TypeToken<?>, List<RimorProvider<?>>> providers = new HashMap<>();
+    // TODO cache
+    private MatchingMap<Token<?>, RimorProvider<?>> providers = new MatchingMap<>();
 
     /**
      * Registers the given {@link RimorProvider}s.
      *
      * @param provider the provider to register
      */
-    public <T> void register(RimorProvider<T> provider) {
-        for (TypeToken<? extends T> type : provider.getProvidedTypes())
-            this.providers.computeIfAbsent(type, t -> new ArrayList<>()).add(provider);
+    public void register(RimorProvider<?> provider) {
+        AnnotatedProperties annotatedProperties = provider.getAnnotatedProperties();
+        for (Type type : provider.getProvidedTypes()) {
+            Token<?> token = Token.of(type, annotatedProperties);
+            this.providers.put(token, provider); // TODO throw if key already present?
+        }
     }
 
     /**
-     * Finds the {@link RimorProvider} associated with the given {@link Token}.
+     * Finds the {@link RimorProvider} bound to the given {@link Token} or, if there are no bindings for it,
+     * finds any suitable provider for its type and annotations, if able.
      *
-     * @param token the token to get its associated provider
-     * @return an optional containing the provider associated, or empty if none was found.
+     * @param token the token to get its bound (or a suitable) provider
+     * @return an optional containing the found provider, or empty if none was found
      */
     @SuppressWarnings("unchecked")
-    public <T> Optional<RimorProvider<T>> findFor(Token<T> token, ExecutionContext context) {
-        return this.get(token)
-                .filter(provider -> provider.canProvide(token, context))
-                .map(provider -> (RimorProvider<T>) provider)
-                .findAny();
+    public <T> Optional<RimorProvider<T>> findFor(Token<? super T> token) {
+        return OptionalUtils.firstPresent(
+                        this.getFor(token),
+                        () -> this.findAnySuitable(token)
+                )
+                .map(provider -> (RimorProvider<T>) provider);
     }
 
-    private <T> Stream<RimorProvider<?>> get(Token<T> token) {
-        return providers.containsKey(token.getType())
-                ? providers.get(token.getType()).stream()
-                : providers.values().stream().flatMap(Collection::stream);
+    private Optional<RimorProvider<?>> getFor(Token<?> token) {
+        return Optional.ofNullable(this.providers.get(token));
+    }
+
+    private Optional<RimorProvider<?>> findAnySuitable(Token<?> token) {
+        for (Entry<Integer, List<Entry<Token<?>, RimorProvider<?>>>> matchingTokenEntry : this.providers.getDelegate().entrySet()) {
+            for (Entry<Token<?>, RimorProvider<?>> entry : matchingTokenEntry.getValue()) {
+                if (token.isAssignableFrom(entry.getKey()))
+                    return Optional.ofNullable(entry.getValue());
+            }
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -58,7 +74,7 @@ public class ProviderRegistry implements Cloneable {
     public ProviderRegistry clone() {
         try {
             ProviderRegistry clone = (ProviderRegistry) super.clone();
-            clone.providers = new HashMap<>(this.providers);
+            clone.providers = new MatchingMap<>(this.providers);
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();

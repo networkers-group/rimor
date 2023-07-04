@@ -1,70 +1,101 @@
 package st.networkers.rimor.inject;
 
-import com.google.common.reflect.TypeToken;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.reflect.TypeUtils;
+import st.networkers.rimor.annotated.Annotated;
 import st.networkers.rimor.annotated.AnnotatedProperties;
 import st.networkers.rimor.annotated.DinamicallyAnnotated;
+import st.networkers.rimor.util.MatchingKey;
+import st.networkers.rimor.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
- * Exchanged in {@link RimorInjector} to obtain an object for the wrapped type {@link T}.
- * <p>
- * For generic types, use the {@link TypeToken} constructor. For example, to construct a Token of type
- * {@literal List<String>} annotated with {@code @Params}, use:
+ * Represents an annotated {@link Type}.
+ * <p>For example, to represent a {@link String} annotated with any {@code @MyAnnotation}, use:
  * <pre>
- * new Token<>(new{@literal TypeToken<List<String>>}() {}).annotatedWith(Params.class);
+ * Token.of(String.class).annotatedWith(MyAnnotation.class);
+ * </pre>
+ * For generic types, use an empty anonymous inner class along with the {@link Token#Token()} constructor.
+ * For example, to build a Token of type {@code List<String>} annotated with any {@code @MyAnnotation}, use:
+ * <pre>
+ * new Token&lt;List&lt;String>>() {}.annotatedWith(MyAnnotation.class);
  * </pre>
  */
-public class Token<T> extends DinamicallyAnnotated<Token<T>> {
-
-    private final TypeToken<T> type;
+public class Token<T> extends DinamicallyAnnotated<Token<T>> implements MatchingKey {
 
     /**
-     * Constructs a Token of a given type.
+     * Builds a Token for the provided type.
      *
      * @param type the type of the token
      */
-    public Token(Class<T> type) {
-        this(TypeToken.of(type));
+    public static <T> Token<T> of(Class<T> type) {
+        return of((Type) ClassUtils.primitiveToWrapper(type));
     }
 
     /**
-     * Constructs a Token of a given type.
+     * Builds a Token for the provided type.
      *
      * @param type the type of the token
      */
-    public Token(TypeToken<T> type) {
-        this.type = type.wrap();
+    public static <T> Token<T> of(Type type) {
+        return new Token<>(type);
     }
 
     /**
-     * Constructs a Token of a given type with the specified {@link AnnotatedProperties}.
-     * <p>
-     * For a programmatic use of Token, use the {@link Token#Token(Class)} or {@link Token#Token(TypeToken)} constructor
-     * along with the {@link #annotatedWith(Annotation)} and {@link #annotatedWith(Class)} methods.
+     * Builds a Token for the provided type with the specified {@link AnnotatedProperties}.
      *
-     * @param type the type of the token
+     * @param type                the type of the token
+     * @param annotatedProperties the {@link AnnotatedProperties} of the token
      */
-    public Token(Class<T> type, AnnotatedProperties annotatedProperties) {
-        this(TypeToken.of(type), annotatedProperties);
+    public static <T> Token<T> of(Type type, AnnotatedProperties annotatedProperties) {
+        return new Token<>(type, annotatedProperties);
     }
 
+    private final Type type;
+
     /**
-     * Constructs a Token of a given type with the specified {@link AnnotatedProperties}.
-     * <p>
-     * For a programmatic use of Token, use the {@link Token#Token(Class)} or {@link Token#Token(TypeToken)} constructor
-     * along with the {@link #annotatedWith(Annotation)} and {@link #annotatedWith(Class)} methods.
-     *
-     * @param type the type of the token
+     * Constructs a Token for the type {@link T}.
      */
-    public Token(TypeToken<T> type, AnnotatedProperties annotatedProperties) {
+    protected Token() {
+        this.type = TypeUtils.getTypeArguments(getClass(), Token.class).get(Token.class.getTypeParameters()[0]);
+    }
+
+    protected Token(Type type) {
+        this.type = ReflectionUtils.wrapPrimitive(type);
+    }
+
+    protected Token(Type type, AnnotatedProperties annotatedProperties) {
         super(annotatedProperties);
-        this.type = type.wrap();
+        this.type = ReflectionUtils.wrapPrimitive(type);
     }
 
-    public TypeToken<T> getType() {
+    public boolean isAssignableFrom(Token<?> other) {
+        return TypeUtils.isAssignable(other.getType(), this.type) && this.isAssignableFrom(other, AssignCriteria.EQUALS);
+    }
+
+    public Type getType() {
         return type;
+    }
+
+    @Override
+    public boolean matches(MatchingKey o) {
+        if (this == o) return true;
+        if (!(o instanceof Token)) return false;
+        Token<?> token = (Token<?>) o;
+        return this.type.equals(token.type) && this.isAssignableFrom(token, Annotated.AssignCriteria.EQUALS);
+    }
+
+    @Override
+    public int matchingHashCode() {
+        Set<Class<? extends Annotation>> annotationTypes = new HashSet<>(this.getRequiredAnnotations());
+        annotationTypes.addAll(this.getAnnotatedProperties().getAnnotations().keySet());
+
+        return Objects.hash(this.type, annotationTypes);
     }
 
     @Override
@@ -79,5 +110,13 @@ public class Token<T> extends DinamicallyAnnotated<Token<T>> {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), type);
+    }
+
+    @Override
+    public String toString() {
+        return "Token{" +
+               "type=" + type +
+               ", annotatedProperties=" + getAnnotatedProperties() +
+               '}';
     }
 }

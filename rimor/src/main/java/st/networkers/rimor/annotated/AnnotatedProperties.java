@@ -73,4 +73,12 @@ public class AnnotatedProperties {
     public int hashCode() {
         return Objects.hash(annotations, requiredAnnotations);
     }
+
+    @Override
+    public String toString() {
+        return "AnnotatedProperties{" +
+               "annotations=" + annotations +
+               ", requiredAnnotations=" + requiredAnnotations +
+               '}';
+    }
 }
