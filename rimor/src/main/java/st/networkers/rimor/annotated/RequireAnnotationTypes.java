@@ -3,11 +3,10 @@ package st.networkers.rimor.annotated;
 import java.lang.annotation.*;
 
 /**
- * Declares that an {@link Annotated} requires to have the provided annotation types.
+ * Declares that an {@link Annotated} requires to have the provided qualifier annotation types.
  * <p>
- * This is useful for looking for annotation types rather than annotation instances: an {@link Annotated} A matches
- * another {@link Annotated} B if A has all the annotations of B <b>and</b> A has an instance for all the required
- * annotation types of B.
+ * This is useful for looking for annotation types rather than annotation instances: an {@link Annotated} A qualifies for
+ * another {@link Annotated} B if every annotation instance of A is present in B or B requires the type of that annotation.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})

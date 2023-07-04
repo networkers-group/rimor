@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Thrown if the execution path does not belong to any instruction and there are no main instructions for the command.
+ * Thrown if the execution path does not lead to any instruction and there are no main instructions for the command.
  * <p>
  * For example, having this command with mappings for {@code commit} and {@code push} instructions, an
  * {@link InstructionNotFoundException} will be thrown if {@code "git foo"} is executed:
@@ -33,8 +33,7 @@ import java.util.Objects;
  * public class GitCommand {
  *
  *     &#64;MainInstructionMapping
- *     public void displayGitInstructions(@Params {@literal List<Object>} params) {
- *         // rimor-params extension for @Params :)
+ *     public void displayGitInstructions(@InstructionParams {@literal List<Object>} params) {
  *         ...
  *     }
  * }

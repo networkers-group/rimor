@@ -27,7 +27,7 @@ public class RimorInjectorImpl implements RimorInjector {
     public <T> Optional<T> get(Token<T> token, ExecutionContext context) {
         return OptionalUtils.firstPresent(
                 context.get(token),
-                () -> providerRegistry.findFor(token, context).map(provider -> provider.get(token, context))
+                () -> providerRegistry.findFor(token).map(provider -> provider.get(token, context))
         );
     }
 

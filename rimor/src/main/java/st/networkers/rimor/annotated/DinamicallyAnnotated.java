@@ -4,22 +4,21 @@ import java.lang.annotation.Annotation;
 import java.util.*;
 
 /**
- * Abstract class for objects to be able to be programmatically annotated at runtime.
+ * Abstract class for objects to be able to be annotated at runtime.
  */
 public abstract class DinamicallyAnnotated<T extends DinamicallyAnnotated<T>> implements Annotated {
 
     private final Map<Class<? extends Annotation>, Annotation> annotations;
     private final Collection<Class<? extends Annotation>> requiredAnnotations;
 
-    public DinamicallyAnnotated() {
+    protected DinamicallyAnnotated() {
         this.annotations = new HashMap<>();
         this.requiredAnnotations = new ArrayList<>();
     }
 
-    public DinamicallyAnnotated(AnnotatedProperties properties) {
-        this();
-        this.annotations.putAll(properties.getAnnotations());
-        this.requiredAnnotations.addAll(properties.getRequiredAnnotations());
+    protected DinamicallyAnnotated(AnnotatedProperties properties) {
+        this.annotations = new HashMap<>(properties.getAnnotations());
+        this.requiredAnnotations = new ArrayList<>(properties.getRequiredAnnotations());
     }
 
     public T annotatedWith(Annotation annotation) {

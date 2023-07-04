@@ -1,5 +1,6 @@
 package st.networkers.rimor.execute.task;
 
+import st.networkers.rimor.annotated.Annotated;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.executable.Executable;
 
@@ -46,7 +47,7 @@ public class ExecutionTaskRegistry implements Cloneable {
 
     private void runExecutionTasks(Executable executable, ExecutionContext context, Collection<? extends ExecutionTask> executionTasks) {
         executionTasks.forEach(executionTask -> {
-            if (executable.matchesAnnotations(executionTask))
+            if (executable.isAssignableFrom(executionTask, Annotated.AssignCriteria.CONTAINS))
                 executionTask.run(executable, context);
         });
     }

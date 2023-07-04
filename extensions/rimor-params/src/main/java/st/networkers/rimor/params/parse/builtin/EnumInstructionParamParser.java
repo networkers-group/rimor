@@ -1,19 +1,16 @@
 package st.networkers.rimor.params.parse.builtin;
 
-import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.params.parse.AbstractParamParser;
+import st.networkers.rimor.params.parse.AbstractInstructionParamParser;
 
 /**
  * Built-in param parser for any enum type.
  */
-public class EnumParamParser extends AbstractParamParser<Enum<?>> {
+public class EnumInstructionParamParser extends AbstractInstructionParamParser<Enum<?>> {
 
-    private static final TypeToken<Enum<?>> ENUM_TYPE = new TypeToken<Enum<?>>() {};
-
-    public EnumParamParser() {
-        super(ENUM_TYPE);
+    public EnumInstructionParamParser() {
+        super(Enum.class);
     }
 
     @Override
@@ -30,17 +27,10 @@ public class EnumParamParser extends AbstractParamParser<Enum<?>> {
         throw new IllegalArgumentException(rawParameter + " is neither an Enum or String type");
     }
 
-    @Override
-    public boolean canProvide(Token<?> token, ExecutionContext context) {
-        return token.getType().isSubtypeOf(ENUM_TYPE)
-               && this.matchesAnnotations(token)
-               && token.matchesAnnotations(this);
-    }
-
     @SuppressWarnings("unchecked")
     private <T extends Enum<T>> T parse(String parameter, Token<? extends Enum<?>> token) {
         try {
-            return Enum.valueOf((Class<T>) token.getType().getRawType(), parameter);
+            return Enum.valueOf((Class<T>) token.getType(), parameter);
         } catch (IllegalArgumentException e) {
             return null;
         }

@@ -1,42 +1,29 @@
 package st.networkers.rimor.context;
 
-import com.google.common.reflect.TypeToken;
 import st.networkers.rimor.inject.Token;
+import st.networkers.rimor.util.MatchingMap;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
- * Contains injectable objects relative to the execution of a command (for example, its parameters, the executor...).
- * <p>
- * Every object is wrapped in a {@link ContextComponent}.
+ * Contains information relative to the execution of a command (for example, its parameters, the executor...).
  */
 public class ExecutionContext {
 
-    public static ExecutionContext build(ContextComponent<?>... components) {
-        return new ExecutionContext(Arrays.stream(components).collect(Collectors.groupingBy(ContextComponent::getType)));
+    public static Builder builder() {
+        return new Builder();
     }
 
-    public static ExecutionContext build(Collection<ContextComponent<?>> components) {
-        return new ExecutionContext(components.stream().collect(Collectors.groupingBy(ContextComponent::getType)));
-    }
+    private final MatchingMap<Token<?>, Object> components;
 
-    private final Map<TypeToken<?>, List<ContextComponent<?>>> components;
-
-    private ExecutionContext(Map<TypeToken<?>, List<ContextComponent<?>>> components) {
+    public ExecutionContext(MatchingMap<Token<?>, Object> components) {
         this.components = components;
     }
 
     @SuppressWarnings("unchecked")
     public <T> Optional<T> get(Token<T> token) {
-        if (!this.components.containsKey(token.getType()))
-            return Optional.empty();
-
-        return this.components.get(token.getType()).stream()
-                .filter(component -> component.canProvide(token))
-                .map(component -> (ContextComponent<T>) component)
-                .map(ContextComponent::getObject)
-                .findAny();
+        return (Optional<T>) Optional.ofNullable(components.get(token));
     }
 
     @Override
@@ -50,5 +37,27 @@ public class ExecutionContext {
     @Override
     public int hashCode() {
         return Objects.hash(components);
+    }
+
+    public static class Builder {
+        private final MatchingMap<Token<?>, Object> components;
+
+        private Builder() {
+            this.components = new MatchingMap<>();
+        }
+
+        public <T> Builder bind(Class<? super T> type, T object) {
+            this.components.put(Token.of(type), object);
+            return this;
+        }
+
+        public <T> Builder bind(Token<? super T> token, T object) {
+            this.components.put(token, object);
+            return this;
+        }
+
+        public ExecutionContext build() {
+            return new ExecutionContext(this.components);
+        }
     }
 }

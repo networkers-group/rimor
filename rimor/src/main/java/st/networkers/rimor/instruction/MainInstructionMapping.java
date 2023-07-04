@@ -17,8 +17,7 @@ import java.lang.annotation.Target;
  * public class GitCommand {
  *
  *     &#64;MainInstructionMapping
- *     public void displayGitInstructions(@Params {@literal List<Object>} params) {
- *         // rimor-params extension for @Params :)
+ *     public void displayGitInstructions(@InstructionParams {@literal List<Object>} params) {
  *         ...
  *     }
  *

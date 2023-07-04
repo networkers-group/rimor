@@ -1,10 +1,9 @@
 package st.networkers.rimor.internal.provide;
 
-import com.google.common.reflect.TypeToken;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import st.networkers.rimor.FooAnnotation;
 import st.networkers.rimor.FooAnnotationImpl;
-import st.networkers.rimor.context.ContextComponent;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.internal.inject.RimorInjectorImpl;
@@ -24,47 +23,46 @@ class OptionalProviderTest {
 
     @Test
     void givenContextWithStringComponent_whenGettingStringWrappedInOptional_optionalContainsGivenString() {
-        ExecutionContext context = ExecutionContext.build(
-                new ContextComponent<>(String.class, "foo")
-        );
+        ExecutionContext context = ExecutionContext.builder()
+                .bind(String.class, "foo")
+                .build();
 
-        TypeToken<Optional<String>> type = new TypeToken<Optional<String>>() {};
-        assertThat(provider.get(buildToken(type), context)).isEqualTo(Optional.of("foo"));
+        Token<Optional<String>> token = new Token<Optional<String>>() {};
+        assertThat(get(token, context)).contains("foo");
     }
 
     @Test
-    void givenContextWithStringAnnotatedWithFooAnnotation_whenGettingOptionalStringAnnotatedWithFooAnnotation_optionalContainsGivenString() {
-        ExecutionContext context = ExecutionContext.build(
-                new ContextComponent<>(String.class, "foo").annotatedWith(new FooAnnotationImpl("bar"))
-        );
+    void givenContextWithStringAnnotatedWithFooAnnotation_whenGettingStringWrappedInOptionalAnnotatedWithFooAnnotation_optionalContainsGivenString() {
+        ExecutionContext context = ExecutionContext.builder()
+                .bind(Token.of(String.class).annotatedWith(FooAnnotation.class), "foo")
+                .build();
 
-        Token<Optional<?>> token = buildToken(new TypeToken<Optional<String>>() {})
-                .annotatedWith(new FooAnnotationImpl("bar"));
-        assertThat(provider.get(token, context)).isEqualTo(Optional.of("foo"));
+        Token<Optional<String>> token = new Token<Optional<String>>() {}.annotatedWith(new FooAnnotationImpl("bar"));
+        assertThat(get(token, context)).contains("foo");
     }
 
     @Test
     void givenContextWithIntComponent_whenGettingIntegerWrappedInOptional_optionalContainsGivenInteger() {
-        ExecutionContext context = ExecutionContext.build(
-                new ContextComponent<>(int.class, 3)
-        );
+        ExecutionContext context = ExecutionContext.builder()
+                .bind(int.class, 3)
+                .build();
 
-        TypeToken<Optional<Integer>> type = new TypeToken<Optional<Integer>>() {};
-        assertThat(provider.get(buildToken(type), context)).isEqualTo(Optional.of(3));
+        Token<Optional<Integer>> token = new Token<Optional<Integer>>() {};
+        assertThat(get(token, context)).contains(3);
     }
 
     @Test
     void givenContextWithIntComponent_whenGettingStringWrappedInOptional_optionalIsEmpty() {
-        ExecutionContext context = ExecutionContext.build(
-                new ContextComponent<>(int.class, 3)
-        );
+        ExecutionContext context = ExecutionContext.builder()
+                .bind(int.class, 3)
+                .build();
 
-        TypeToken<Optional<String>> type = new TypeToken<Optional<String>>() {};
-        assertThat(provider.get(buildToken(type), context)).isEmpty();
+        Token<Optional<String>> token = new Token<Optional<String>>() {};
+        assertThat(get(token, context)).isEmpty();
     }
 
     @SuppressWarnings("unchecked")
-    Token<Optional<?>> buildToken(TypeToken<? extends Optional<?>> type) {
-        return (Token<Optional<?>>) new Token<>(type);
+    Optional<Object> get(Token<? extends Optional<?>> token, ExecutionContext context) {
+        return (Optional<Object>) provider.get((Token<Optional<?>>) token, context);
     }
 }
