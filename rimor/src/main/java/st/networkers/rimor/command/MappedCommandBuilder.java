@@ -1,6 +1,5 @@
 package st.networkers.rimor.command;
 
-import st.networkers.rimor.annotated.AnnotatedProperties;
 import st.networkers.rimor.instruction.Instruction;
 
 import java.util.Collection;
@@ -11,7 +10,6 @@ import java.util.Map;
 public class MappedCommandBuilder {
 
     private Object commandInstance;
-    private AnnotatedProperties annotatedProperties;
     private List<String> identifiers;
     private Instruction mainInstruction;
     private Map<String, Instruction> instructions;
@@ -19,11 +17,6 @@ public class MappedCommandBuilder {
 
     public MappedCommandBuilder setCommandInstance(Object commandInstance) {
         this.commandInstance = commandInstance;
-        return this;
-    }
-
-    public MappedCommandBuilder setAnnotatedProperties(AnnotatedProperties annotatedProperties) {
-        this.annotatedProperties = annotatedProperties;
         return this;
     }
 
@@ -60,6 +53,6 @@ public class MappedCommandBuilder {
     }
 
     public MappedCommand create() {
-        return new MappedCommand(commandInstance, annotatedProperties, identifiers, mainInstruction, instructions, subcommands);
+        return new MappedCommand(commandInstance, identifiers, mainInstruction, instructions, subcommands);
     }
 }

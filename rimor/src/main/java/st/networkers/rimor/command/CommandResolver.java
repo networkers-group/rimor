@@ -1,6 +1,5 @@
 package st.networkers.rimor.command;
 
-import st.networkers.rimor.annotated.AnnotatedProperties;
 import st.networkers.rimor.instruction.InstructionResolver;
 import st.networkers.rimor.instruction.ResolvedInstructions;
 import st.networkers.rimor.util.ReflectionUtils;
@@ -29,15 +28,12 @@ public class CommandResolver {
         if (!commandInstance.getClass().isAnnotationPresent(CommandMapping.class))
             throw new IllegalArgumentException("there is no CommandMapping annotation in " + commandInstance.getClass().getName());
 
-        AnnotatedProperties annotatedProperties = AnnotatedProperties.build(commandInstance.getClass());
         List<String> identifiers = this.resolveIdentifiers(commandInstance);
-
         ResolvedInstructions instructions = instructionResolver.resolveInstructions(commandInstance);
         Collection<MappedCommand> subcommands = this.resolveSubcommands(commandInstance);
 
         return new MappedCommandBuilder()
                 .setCommandInstance(commandInstance)
-                .setAnnotatedProperties(annotatedProperties)
                 .setIdentifiers(identifiers)
                 .setMainInstruction(instructions.getMainInstruction())
                 .setInstructions(instructions.getInstructions())

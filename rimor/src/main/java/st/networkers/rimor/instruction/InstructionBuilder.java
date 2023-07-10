@@ -1,6 +1,5 @@
 package st.networkers.rimor.instruction;
 
-import st.networkers.rimor.annotated.AnnotatedProperties;
 import st.networkers.rimor.reflect.CachedMethod;
 
 import java.lang.reflect.Method;
@@ -28,6 +27,6 @@ public class InstructionBuilder {
     }
 
     public Instruction create() {
-        return new Instruction(commandInstance, CachedMethod.build(method), AnnotatedProperties.build(method), identifiers);
+        return new Instruction(commandInstance, CachedMethod.build(method), identifiers);
     }
 }
