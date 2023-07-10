@@ -1,7 +1,7 @@
 package st.networkers.rimor.resolve;
 
 import st.networkers.rimor.command.MappedCommand;
-import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.inject.ExecutionContext;
 
 import java.util.List;
 

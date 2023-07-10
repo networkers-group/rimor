@@ -4,9 +4,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import st.networkers.rimor.FooAnnotation;
 import st.networkers.rimor.FooAnnotationImpl;
-import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.inject.ExecutionContext;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.internal.inject.RimorInjectorImpl;
+import st.networkers.rimor.inject.RimorInjectorImpl;
 
 import java.util.Optional;
 

@@ -1,6 +1,5 @@
-package st.networkers.rimor.context;
+package st.networkers.rimor.inject;
 
-import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.util.MatchingMap;
 
 import java.util.Objects;

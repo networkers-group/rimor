@@ -1,8 +1,5 @@
-package st.networkers.rimor.internal.inject;
+package st.networkers.rimor.inject;
 
-import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.inject.RimorInjector;
-import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.provide.ProviderRegistry;
 import st.networkers.rimor.reflect.CachedMethod;
 import st.networkers.rimor.reflect.CachedParameter;
@@ -34,11 +31,6 @@ public class RimorInjectorImpl implements RimorInjector {
     @Override
     public Object invokeMethod(CachedMethod method, Object instance, ExecutionContext context) {
         return ReflectionUtils.invoke(method.getMethod(), instance, resolveParameters(method, context));
-    }
-
-    @Override
-    public ProviderRegistry getProviderRegistry() {
-        return providerRegistry;
     }
 
     private Object[] resolveParameters(CachedMethod method, ExecutionContext context) {

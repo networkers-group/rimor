@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import st.networkers.rimor.FooAnnotation;
 import st.networkers.rimor.FooAnnotationImpl;
 import st.networkers.rimor.annotated.RequireAnnotationTypes;
-import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.inject.ExecutionContext;
 import st.networkers.rimor.inject.Token;
 
 import static org.assertj.core.api.Assertions.assertThat;

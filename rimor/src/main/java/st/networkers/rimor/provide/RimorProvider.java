@@ -1,7 +1,7 @@
 package st.networkers.rimor.provide;
 
 import st.networkers.rimor.annotated.Annotated;
-import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.inject.ExecutionContext;
 import st.networkers.rimor.inject.Token;
 
 import java.lang.reflect.Type;

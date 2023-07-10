@@ -4,7 +4,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 import st.networkers.rimor.annotated.AnnotatedProperties;
 import st.networkers.rimor.annotated.DinamicallyAnnotated;
-import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.inject.ExecutionContext;
 import st.networkers.rimor.inject.Token;
 
 import java.lang.reflect.Type;

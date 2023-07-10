@@ -2,12 +2,8 @@ package st.networkers.rimor.command;
 
 import st.networkers.rimor.annotated.Annotated;
 import st.networkers.rimor.annotated.AnnotatedProperties;
-import st.networkers.rimor.executable.Executable;
-import st.networkers.rimor.executable.ExecutableProperties;
-import st.networkers.rimor.execute.exception.ExceptionHandlerRegistry;
-import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
+import st.networkers.rimor.execute.Executable;
 import st.networkers.rimor.instruction.Instruction;
-import st.networkers.rimor.provide.ProviderRegistry;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,7 +18,6 @@ public class MappedCommand implements Annotated, Executable {
 
     private final Object commandInstance;
     private final AnnotatedProperties annotatedProperties;
-    private final ExecutableProperties executableProperties;
 
     private final List<String> identifiers;
 
@@ -32,14 +27,12 @@ public class MappedCommand implements Annotated, Executable {
 
     public MappedCommand(Object commandInstance,
                          AnnotatedProperties annotatedProperties,
-                         ExecutableProperties executableProperties,
                          List<String> identifiers,
                          Instruction mainInstruction,
                          Map<String, Instruction> instructions,
                          Map<String, MappedCommand> subcommands) {
         this.commandInstance = commandInstance;
         this.annotatedProperties = annotatedProperties;
-        this.executableProperties = executableProperties;
         this.identifiers = identifiers.stream().map(String::toLowerCase).collect(Collectors.toList());
         this.mainInstruction = mainInstruction;
         this.instructions = instructions;
@@ -53,21 +46,6 @@ public class MappedCommand implements Annotated, Executable {
     @Override
     public AnnotatedProperties getAnnotatedProperties() {
         return annotatedProperties;
-    }
-
-    @Override
-    public ExceptionHandlerRegistry getExceptionHandlerRegistry() {
-        return executableProperties.getExceptionHandlerRegistry();
-    }
-
-    @Override
-    public ExecutionTaskRegistry getExecutionTaskRegistry() {
-        return executableProperties.getExecutionTaskRegistry();
-    }
-
-    @Override
-    public ProviderRegistry getProviderRegistry() {
-        return executableProperties.getProviderRegistry();
     }
 
     public Collection<String> getIdentifiers() {
@@ -103,11 +81,11 @@ public class MappedCommand implements Annotated, Executable {
         if (this == o) return true;
         if (!(o instanceof MappedCommand)) return false;
         MappedCommand that = (MappedCommand) o;
-        return Objects.equals(commandInstance, that.commandInstance) && Objects.equals(annotatedProperties, that.annotatedProperties) && Objects.equals(executableProperties, that.executableProperties) && Objects.equals(identifiers, that.identifiers) && Objects.equals(mainInstruction, that.mainInstruction) && Objects.equals(instructions, that.instructions) && Objects.equals(subcommands, that.subcommands);
+        return Objects.equals(commandInstance, that.commandInstance) && Objects.equals(annotatedProperties, that.annotatedProperties) && Objects.equals(identifiers, that.identifiers) && Objects.equals(mainInstruction, that.mainInstruction) && Objects.equals(instructions, that.instructions) && Objects.equals(subcommands, that.subcommands);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(commandInstance, annotatedProperties, executableProperties, identifiers, mainInstruction, instructions, subcommands);
+        return Objects.hash(commandInstance, annotatedProperties, identifiers, mainInstruction, instructions, subcommands);
     }
 }

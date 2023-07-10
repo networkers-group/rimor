@@ -1,7 +1,7 @@
 package st.networkers.rimor.internal.provide;
 
 import org.apache.commons.lang3.reflect.TypeLiteral;
-import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.inject.ExecutionContext;
 import st.networkers.rimor.inject.RimorInjector;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.provide.AbstractRimorProvider;

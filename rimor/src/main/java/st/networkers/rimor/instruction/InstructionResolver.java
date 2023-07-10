@@ -1,23 +1,24 @@
 package st.networkers.rimor.instruction;
 
-import st.networkers.rimor.executable.ExecutableProperties;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Class to resolve annotation-based instruction handler methods.
+ */
 public class InstructionResolver {
 
-    public ResolvedInstructions resolveInstructions(Object commandInstance, ExecutableProperties executableProperties) {
+    public ResolvedInstructions resolveInstructions(Object commandInstance) {
         ResolvedInstructions results = new ResolvedInstructions();
 
         for (Method method : commandInstance.getClass().getMethods()) {
             if (!method.isAnnotationPresent(MainInstructionMapping.class) && !method.isAnnotationPresent(InstructionMapping.class))
                 continue;
 
-            Instruction instruction = this.resolveInstruction(commandInstance, executableProperties, method);
+            Instruction instruction = this.resolveInstruction(commandInstance, method);
             if (method.isAnnotationPresent(MainInstructionMapping.class))
                 results.setMainInstruction(instruction);
 
@@ -27,11 +28,13 @@ public class InstructionResolver {
         return results;
     }
 
-    public Instruction resolveInstruction(Object commandInstance, ExecutableProperties executableProperties, Method method) {
+    public Instruction resolveInstruction(Object commandInstance, Method method) {
+        if (!method.isAnnotationPresent(InstructionMapping.class) && !method.isAnnotationPresent(MainInstructionMapping.class))
+            throw new IllegalArgumentException("there is no InstructionMapping or MainInstructionMapping annotation in " + method.getName());
+
         return new InstructionBuilder()
                 .setCommandInstance(commandInstance)
                 .setMethod(method)
-                .setExecutableProperties(executableProperties)
                 .setIdentifiers(this.resolveIdentifiers(method))
                 .create();
     }

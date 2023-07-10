@@ -1,7 +1,6 @@
 package st.networkers.rimor.command;
 
 import st.networkers.rimor.annotated.AnnotatedProperties;
-import st.networkers.rimor.executable.ExecutableProperties;
 import st.networkers.rimor.instruction.Instruction;
 
 import java.util.Collection;
@@ -13,7 +12,6 @@ public class MappedCommandBuilder {
 
     private Object commandInstance;
     private AnnotatedProperties annotatedProperties;
-    private ExecutableProperties executableProperties;
     private List<String> identifiers;
     private Instruction mainInstruction;
     private Map<String, Instruction> instructions;
@@ -26,11 +24,6 @@ public class MappedCommandBuilder {
 
     public MappedCommandBuilder setAnnotatedProperties(AnnotatedProperties annotatedProperties) {
         this.annotatedProperties = annotatedProperties;
-        return this;
-    }
-
-    public MappedCommandBuilder setExecutableProperties(ExecutableProperties executableProperties) {
-        this.executableProperties = executableProperties;
         return this;
     }
 
@@ -67,6 +60,6 @@ public class MappedCommandBuilder {
     }
 
     public MappedCommand create() {
-        return new MappedCommand(commandInstance, annotatedProperties, executableProperties, identifiers, mainInstruction, instructions, subcommands);
+        return new MappedCommand(commandInstance, annotatedProperties, identifiers, mainInstruction, instructions, subcommands);
     }
 }

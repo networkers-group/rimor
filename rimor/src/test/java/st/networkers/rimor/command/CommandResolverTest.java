@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoSettings;
-import st.networkers.rimor.executable.ExecutableProperties;
 import st.networkers.rimor.instruction.Instruction;
 import st.networkers.rimor.instruction.InstructionMapping;
 import st.networkers.rimor.instruction.MainInstructionMapping;
@@ -12,7 +11,6 @@ import st.networkers.rimor.reflect.CachedMethod;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 @MockitoSettings
@@ -91,7 +89,7 @@ class CommandResolverTest {
         MappedCommand command = commandResolver.resolve(new CommandWithDeclaredStaticSubcommand());
 
         ArgumentCaptor<CommandWithDeclaredStaticSubcommand.BarSubcommand> barSubcommandInstanceCaptor = ArgumentCaptor.forClass(CommandWithDeclaredStaticSubcommand.BarSubcommand.class);
-        verify(commandResolver).resolve(any(ExecutableProperties.class), barSubcommandInstanceCaptor.capture());
+        verify(commandResolver).resolve(barSubcommandInstanceCaptor.capture());
 
         assertThat(command.getSubcommand("bar"))
                 .map(MappedCommand::getCommandInstance)
@@ -110,7 +108,7 @@ class CommandResolverTest {
         MappedCommand command = commandResolver.resolve(new CommandWithDeclaredNonStaticSubcommand());
 
         ArgumentCaptor<CommandWithDeclaredNonStaticSubcommand.BarSubcommand> barSubcommandInstanceCaptor = ArgumentCaptor.forClass(CommandWithDeclaredNonStaticSubcommand.BarSubcommand.class);
-        verify(commandResolver).resolve(any(ExecutableProperties.class), barSubcommandInstanceCaptor.capture());
+        verify(commandResolver).resolve(barSubcommandInstanceCaptor.capture());
 
         assertThat(command.getSubcommand("bar"))
                 .map(MappedCommand::getCommandInstance)
@@ -135,7 +133,7 @@ class CommandResolverTest {
         MappedCommand command = commandResolver.resolve(new CommandWithRegisteredInnerSubcommand());
 
         ArgumentCaptor<CommandWithRegisteredInnerSubcommand.BarSubcommand> barSubcommandInstanceCaptor = ArgumentCaptor.forClass(CommandWithRegisteredInnerSubcommand.BarSubcommand.class);
-        verify(commandResolver).resolve(any(ExecutableProperties.class), barSubcommandInstanceCaptor.capture());
+        verify(commandResolver).resolve(barSubcommandInstanceCaptor.capture());
 
         assertThat(command.getSubcommand("bar"))
                 .map(MappedCommand::getCommandInstance)

@@ -1,7 +1,6 @@
-package st.networkers.rimor.internal.inject;
+package st.networkers.rimor.inject;
 
 import st.networkers.rimor.annotated.AnnotatedProperties;
-import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.reflect.CachedMethod;
 import st.networkers.rimor.reflect.CachedParameter;
 

@@ -4,18 +4,12 @@ import st.networkers.rimor.command.CommandRegistry;
 import st.networkers.rimor.command.CommandResolver;
 import st.networkers.rimor.command.RimorCommand;
 import st.networkers.rimor.execute.CommandExecutor;
-import st.networkers.rimor.execute.exception.ExceptionHandler;
-import st.networkers.rimor.execute.exception.ExceptionHandlerRegistry;
-import st.networkers.rimor.execute.task.ExecutionTask;
-import st.networkers.rimor.execute.task.ExecutionTaskRegistry;
-import st.networkers.rimor.execute.task.PostExecutionTask;
-import st.networkers.rimor.execute.task.PreExecutionTask;
+import st.networkers.rimor.execute.DefaultCommandExecutor;
 import st.networkers.rimor.extension.ExtensionManager;
 import st.networkers.rimor.extension.ExtensionManagerImpl;
 import st.networkers.rimor.extension.RimorExtension;
 import st.networkers.rimor.inject.RimorInjector;
-import st.networkers.rimor.internal.execute.CommandExecutorImpl;
-import st.networkers.rimor.internal.inject.RimorInjectorImpl;
+import st.networkers.rimor.inject.RimorInjectorImpl;
 import st.networkers.rimor.internal.provide.OptionalProvider;
 import st.networkers.rimor.internal.resolve.PathResolverImpl;
 import st.networkers.rimor.provide.ProviderRegistry;
@@ -29,44 +23,36 @@ public class Rimor {
     private final RimorInjector injector;
 
     private final CommandRegistry commandRegistry;
-    private final ExceptionHandlerRegistry exceptionHandlerRegistry;
-    private final ExecutionTaskRegistry executionTaskRegistry;
     private final ExtensionManager extensionManager;
     private final ProviderRegistry providerRegistry;
 
-    private final CommandExecutor executor;
+    private final CommandExecutor commandExecutor;
     private final CommandResolver commandResolver;
     private final PathResolver pathResolver;
 
     private boolean initialized = false;
 
     public Rimor() {
-        this(new RimorInjectorImpl(new ProviderRegistry()));
+        this(new ProviderRegistry());
     }
 
-    public Rimor(RimorInjector injector) {
-        this(injector, new ExceptionHandlerRegistry(), new ExecutionTaskRegistry(), injector.getProviderRegistry());
+    public Rimor(ProviderRegistry providerRegistry) {
+        this(new RimorInjectorImpl(providerRegistry), providerRegistry);
     }
 
-    public Rimor(RimorInjector injector,
-                 ExceptionHandlerRegistry exceptionHandlerRegistry,
-                 ExecutionTaskRegistry executionTaskRegistry,
-                 ProviderRegistry providerRegistry) {
-        this(injector, new CommandRegistry(), exceptionHandlerRegistry, executionTaskRegistry, new ExtensionManagerImpl(),
-                new ProviderRegistry(), new CommandExecutorImpl(injector, exceptionHandlerRegistry, executionTaskRegistry),
-                new CommandResolver(), new PathResolverImpl());
+    public Rimor(RimorInjector injector, ProviderRegistry providerRegistry) {
+        this(injector, new CommandRegistry(), new ExtensionManagerImpl(), providerRegistry,
+                new DefaultCommandExecutor(injector), new CommandResolver(), new PathResolverImpl());
     }
 
-    public Rimor(RimorInjector injector, CommandRegistry commandRegistry, ExceptionHandlerRegistry exceptionHandlerRegistry,
-                 ExecutionTaskRegistry executionTaskRegistry, ExtensionManager extensionManager, ProviderRegistry providerRegistry,
-                 CommandExecutor executor, CommandResolver commandResolver, PathResolver pathResolver) {
+    public Rimor(RimorInjector injector, CommandRegistry commandRegistry, ExtensionManager extensionManager,
+                 ProviderRegistry providerRegistry, CommandExecutor commandExecutor, CommandResolver commandResolver,
+                 PathResolver pathResolver) {
         this.injector = injector;
         this.commandRegistry = commandRegistry;
-        this.exceptionHandlerRegistry = exceptionHandlerRegistry;
-        this.executionTaskRegistry = executionTaskRegistry;
         this.extensionManager = extensionManager;
         this.providerRegistry = providerRegistry;
-        this.executor = executor;
+        this.commandExecutor = commandExecutor;
         this.commandResolver = commandResolver;
         this.pathResolver = pathResolver;
 
@@ -97,29 +83,6 @@ public class Rimor {
     }
 
     /**
-     * Registers the given {@link ExceptionHandler}.
-     *
-     * @param handler the exception handler to register
-     */
-    public Rimor registerExceptionHandler(ExceptionHandler<?> handler) {
-        Objects.requireNonNull(handler);
-        this.exceptionHandlerRegistry.registerExceptionHandler(handler);
-        return this;
-    }
-
-    /**
-     * Registers the given {@link ExceptionHandler}s.
-     *
-     * @param handlers the exception handlers to register
-     */
-    public Rimor registerExceptionHandlers(ExceptionHandler<?>... handlers) {
-        Objects.requireNonNull(handlers);
-        for (ExceptionHandler<?> handler : handlers)
-            this.registerExceptionHandler(handler);
-        return this;
-    }
-
-    /**
      * Registers the given {@link RimorProvider}.
      *
      * @param provider the provider to register into the injector
@@ -137,72 +100,6 @@ public class Rimor {
     public Rimor registerProviders(RimorProvider<?>... providers) {
         for (RimorProvider<?> provider : providers)
             this.registerProvider(provider);
-        return this;
-    }
-
-    /**
-     * Registers the given {@link ExecutionTask}.
-     *
-     * @param executionTask the execution task to register
-     */
-    public Rimor registerExecutionTask(ExecutionTask executionTask) {
-        if (executionTask instanceof PreExecutionTask)
-            return this.registerPreExecutionTask((PreExecutionTask) executionTask);
-        else if (executionTask instanceof PostExecutionTask)
-            return this.registerPostExecutionTask((PostExecutionTask) executionTask);
-        throw new IllegalArgumentException(executionTask + " is neither a PreExecutionTask nor a PostExecutionTask");
-    }
-
-    /**
-     * Registers the given {@link ExecutionTask}s.
-     *
-     * @param executionTasks the execution tasks to register
-     */
-    public Rimor registerExecutionTasks(ExecutionTask... executionTasks) {
-        for (ExecutionTask executionTask : executionTasks)
-            this.registerExecutionTask(executionTask);
-        return this;
-    }
-
-    /**
-     * Registers the given {@link PreExecutionTask}.
-     *
-     * @param executionTask the pre-execution task to register
-     */
-    public Rimor registerPreExecutionTask(PreExecutionTask executionTask) {
-        this.executionTaskRegistry.registerPreExecutionTask(executionTask);
-        return this;
-    }
-
-    /**
-     * Registers the given {@link PreExecutionTask}s.
-     *
-     * @param executionTasks the pre-execution tasks to register
-     */
-    public Rimor registerPreExecutionTasks(PreExecutionTask... executionTasks) {
-        for (PreExecutionTask executionTask : executionTasks)
-            this.registerPreExecutionTask(executionTask);
-        return this;
-    }
-
-    /**
-     * Registers the given {@link PostExecutionTask}.
-     *
-     * @param executionTask the post-execution task to register
-     */
-    public Rimor registerPostExecutionTask(PostExecutionTask executionTask) {
-        this.executionTaskRegistry.registerPostExecutionTask(executionTask);
-        return this;
-    }
-
-    /**
-     * Registers the given {@link PostExecutionTask}s.
-     *
-     * @param executionTasks the post-execution tasks to register
-     */
-    public Rimor registerPostExecutionTasks(PostExecutionTask... executionTasks) {
-        for (PostExecutionTask executionTask : executionTasks)
-            this.registerPostExecutionTask(executionTask);
         return this;
     }
 
@@ -251,14 +148,6 @@ public class Rimor {
         return commandRegistry;
     }
 
-    public ExceptionHandlerRegistry getExceptionHandlerRegistry() {
-        return exceptionHandlerRegistry;
-    }
-
-    public ExecutionTaskRegistry getExecutionTaskRegistry() {
-        return executionTaskRegistry;
-    }
-
     public ExtensionManager getExtensionManager() {
         return extensionManager;
     }
@@ -267,8 +156,8 @@ public class Rimor {
         return providerRegistry;
     }
 
-    public CommandExecutor getExecutor() {
-        return executor;
+    public CommandExecutor getCommandExecutor() {
+        return commandExecutor;
     }
 
     public CommandResolver getMappedCommandResolver() {
