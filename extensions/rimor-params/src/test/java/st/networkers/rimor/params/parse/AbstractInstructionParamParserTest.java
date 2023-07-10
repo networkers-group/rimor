@@ -11,7 +11,7 @@ import st.networkers.rimor.inject.ParameterToken;
 import st.networkers.rimor.params.InstructionParam;
 import st.networkers.rimor.params.InstructionParamImpl;
 import st.networkers.rimor.params.InstructionParams;
-import st.networkers.rimor.params.parse.builtin.DefaultInstructionParamParser;
+import st.networkers.rimor.params.parse.support.DefaultInstructionParamParser;
 import st.networkers.rimor.reflect.CachedMethod;
 import st.networkers.rimor.reflect.CachedParameter;
 

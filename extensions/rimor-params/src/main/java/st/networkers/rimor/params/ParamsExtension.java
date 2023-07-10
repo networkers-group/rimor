@@ -1,10 +1,10 @@
 package st.networkers.rimor.params;
 
 import st.networkers.rimor.extension.AbstractRimorExtension;
-import st.networkers.rimor.params.parse.builtin.BooleanInstructionParamParser;
-import st.networkers.rimor.params.parse.builtin.DefaultInstructionParamParser;
-import st.networkers.rimor.params.parse.builtin.EnumInstructionParamParser;
-import st.networkers.rimor.params.parse.builtin.StringInstructionParamParser;
+import st.networkers.rimor.params.parse.support.BooleanInstructionParamParser;
+import st.networkers.rimor.params.parse.support.DefaultInstructionParamParser;
+import st.networkers.rimor.params.parse.support.EnumInstructionParamParser;
+import st.networkers.rimor.params.parse.support.StringInstructionParamParser;
 
 public class ParamsExtension extends AbstractRimorExtension {
 

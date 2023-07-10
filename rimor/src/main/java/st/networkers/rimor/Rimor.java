@@ -10,10 +10,10 @@ import st.networkers.rimor.extension.ExtensionManagerImpl;
 import st.networkers.rimor.extension.RimorExtension;
 import st.networkers.rimor.inject.RimorInjector;
 import st.networkers.rimor.inject.RimorInjectorImpl;
-import st.networkers.rimor.internal.provide.OptionalProvider;
-import st.networkers.rimor.internal.resolve.PathResolverImpl;
-import st.networkers.rimor.provide.ProviderRegistry;
-import st.networkers.rimor.provide.RimorProvider;
+import st.networkers.rimor.inject.provide.support.OptionalProvider;
+import st.networkers.rimor.resolve.PathResolverImpl;
+import st.networkers.rimor.inject.provide.ProviderRegistry;
+import st.networkers.rimor.inject.provide.RimorProvider;
 import st.networkers.rimor.resolve.PathResolver;
 
 import java.util.Objects;

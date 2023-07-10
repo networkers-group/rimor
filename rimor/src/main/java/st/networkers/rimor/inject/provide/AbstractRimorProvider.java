@@ -1,4 +1,4 @@
-package st.networkers.rimor.provide;
+package st.networkers.rimor.inject.provide;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;

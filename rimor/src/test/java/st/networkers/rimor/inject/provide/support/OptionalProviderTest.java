@@ -1,4 +1,4 @@
-package st.networkers.rimor.internal.provide;
+package st.networkers.rimor.inject.provide.support;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

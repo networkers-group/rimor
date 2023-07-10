@@ -1,7 +1,7 @@
 package st.networkers.rimor.inject;
 
 import st.networkers.rimor.Rimor;
-import st.networkers.rimor.provide.RimorProvider;
+import st.networkers.rimor.inject.provide.RimorProvider;
 import st.networkers.rimor.reflect.CachedMethod;
 
 import java.util.Optional;

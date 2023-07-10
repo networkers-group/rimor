@@ -1,10 +1,10 @@
-package st.networkers.rimor.internal.provide;
+package st.networkers.rimor.inject.provide.support;
 
 import org.apache.commons.lang3.reflect.TypeLiteral;
 import st.networkers.rimor.inject.ExecutionContext;
 import st.networkers.rimor.inject.RimorInjector;
 import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.provide.AbstractRimorProvider;
+import st.networkers.rimor.inject.provide.AbstractRimorProvider;
 import st.networkers.rimor.util.ReflectionUtils;
 
 import java.lang.reflect.Type;

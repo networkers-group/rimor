@@ -1,4 +1,4 @@
-package st.networkers.rimor.provide;
+package st.networkers.rimor.inject.provide;
 
 import st.networkers.rimor.annotated.AnnotatedProperties;
 import st.networkers.rimor.inject.Token;

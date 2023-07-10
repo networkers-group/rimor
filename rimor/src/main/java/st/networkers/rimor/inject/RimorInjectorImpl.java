@@ -1,6 +1,6 @@
 package st.networkers.rimor.inject;
 
-import st.networkers.rimor.provide.ProviderRegistry;
+import st.networkers.rimor.inject.provide.ProviderRegistry;
 import st.networkers.rimor.reflect.CachedMethod;
 import st.networkers.rimor.reflect.CachedParameter;
 import st.networkers.rimor.util.OptionalUtils;

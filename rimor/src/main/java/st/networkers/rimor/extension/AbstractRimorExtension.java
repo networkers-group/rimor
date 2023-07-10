@@ -2,7 +2,7 @@ package st.networkers.rimor.extension;
 
 import st.networkers.rimor.Rimor;
 import st.networkers.rimor.command.RimorCommand;
-import st.networkers.rimor.provide.RimorProvider;
+import st.networkers.rimor.inject.provide.RimorProvider;
 
 public abstract class AbstractRimorExtension implements RimorExtension {
 

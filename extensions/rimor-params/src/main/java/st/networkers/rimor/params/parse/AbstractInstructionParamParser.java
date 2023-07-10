@@ -5,8 +5,8 @@ import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.inject.ParameterToken;
 import st.networkers.rimor.params.InstructionParam;
 import st.networkers.rimor.params.InstructionParams;
-import st.networkers.rimor.params.parse.builtin.StringInstructionParamParser;
-import st.networkers.rimor.provide.AbstractRimorProvider;
+import st.networkers.rimor.params.parse.support.StringInstructionParamParser;
+import st.networkers.rimor.inject.provide.AbstractRimorProvider;
 import st.networkers.rimor.reflect.CachedMethod;
 import st.networkers.rimor.reflect.CachedParameter;
 
