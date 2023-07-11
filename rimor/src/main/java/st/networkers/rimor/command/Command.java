@@ -14,10 +14,10 @@ import java.lang.annotation.Target;
  * The path {@code "myCommand mySubcommand myInstruction"} leads to {@code MyCommand.MySubcommand#instruction()} in
  * this example:
  * <pre>
- * &#64;CommandMapping("myCommand")
+ * &#64;Command("myCommand")
  * public class MyCommand {
  *
- *     &#64;CommandMapping("mySubcommand")
+ *     &#64;Command("mySubcommand")
  *     public class MySubcommand {
  *
  *         &#64;InstructionMapping("myInstruction")
@@ -31,14 +31,14 @@ import java.lang.annotation.Target;
  * If you need to manually instantiate {@code MySubcommand}, make the parent command class extend {@link AbstractRimorCommand}
  * and use {@link AbstractRimorCommand#registerSubcommand(Object)} in the constructor:
  * <pre>
- * &#64;CommandMapping("myCommand")
+ * &#64;Command("myCommand")
  * public class MyCommand extends AbstractRimorCommand {
  *
  *     public MyCommand() {
  *         registerSubcommand(new MySubcommand(new MyServiceImpl()));
  *     }
  *
- *     &#64;CommandMapping("mySubcommand")
+ *     &#64;Command("mySubcommand")
  *     public static class MySubcommand {
  *
  *         public MySubcommand(MyService myService) {
@@ -55,7 +55,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface CommandMapping {
+public @interface Command {
 
     /**
      * The identifiers of the command.

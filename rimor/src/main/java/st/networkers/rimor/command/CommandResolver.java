@@ -25,8 +25,8 @@ public class CommandResolver {
     }
 
     public MappedCommand resolve(Object commandInstance) {
-        if (!commandInstance.getClass().isAnnotationPresent(CommandMapping.class))
-            throw new IllegalArgumentException("there is no CommandMapping annotation in " + commandInstance.getClass().getName());
+        if (!commandInstance.getClass().isAnnotationPresent(Command.class))
+            throw new IllegalArgumentException("there is no Command annotation in " + commandInstance.getClass().getName());
 
         List<String> identifiers = this.resolveIdentifiers(commandInstance);
         ResolvedInstructions instructions = instructionResolver.resolveInstructions(commandInstance);
@@ -42,9 +42,9 @@ public class CommandResolver {
     }
 
     private List<String> resolveIdentifiers(Object commandInstance) {
-        CommandMapping commandMapping = commandInstance.getClass().getAnnotation(CommandMapping.class);
+        Command command = commandInstance.getClass().getAnnotation(Command.class);
 
-        List<String> identifiers = Arrays.stream(commandMapping.value())
+        List<String> identifiers = Arrays.stream(command.value())
                 .filter(identifier -> !identifier.isEmpty())
                 .distinct()
                 .collect(Collectors.toList());
@@ -66,7 +66,7 @@ public class CommandResolver {
 
     private Collection<MappedCommand> resolveDeclaredSubcommands(Object commandInstance) {
         return Arrays.stream(commandInstance.getClass().getClasses())
-                .filter(subcommandClass -> subcommandClass.isAnnotationPresent(CommandMapping.class))
+                .filter(subcommandClass -> subcommandClass.isAnnotationPresent(Command.class))
                 .filter(subcommandClass -> !(commandInstance instanceof RimorCommand)
                                            || !((RimorCommand) commandInstance).getSubcommands().contains(subcommandClass))
                 .map(subcommandClass -> ReflectionUtils.instantiateInnerClass(commandInstance, subcommandClass))

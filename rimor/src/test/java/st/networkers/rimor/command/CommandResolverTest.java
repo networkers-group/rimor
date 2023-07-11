@@ -18,7 +18,7 @@ class CommandResolverTest {
 
     @Spy CommandResolver commandResolver = new CommandResolver();
 
-    @CommandMapping({"foo", "bar"})
+    @Command({"foo", "bar"})
     static class TwoIdentifiersCommand {
     }
 
@@ -34,7 +34,7 @@ class CommandResolverTest {
         assertThat(command.getIdentifiers()).containsExactly("foo", "bar");
     }
 
-    @CommandMapping("")
+    @Command("")
     static class NoIdentifierCommand {}
 
     @Test
@@ -42,7 +42,7 @@ class CommandResolverTest {
         assertThatThrownBy(() -> commandResolver.resolve(new NoIdentifierCommand())).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @CommandMapping("foo")
+    @Command("foo")
     static class CommandWithDefaultInstruction {
         @MainInstructionMapping
         public void defaultInstruction() {
@@ -58,7 +58,7 @@ class CommandResolverTest {
                 .contains(CommandWithDefaultInstruction.class.getMethod("defaultInstruction"));
     }
 
-    @CommandMapping("foo")
+    @Command("foo")
     static class CommandWithInstruction {
         @InstructionMapping("bar")
         public void barInstruction() {
@@ -74,9 +74,9 @@ class CommandResolverTest {
                 .contains(CommandWithInstruction.class.getMethod("barInstruction"));
     }
 
-    @CommandMapping("foo")
+    @Command("foo")
     static class CommandWithDeclaredStaticSubcommand {
-        @CommandMapping("bar")
+        @Command("bar")
         public static class BarSubcommand {
             @MainInstructionMapping
             public void defaultInstruction() {
@@ -96,9 +96,9 @@ class CommandResolverTest {
                 .contains(barSubcommandInstanceCaptor.getValue());
     }
 
-    @CommandMapping("foo")
+    @Command("foo")
     static class CommandWithDeclaredNonStaticSubcommand {
-        @CommandMapping("bar")
+        @Command("bar")
         public class BarSubcommand {
         }
     }
@@ -115,13 +115,13 @@ class CommandResolverTest {
                 .contains(barSubcommandInstanceCaptor.getValue());
     }
 
-    @CommandMapping("foo")
+    @Command("foo")
     static class CommandWithRegisteredInnerSubcommand extends AbstractRimorCommand {
         public CommandWithRegisteredInnerSubcommand() {
             registerSubcommand(new BarSubcommand(0));
         }
 
-        @CommandMapping("bar")
+        @Command("bar")
         static class BarSubcommand {
             private BarSubcommand(int i) {
             }

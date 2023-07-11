@@ -12,7 +12,7 @@ import java.util.Objects;
  * For example, having this command with mappings for {@code commit} and {@code push} instructions, an
  * {@link InstructionNotFoundException} will be thrown if {@code "git foo"} is executed:
  * <pre>
- * &#64;CommandMapping("git")
+ * &#64;Command("git")
  * public class GitCommand {
  *
  *     &#64;InstructionMapping
@@ -29,7 +29,7 @@ import java.util.Objects;
  * However, if a main instruction mapping is present, nothing will be thrown if {@code "git foo"} is executed, because the main
  * instruction will be run and (if using the rimor-params extension), {@code "foo"} will be passed as a parameter.
  * <pre>
- * &#64;CommandMapping("git")
+ * &#64;Command("git")
  * public class GitCommand {
  *
  *     &#64;MainInstructionMapping

@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * <p>
  * For example, having this command with mappings for {@code commit} and {@code push} instructions:
  * <pre>
- * &#64;CommandMapping("git")
+ * &#64;Command("git")
  * public class GitCommand {
  *
  *     &#64;MainInstructionMapping

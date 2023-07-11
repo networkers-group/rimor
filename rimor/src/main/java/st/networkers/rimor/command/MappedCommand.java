@@ -1,6 +1,5 @@
 package st.networkers.rimor.command;
 
-import st.networkers.rimor.execute.Executable;
 import st.networkers.rimor.instruction.Instruction;
 
 import java.util.*;
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
  * @see RimorCommand
  * @see AbstractRimorCommand
  */
-public class MappedCommand implements Executable {
+public class MappedCommand {
 
     private final Object commandInstance;
 
