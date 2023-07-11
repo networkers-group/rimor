@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import st.networkers.rimor.FooAnnotation;
 import st.networkers.rimor.FooAnnotationImpl;
-import st.networkers.rimor.annotated.RequireAnnotationTypes;
+import st.networkers.rimor.annotation.RequireQualifiers;
 import st.networkers.rimor.inject.ExecutionContext;
 import st.networkers.rimor.inject.Token;
 
@@ -23,7 +23,7 @@ class ProviderRegistryTest {
 
     static RimorProvider<String> anyFooAnnotationProvider = new AbstractRimorProvider<String>(String.class) {
         @Override
-        @RequireAnnotationTypes(FooAnnotation.class)
+        @RequireQualifiers(FooAnnotation.class)
         public String get(Token<String> token, ExecutionContext context) {
             return "foo";
         }

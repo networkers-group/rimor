@@ -1,6 +1,6 @@
 package st.networkers.rimor.inject.provide;
 
-import st.networkers.rimor.annotated.Annotated;
+import st.networkers.rimor.annotation.Annotated;
 import st.networkers.rimor.inject.ExecutionContext;
 import st.networkers.rimor.inject.Token;
 

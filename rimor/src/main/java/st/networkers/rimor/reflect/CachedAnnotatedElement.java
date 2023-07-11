@@ -1,31 +1,27 @@
 package st.networkers.rimor.reflect;
 
-import java.lang.annotation.Annotation;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import st.networkers.rimor.annotation.Annotated;
 
-public class CachedAnnotatedElement {
+import java.lang.annotation.Annotation;
+import java.util.*;
+
+public class CachedAnnotatedElement implements Annotated {
 
     private final Map<Class<? extends Annotation>, Annotation> annotations;
+    private final Collection<Class<? extends Annotation>> requiredAnnotations;
 
-    public CachedAnnotatedElement(Map<Class<? extends Annotation>, Annotation> annotations) {
+    public CachedAnnotatedElement(Map<Class<? extends Annotation>, Annotation> annotations,
+                                  Collection<Class<? extends Annotation>> requiredAnnotations) {
         this.annotations = annotations;
+        this.requiredAnnotations = requiredAnnotations;
     }
 
-    public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
-        return this.getAnnotation(annotationClass) != null;
+    @Override
+    public Collection<Class<? extends Annotation>> getRequiredAnnotations() {
+        return Collections.unmodifiableCollection(this.requiredAnnotations);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
-        return (T) annotations.get(annotationClass);
-    }
-
-    public Collection<Annotation> getAnnotations() {
-        return annotations.values();
-    }
-
+    @Override
     public Map<Class<? extends Annotation>, Annotation> getAnnotationsMap() {
         return Collections.unmodifiableMap(this.annotations);
     }

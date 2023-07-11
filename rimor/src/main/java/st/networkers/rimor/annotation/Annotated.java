@@ -1,38 +1,25 @@
-package st.networkers.rimor.annotated;
+package st.networkers.rimor.annotation;
 
 import java.lang.annotation.Annotation;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
- * Interface to be implemented by objects that differ from others of the same type based on their annotations.
- * <p>
- * This is used for:
- * <ul>
- *     <li>injection: distinguish tokens of the same type</li>
- *     <li>aspects: define aspect pointcuts</li>
- * </ul>
+ * Represents a type that has annotation instances and required annotation types.
  */
 public interface Annotated {
 
-    /**
-     * The properties of this {@code Annotated}
-     */
-    AnnotatedProperties getAnnotatedProperties();
+    Map<Class<? extends Annotation>, Annotation> getAnnotationsMap();
 
     /**
-     * The annotations of this {@code Annotated}.
+     * The required annotation types of this element.
+     */
+    Collection<Class<? extends Annotation>> getRequiredAnnotations();
+
+    /**
+     * The annotations of this element.
      */
     default Collection<Annotation> getAnnotations() {
-        return this.getAnnotatedProperties().getAnnotations().values();
-    }
-
-    /**
-     * The required annotation types of this {@code Annotated}.
-     */
-    default Collection<Class<? extends Annotation>> getRequiredAnnotations() {
-        return this.getAnnotatedProperties().getRequiredAnnotations();
+        return this.getAnnotationsMap().values();
     }
 
     /**
@@ -43,7 +30,7 @@ public interface Annotated {
      */
     @SuppressWarnings("unchecked")
     default <A extends Annotation> A getAnnotation(Class<A> annotationClass) {
-        return (A) this.getAnnotatedProperties().getAnnotations().get(annotationClass);
+        return (A) this.getAnnotationsMap().get(annotationClass);
     }
 
     /**
@@ -65,7 +52,7 @@ public interface Annotated {
      * @return if this {@code Annotated} contains the given {@link Annotation}
      */
     default boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
-        return this.getAnnotatedProperties().getAnnotations().containsKey(annotationClass) || this.getRequiredAnnotations().contains(annotationClass);
+        return this.getAnnotationsMap().containsKey(annotationClass) || this.getRequiredAnnotations().contains(annotationClass);
     }
 
     /**
@@ -80,8 +67,8 @@ public interface Annotated {
      *                       or if both have the exact same annotation types
      * @return {@code true} if this {@code Annotated} matches the annotations of {@code other}, {@code false} otherwise
      */
-    default boolean isAssignableFrom(Annotated other, AssignCriteria assignCriteria) {
-        return this.annotationTypesAreAssignableFrom(other, assignCriteria) && this.annotationInstancesAreAssignableFrom(other);
+    default boolean containsAllAnnotationsOf(Annotated other, AssignCriteria assignCriteria) {
+        return this.containsAllAnnotationTypesOf(other, assignCriteria) && this.containsAllAnnotationInstancesOf(other);
     }
 
     /**
@@ -95,12 +82,12 @@ public interface Annotated {
      *                       or if both have the exact same annotation types
      * @return {@code true} if this {@code Annotated} matches the annotation types of {@code other}, {@code false} otherwise
      */
-    default boolean annotationTypesAreAssignableFrom(Annotated other, AssignCriteria assignCriteria) {
+    default boolean containsAllAnnotationTypesOf(Annotated other, AssignCriteria assignCriteria) {
         Set<Class<? extends Annotation>> thisAnnotationTypes = new HashSet<>(this.getRequiredAnnotations());
-        thisAnnotationTypes.addAll(this.getAnnotatedProperties().getAnnotations().keySet());
+        thisAnnotationTypes.addAll(this.getAnnotationsMap().keySet());
 
         Set<Class<? extends Annotation>> otherAnnotationTypes = new HashSet<>(other.getRequiredAnnotations());
-        otherAnnotationTypes.addAll(other.getAnnotatedProperties().getAnnotations().keySet());
+        otherAnnotationTypes.addAll(other.getAnnotationsMap().keySet());
 
         return assignCriteria == AssignCriteria.CONTAINS
                 ? thisAnnotationTypes.containsAll(otherAnnotationTypes)
@@ -115,7 +102,7 @@ public interface Annotated {
      * @param other the {@code Annotated} to check whether this {@code Annotated} matches its annotation instances
      * @return {@code true} if this {@code Annotated} matches the annotation instances of {@code other}, {@code false} otherwise
      */
-    default boolean annotationInstancesAreAssignableFrom(Annotated other) {
+    default boolean containsAllAnnotationInstancesOf(Annotated other) {
         Set<Annotation> thisAnnotations = new HashSet<>(this.getAnnotations());
         return thisAnnotations.containsAll(other.getAnnotations());
     }

@@ -1,6 +1,5 @@
 package st.networkers.rimor.inject;
 
-import st.networkers.rimor.annotated.AnnotatedProperties;
 import st.networkers.rimor.reflect.CachedMethod;
 import st.networkers.rimor.reflect.CachedParameter;
 
@@ -19,7 +18,7 @@ public class ParameterToken<T> extends Token<T> {
     private final CachedParameter parameter;
 
     private ParameterToken(CachedMethod method, CachedParameter parameter) {
-        super(parameter.getType(), AnnotatedProperties.build(parameter));
+        super(parameter.getType(), parameter.getAnnotationsMap(), parameter.getRequiredAnnotations());
         this.method = method;
         this.parameter = parameter;
     }

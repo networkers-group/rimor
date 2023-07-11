@@ -2,17 +2,13 @@ package st.networkers.rimor.inject;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.TypeUtils;
-import st.networkers.rimor.annotated.Annotated;
-import st.networkers.rimor.annotated.AnnotatedProperties;
-import st.networkers.rimor.annotated.DinamicallyAnnotated;
+import st.networkers.rimor.annotation.DinamicallyAnnotated;
 import st.networkers.rimor.util.MatchingKey;
 import st.networkers.rimor.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represents an annotated {@link Type}.
@@ -47,13 +43,14 @@ public class Token<T> extends DinamicallyAnnotated<Token<T>> implements Matching
     }
 
     /**
-     * Builds a Token for the provided type with the specified {@link AnnotatedProperties}.
+     * Builds a Token for the provided type.
      *
-     * @param type                the type of the token
-     * @param annotatedProperties the {@link AnnotatedProperties} of the token
+     * @param type the type of the token
      */
-    public static <T> Token<T> of(Type type, AnnotatedProperties annotatedProperties) {
-        return new Token<>(type, annotatedProperties);
+    public static <T> Token<T> of(Type type,
+                                  Map<Class<? extends Annotation>, Annotation> annotations,
+                                  Collection<Class<? extends Annotation>> requiredAnnotations) {
+        return new Token<>(type, annotations, requiredAnnotations);
     }
 
     private final Type type;
@@ -69,13 +66,16 @@ public class Token<T> extends DinamicallyAnnotated<Token<T>> implements Matching
         this.type = ReflectionUtils.wrapPrimitive(type);
     }
 
-    protected Token(Type type, AnnotatedProperties annotatedProperties) {
-        super(annotatedProperties);
+    protected Token(Type type,
+                    Map<Class<? extends Annotation>, Annotation> annotations,
+                    Collection<Class<? extends Annotation>> requiredAnnotations) {
+        super(annotations, requiredAnnotations);
         this.type = ReflectionUtils.wrapPrimitive(type);
     }
 
     public boolean isAssignableFrom(Token<?> other) {
-        return TypeUtils.isAssignable(other.getType(), this.type) && this.isAssignableFrom(other, AssignCriteria.EQUALS);
+        return TypeUtils.isAssignable(other.getType(), this.type)
+               && this.containsAllAnnotationsOf(other, AssignCriteria.EQUALS);
     }
 
     public Type getType() {
@@ -87,13 +87,13 @@ public class Token<T> extends DinamicallyAnnotated<Token<T>> implements Matching
         if (this == o) return true;
         if (!(o instanceof Token)) return false;
         Token<?> token = (Token<?>) o;
-        return this.type.equals(token.type) && this.isAssignableFrom(token, Annotated.AssignCriteria.EQUALS);
+        return this.type.equals(token.type) && this.containsAllAnnotationsOf(token, AssignCriteria.EQUALS);
     }
 
     @Override
     public int matchingHashCode() {
         Set<Class<? extends Annotation>> annotationTypes = new HashSet<>(this.getRequiredAnnotations());
-        annotationTypes.addAll(this.getAnnotatedProperties().getAnnotations().keySet());
+        annotationTypes.addAll(this.getAnnotationsMap().keySet());
 
         return Objects.hash(this.type, annotationTypes);
     }
@@ -116,7 +116,8 @@ public class Token<T> extends DinamicallyAnnotated<Token<T>> implements Matching
     public String toString() {
         return "Token{" +
                "type=" + type +
-               ", annotatedProperties=" + getAnnotatedProperties() +
+               ", annotations=" + annotations +
+               ", requiredAnnotations=" + requiredAnnotations +
                '}';
     }
 }

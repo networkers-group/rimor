@@ -1,6 +1,5 @@
 package st.networkers.rimor.inject.provide;
 
-import st.networkers.rimor.annotated.AnnotatedProperties;
 import st.networkers.rimor.inject.Token;
 import st.networkers.rimor.util.MatchingMap;
 import st.networkers.rimor.util.OptionalUtils;
@@ -20,9 +19,8 @@ public class ProviderRegistry implements Cloneable {
      * @param provider the provider to register
      */
     public void register(RimorProvider<?> provider) {
-        AnnotatedProperties annotatedProperties = provider.getAnnotatedProperties();
         for (Type type : provider.getProvidedTypes()) {
-            Token<?> token = Token.of(type, annotatedProperties);
+            Token<?> token = Token.of(type, provider.getAnnotationsMap(), provider.getRequiredAnnotations());
             this.providers.put(token, provider); // TODO throw if key already present?
         }
     }

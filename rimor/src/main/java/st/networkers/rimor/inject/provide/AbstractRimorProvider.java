@@ -2,10 +2,11 @@ package st.networkers.rimor.inject.provide;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
-import st.networkers.rimor.annotated.AnnotatedProperties;
-import st.networkers.rimor.annotated.DinamicallyAnnotated;
+import st.networkers.rimor.annotation.DinamicallyAnnotated;
 import st.networkers.rimor.inject.ExecutionContext;
 import st.networkers.rimor.inject.Token;
+import st.networkers.rimor.reflect.CachedMethod;
+import st.networkers.rimor.util.ReflectionUtils;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -65,8 +66,8 @@ public abstract class AbstractRimorProvider<T>
     }
 
     private AbstractRimorProvider(Collection<Type> providedTypes) {
+        this.addPresentAnnotations();
         this.providedTypes = providedTypes;
-        this.withProperties(this.inspectAnnotations());
     }
 
     @Override
@@ -74,10 +75,11 @@ public abstract class AbstractRimorProvider<T>
         return providedTypes;
     }
 
-    private AnnotatedProperties inspectAnnotations() {
+    private void addPresentAnnotations() {
         try {
-            return AnnotatedProperties.build(this.getClass().getMethod("get", Token.class, ExecutionContext.class))
-                    .merge(AnnotatedProperties.build(this.getClass()));
+            this.withAnnotationsOf(CachedMethod.build(this.getClass().getMethod("get", Token.class, ExecutionContext.class)))
+                    .withRequiredAnnotations(ReflectionUtils.getRequiredAnnotations(this.getClass()))
+                    .withAnnotations(ReflectionUtils.getMappedAnnotations(this.getClass()));
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
