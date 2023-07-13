@@ -12,6 +12,4 @@ public interface ExtensionManager {
 
     Collection<RimorExtension> getRegisteredExtensions();
 
-    void initialize();
-
 }

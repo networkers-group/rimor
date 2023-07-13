@@ -13,7 +13,7 @@ import java.util.Collection;
  *
  * @see Command
  */
-public abstract class AbstractRimorCommand implements RimorCommand {
+public abstract class AbstractCommandDefinition implements CommandDefinition {
 
     private final Collection<Object> subcommands = new ArrayList<>();
 

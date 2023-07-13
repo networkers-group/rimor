@@ -8,8 +8,8 @@ public class CommandRegistry {
 
     private final Map<String, MappedCommand> commands = new HashMap<>();
 
-    public void registerCommand(MappedCommand command) {
-        command.getIdentifiers().forEach(identifier -> this.commands.put(identifier.toLowerCase(), command));
+    public void register(String identifier, MappedCommand command) {
+        this.commands.put(identifier.toLowerCase(), command);
     }
 
     public Collection<MappedCommand> getRegisteredCommands() {

@@ -26,10 +26,4 @@ public class ExtensionManagerImpl implements ExtensionManager {
     public Collection<RimorExtension> getRegisteredExtensions() {
         return this.extensions.values();
     }
-
-    @Override
-    public void initialize() {
-        for (RimorExtension extension : this.getRegisteredExtensions())
-            extension.initialize();
-    }
 }

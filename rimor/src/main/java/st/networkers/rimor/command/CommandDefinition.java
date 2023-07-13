@@ -8,10 +8,10 @@ import java.util.Collection;
  * There is no need to implement this in order to define a command. This is only intended to allow registering
  * subcommand instances. See the {@link Command} documentation for instructions on how to define a command.
  *
- * @see AbstractRimorCommand
+ * @see AbstractCommandDefinition
  * @see Command
  */
-public interface RimorCommand {
+public interface CommandDefinition {
 
     Collection<Object> getSubcommands();
 

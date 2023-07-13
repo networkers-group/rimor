@@ -1,5 +1,6 @@
 package st.networkers.rimor.params;
 
+import st.networkers.rimor.annotation.RimorQualifier;
 import st.networkers.rimor.params.parse.InstructionParamParser;
 
 import java.lang.annotation.ElementType;
@@ -20,6 +21,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
+@RimorQualifier
 public @interface InstructionParam {
 
     /**

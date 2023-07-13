@@ -1,46 +1,17 @@
 package st.networkers.rimor.instruction;
 
 import st.networkers.rimor.execute.Executable;
-import st.networkers.rimor.reflect.CachedMethod;
+import st.networkers.rimor.inject.ExecutionContext;
 
 import java.util.Collection;
-import java.util.Objects;
 
-public class Instruction implements Executable {
+/**
+ * A command instruction.
+ */
+public interface Instruction extends Executable {
 
-    private final Object commandInstance;
-    private final CachedMethod method;
+    Object run(ExecutionContext executionContext);
 
-    private final Collection<String> identifiers;
+    Collection<String> getIdentifiers();
 
-    public Instruction(Object commandInstance, CachedMethod method, Collection<String> identifiers) {
-        this.commandInstance = commandInstance;
-        this.method = method;
-        this.identifiers = identifiers;
-    }
-
-    public Object getCommandInstance() {
-        return commandInstance;
-    }
-
-    public CachedMethod getMethod() {
-        return method;
-    }
-
-    public Collection<String> getIdentifiers() {
-        return identifiers;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Instruction)) return false;
-        Instruction that = (Instruction) o;
-        return Objects.equals(commandInstance, that.commandInstance) && Objects.equals(method, that.method) && Objects.equals(identifiers, that.identifiers);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(commandInstance, method, identifiers);
-    }
 }

@@ -8,9 +8,9 @@ public interface CommandExecutor {
     /**
      * Executes the given {@link Instruction} with the given {@link ExecutionContext}.
      *
-     * @param instruction instruction to execute.
-     * @param context     context of the command execution.
+     * @param instruction      instruction to execute.
+     * @param executionContext context of the command execution.
      * @return the result of executing the instruction method.
      */
-    Object execute(Instruction instruction, ExecutionContext context);
+    Object execute(Instruction instruction, ExecutionContext executionContext);
 }

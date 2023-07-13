@@ -28,11 +28,11 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  * <p>
- * If you need to manually instantiate {@code MySubcommand}, make the parent command class extend {@link AbstractRimorCommand}
- * and use {@link AbstractRimorCommand#registerSubcommand(Object)} in the constructor:
+ * If you need to manually instantiate {@code MySubcommand}, make the parent command class extend {@link AbstractCommandDefinition}
+ * and use {@link AbstractCommandDefinition#registerSubcommand(Object)} in the constructor:
  * <pre>
  * &#64;Command("myCommand")
- * public class MyCommand extends AbstractRimorCommand {
+ * public class MyCommand extends AbstractCommandDefinition {
  *
  *     public MyCommand() {
  *         registerSubcommand(new MySubcommand(new MyServiceImpl()));

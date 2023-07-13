@@ -1,41 +1,48 @@
 package st.networkers.rimor.instruction;
 
+import st.networkers.rimor.inject.RimorInjector;
+
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
- * Class to resolve annotation-based instruction handler methods.
+ * Class to resolve instruction handler methods.
  */
 public class InstructionResolver {
 
-    public ResolvedInstructions resolveInstructions(Object commandInstance) {
-        ResolvedInstructions results = new ResolvedInstructions();
+    private final RimorInjector injector;
 
-        for (Method method : commandInstance.getClass().getMethods()) {
+    public InstructionResolver(RimorInjector injector) {
+        this.injector = injector;
+    }
+
+    public InstructionResolutionResults resolveInstructions(Object bean) {
+        InstructionResolutionResults instructionResolutionResults = new InstructionResolutionResults();
+
+        for (Method method : bean.getClass().getMethods()) {
             if (!method.isAnnotationPresent(MainInstructionMapping.class) && !method.isAnnotationPresent(InstructionMapping.class))
                 continue;
 
-            Instruction instruction = this.resolveInstruction(commandInstance, method);
+            HandlerMethodInstruction instruction = this.resolveInstruction(bean, method);
             if (method.isAnnotationPresent(MainInstructionMapping.class))
-                results.setMainInstruction(instruction);
+                instructionResolutionResults.setMainInstruction(instruction);
 
             if (method.isAnnotationPresent(InstructionMapping.class))
-                results.addInstruction(instruction);
+                instructionResolutionResults.addInstruction(instruction);
         }
-        return results;
+        return instructionResolutionResults;
     }
 
-    public Instruction resolveInstruction(Object commandInstance, Method method) {
+    public HandlerMethodInstruction resolveInstruction(Object bean, Method method) {
         if (!method.isAnnotationPresent(InstructionMapping.class) && !method.isAnnotationPresent(MainInstructionMapping.class))
-            throw new IllegalArgumentException("there is no InstructionMapping or MainInstructionMapping annotation in " + method.getName());
+            throw new IllegalArgumentException("there is no InstructionMapping or MainInstructionMapping annotation " +
+                                               "in " + method.getName());
 
-        return new InstructionBuilder()
-                .setCommandInstance(commandInstance)
-                .setMethod(method)
-                .setIdentifiers(this.resolveIdentifiers(method))
+        return HandlerMethodInstruction.builder()
+                .injector(injector)
+                .bean(bean)
+                .method(method)
+                .identifiers(this.resolveIdentifiers(method))
                 .create();
     }
 
@@ -49,5 +56,39 @@ public class InstructionResolver {
             identifiers.add(method.getName());
 
         return identifiers;
+    }
+
+    public static class InstructionResolutionResults {
+        private HandlerMethodInstruction mainInstruction = null;
+        private final Collection<HandlerMethodInstruction> instructions = new ArrayList<>();
+
+        public HandlerMethodInstruction getMainInstruction() {
+            return mainInstruction;
+        }
+
+        public void setMainInstruction(HandlerMethodInstruction instruction) {
+            if (this.mainInstruction != null)
+                throw new IllegalArgumentException("trying to map multiple main instructions for " +
+                                                   instruction.getBean().getClass());
+            this.mainInstruction = instruction;
+        }
+
+        public Collection<HandlerMethodInstruction> getInstructions() {
+            return instructions;
+        }
+        public void addInstruction(HandlerMethodInstruction instruction) {
+            this.instructions.add(instruction);
+        }
+
+        public Map<String, Instruction> mapInstructionsByIdentifier() {
+            Map<String, Instruction> instructions = new HashMap<>();
+            this.instructions.forEach(instruction -> instruction.getIdentifiers().forEach(identifier -> {
+                if (instructions.containsKey(identifier))
+                    throw new IllegalArgumentException("trying to map multiple handler methods for the '" +
+                                                       identifier + "' identifier in " + instruction.getBean().getClass());
+                instructions.put(identifier, instruction);
+            }));
+            return instructions;
+        }
     }
 }

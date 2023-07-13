@@ -6,34 +6,30 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Resolved command to use internally. To create commands, check {@link RimorCommand}.
+ * Resolved command to use internally. To create commands, check {@link CommandDefinition}.
  *
- * @see RimorCommand
- * @see AbstractRimorCommand
+ * @see CommandDefinition
+ * @see AbstractCommandDefinition
  */
 public class MappedCommand {
 
-    private final Object commandInstance;
+    public static Builder builder() {
+        return new Builder();
+    }
 
     private final List<String> identifiers;
     private final Instruction mainInstruction;
     private final Map<String, Instruction> instructions;
     private final Map<String, MappedCommand> subcommands;
 
-    public MappedCommand(Object commandInstance,
-                         List<String> identifiers,
+    public MappedCommand(List<String> identifiers,
                          Instruction mainInstruction,
                          Map<String, Instruction> instructions,
                          Map<String, MappedCommand> subcommands) {
-        this.commandInstance = commandInstance;
         this.identifiers = identifiers.stream().map(String::toLowerCase).collect(Collectors.toList());
         this.mainInstruction = mainInstruction;
         this.instructions = instructions;
         this.subcommands = subcommands;
-    }
-
-    public Object getCommandInstance() {
-        return commandInstance;
     }
 
     public Collection<String> getIdentifiers() {
@@ -69,11 +65,48 @@ public class MappedCommand {
         if (this == o) return true;
         if (!(o instanceof MappedCommand)) return false;
         MappedCommand that = (MappedCommand) o;
-        return Objects.equals(commandInstance, that.commandInstance) && Objects.equals(identifiers, that.identifiers) && Objects.equals(mainInstruction, that.mainInstruction) && Objects.equals(instructions, that.instructions) && Objects.equals(subcommands, that.subcommands);
+        return Objects.equals(identifiers, that.identifiers) && Objects.equals(mainInstruction, that.mainInstruction) && Objects.equals(instructions, that.instructions) && Objects.equals(subcommands, that.subcommands);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(commandInstance, identifiers, mainInstruction, instructions, subcommands);
+        return Objects.hash(identifiers, mainInstruction, instructions, subcommands);
+    }
+
+    public static class Builder {
+        private List<String> identifiers;
+        private Instruction mainInstruction;
+        private Map<String, Instruction> instructions;
+        private Map<String, MappedCommand> subcommands;
+
+        public Builder identifiers(List<String> identifiers) {
+            this.identifiers = identifiers;
+            return this;
+        }
+
+        public Builder mainInstruction(Instruction mainInstruction) {
+            this.mainInstruction = mainInstruction;
+            return this;
+        }
+
+        public Builder instructions(Map<String, Instruction> instructions) {
+            this.instructions = instructions;
+            return this;
+        }
+
+        public Builder subcommands(Collection<MappedCommand> subcommands) {
+            Map<String, MappedCommand> mappedSubcommands = new HashMap<>();
+            subcommands.forEach(subcommand -> subcommand.getIdentifiers().forEach(identifier -> mappedSubcommands.put(identifier.toLowerCase(), subcommand)));
+            return this.subcommands(mappedSubcommands);
+        }
+
+        private Builder subcommands(Map<String, MappedCommand> subcommands) {
+            this.subcommands = subcommands;
+            return this;
+        }
+
+        public MappedCommand create() {
+            return new MappedCommand(identifiers, mainInstruction, instructions, subcommands);
+        }
     }
 }

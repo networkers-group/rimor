@@ -2,6 +2,7 @@ package st.networkers.rimor.instruction;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import st.networkers.rimor.instruction.InstructionResolver.InstructionResolutionResults;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -12,7 +13,7 @@ class InstructionResolverTest {
 
     @BeforeAll
     static void beforeAll() {
-        instructionResolver = new InstructionResolver();
+        instructionResolver = new InstructionResolver(null);
     }
 
     static class FooCommand {
@@ -32,7 +33,7 @@ class InstructionResolverTest {
 
     @Test
     void whenResolvingBarInstruction_identifiersAreBarAndBarAlias() throws NoSuchMethodException {
-        Instruction instruction = instructionResolver.resolveInstruction(new FooCommand(), FooCommand.class.getMethod("barInstruction"));
+        HandlerMethodInstruction instruction = instructionResolver.resolveInstruction(new FooCommand(), FooCommand.class.getMethod("barInstruction"));
         assertThat(instruction.getIdentifiers()).containsExactlyInAnyOrder("bar", "barAlias");
     }
 
@@ -44,7 +45,7 @@ class InstructionResolverTest {
 
     @Test
     void whenResolvingFooCommandInstructions_instructionsAreResolved() throws NoSuchMethodException {
-        ResolvedInstructions instructions = instructionResolver.resolveInstructions(new FooCommand());
+        InstructionResolutionResults instructions = instructionResolver.resolveInstructions(new FooCommand());
         assertThat(instructions.getMainInstruction())
                 .isNotNull()
                 .extracting(instruction -> instruction.getMethod().getMethod())
