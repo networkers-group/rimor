@@ -1,7 +1,7 @@
 package st.networkers.rimor.params.parse.support;
 
 import org.junit.jupiter.api.Test;
-import st.networkers.rimor.inject.Token;
+import st.networkers.rimor.context.Token;
 import st.networkers.rimor.params.InstructionParam;
 
 import static org.assertj.core.api.Assertions.assertThat;

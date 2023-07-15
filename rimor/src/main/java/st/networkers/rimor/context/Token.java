@@ -1,4 +1,4 @@
-package st.networkers.rimor.inject;
+package st.networkers.rimor.context;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.TypeUtils;

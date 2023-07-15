@@ -1,12 +1,12 @@
 package st.networkers.rimor.params.parse;
 
-import st.networkers.rimor.inject.ExecutionContext;
-import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.inject.ParameterToken;
+import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.context.Token;
+import st.networkers.rimor.context.ParameterToken;
 import st.networkers.rimor.params.InstructionParam;
 import st.networkers.rimor.params.InstructionParams;
 import st.networkers.rimor.params.parse.support.StringInstructionParamParser;
-import st.networkers.rimor.inject.provide.AbstractRimorProvider;
+import st.networkers.rimor.context.provide.AbstractExecutionContextProvider;
 import st.networkers.rimor.reflect.CachedMethod;
 import st.networkers.rimor.reflect.CachedParameter;
 
@@ -19,7 +19,7 @@ import java.util.List;
  * <p>
  * Check {@link StringInstructionParamParser} for a quick example.
  */
-public abstract class AbstractInstructionParamParser<T> extends AbstractRimorProvider<T> implements InstructionParamParser<T> {
+public abstract class AbstractInstructionParamParser<T> extends AbstractExecutionContextProvider<T> implements InstructionParamParser<T> {
 
     protected static final Token<List<Object>> PARAMS_TOKEN = new Token<List<Object>>() {}.annotatedWith(InstructionParams.class);
 

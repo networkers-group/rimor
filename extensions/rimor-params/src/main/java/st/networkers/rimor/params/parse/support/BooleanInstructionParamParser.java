@@ -1,8 +1,8 @@
 package st.networkers.rimor.params.parse.support;
 
 import org.apache.commons.lang3.ArrayUtils;
-import st.networkers.rimor.inject.ExecutionContext;
-import st.networkers.rimor.inject.Token;
+import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.context.Token;
 import st.networkers.rimor.params.parse.AbstractInstructionParamParser;
 
 import java.util.Arrays;

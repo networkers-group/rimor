@@ -6,9 +6,9 @@ import st.networkers.rimor.execute.CommandExecutor;
 import st.networkers.rimor.extension.ExtensionManager;
 import st.networkers.rimor.extension.RimorExtension;
 import st.networkers.rimor.extension.SupportExtension;
-import st.networkers.rimor.inject.RimorInjector;
-import st.networkers.rimor.inject.provide.ProviderRegistry;
-import st.networkers.rimor.inject.provide.RimorProvider;
+import st.networkers.rimor.context.ExecutionContextService;
+import st.networkers.rimor.context.provide.ExecutionContextProviderRegistry;
+import st.networkers.rimor.context.provide.ExecutionContextProvider;
 import st.networkers.rimor.resolve.PathResolver;
 
 public class Rimor {
@@ -16,48 +16,53 @@ public class Rimor {
     private final BeanManager beanManager;
     private final CommandRegistry commandRegistry;
     private final CommandExecutor commandExecutor;
+    private final ExecutionContextProviderRegistry executionContextProviderRegistry;
+    private final ExecutionContextService executionContextService;
     private final ExtensionManager extensionManager;
-    private final ProviderRegistry providerRegistry;
     private final PathResolver pathResolver;
-    private final RimorInjector injector;
 
     public Rimor(BeanManager beanManager, CommandRegistry commandRegistry, CommandExecutor commandExecutor,
-                 ExtensionManager extensionManager, ProviderRegistry providerRegistry, PathResolver pathResolver,
-                 RimorInjector injector) {
+                 ExtensionManager extensionManager, ExecutionContextProviderRegistry executionContextProviderRegistry, PathResolver pathResolver,
+                 ExecutionContextService executionContextService) {
         this.beanManager = beanManager;
         this.commandRegistry = commandRegistry;
         this.commandExecutor = commandExecutor;
         this.extensionManager = extensionManager;
-        this.providerRegistry = providerRegistry;
+        this.executionContextProviderRegistry = executionContextProviderRegistry;
         this.pathResolver = pathResolver;
-        this.injector = injector;
+        this.executionContextService = executionContextService;
 
         this.registerExtension(new SupportExtension());
     }
 
+    /**
+     * Registers the given bean.
+     *
+     * @param bean the bean register
+     */
     public Rimor register(Object bean) {
         this.beanManager.processBean(bean);
         return this;
     }
 
     /**
-     * Registers the given {@link RimorProvider}.
+     * Registers the given {@link ExecutionContextProvider}.
      *
      * @param provider the provider to register
      */
-    public Rimor registerProvider(RimorProvider<?> provider) {
-        this.providerRegistry.register(provider);
+    public Rimor registerExecutionContextProvider(ExecutionContextProvider<?> provider) {
+        this.executionContextProviderRegistry.register(provider);
         return this;
     }
 
     /**
-     * Registers the given {@link RimorProvider}s.
+     * Registers the given {@link ExecutionContextProvider}s.
      *
      * @param providers the providers to register
      */
-    public Rimor registerProviders(RimorProvider<?>... providers) {
-        for (RimorProvider<?> provider : providers)
-            this.registerProvider(provider);
+    public Rimor registerExecutionContextProviders(ExecutionContextProvider<?>... providers) {
+        for (ExecutionContextProvider<?> provider : providers)
+            this.registerExecutionContextProvider(provider);
         return this;
     }
 
@@ -98,15 +103,15 @@ public class Rimor {
         return extensionManager;
     }
 
-    public ProviderRegistry getProviderRegistry() {
-        return providerRegistry;
+    public ExecutionContextProviderRegistry getProviderRegistry() {
+        return executionContextProviderRegistry;
     }
 
     public PathResolver getPathResolver() {
         return pathResolver;
     }
 
-    public RimorInjector getInjector() {
-        return injector;
+    public ExecutionContextService getExecutionContextService() {
+        return executionContextService;
     }
 }

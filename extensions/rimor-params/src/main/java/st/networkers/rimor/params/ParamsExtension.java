@@ -11,9 +11,9 @@ public class ParamsExtension implements RimorExtension {
 
     @Override
     public void configure(Rimor rimor) {
-        rimor.registerProvider(new BooleanInstructionParamParser())
-                .registerProvider(new DefaultInstructionParamParser())
-                .registerProvider(new EnumInstructionParamParser())
-                .registerProvider(new StringInstructionParamParser());
+        rimor.registerExecutionContextProvider(new BooleanInstructionParamParser())
+                .registerExecutionContextProvider(new DefaultInstructionParamParser())
+                .registerExecutionContextProvider(new EnumInstructionParamParser())
+                .registerExecutionContextProvider(new StringInstructionParamParser());
     }
 }

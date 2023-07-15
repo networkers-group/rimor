@@ -1,7 +1,7 @@
 package st.networkers.rimor.params.parse.support;
 
-import st.networkers.rimor.inject.ExecutionContext;
-import st.networkers.rimor.inject.Token;
+import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.context.Token;
 import st.networkers.rimor.params.parse.AbstractInstructionParamParser;
 
 public class StringInstructionParamParser extends AbstractInstructionParamParser<String> {

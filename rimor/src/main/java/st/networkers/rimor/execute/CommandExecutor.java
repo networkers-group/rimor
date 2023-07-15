@@ -1,6 +1,6 @@
 package st.networkers.rimor.execute;
 
-import st.networkers.rimor.inject.ExecutionContext;
+import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.instruction.Instruction;
 
 public interface CommandExecutor {

@@ -1,8 +1,8 @@
-package st.networkers.rimor.inject.provide;
+package st.networkers.rimor.context.provide;
 
 import st.networkers.rimor.annotation.Annotated;
-import st.networkers.rimor.inject.ExecutionContext;
-import st.networkers.rimor.inject.Token;
+import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.context.Token;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -10,9 +10,9 @@ import java.util.Collection;
 /**
  * Provides objects at runtime.
  *
- * @see AbstractRimorProvider
+ * @see AbstractExecutionContextProvider
  */
-public interface RimorProvider<T> extends Annotated {
+public interface ExecutionContextProvider<T> extends Annotated {
 
     Collection<Type> getProvidedTypes();
 

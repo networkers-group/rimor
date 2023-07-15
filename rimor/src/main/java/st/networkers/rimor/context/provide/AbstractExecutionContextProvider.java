@@ -1,10 +1,10 @@
-package st.networkers.rimor.inject.provide;
+package st.networkers.rimor.context.provide;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 import st.networkers.rimor.annotation.DinamicallyAnnotated;
-import st.networkers.rimor.inject.ExecutionContext;
-import st.networkers.rimor.inject.Token;
+import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.context.Token;
 import st.networkers.rimor.reflect.CachedMethod;
 import st.networkers.rimor.util.ReflectionUtils;
 
@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Useful abstract class to implement {@link RimorProvider}s.
+ * Useful abstract class to implement {@link ExecutionContextProvider}s.
  *
  * <p>For example, this is the provider for an imaginary {@code @Stats}-annotated {@code UserStats}, obtained from an
  * imaginary {@code @Sender}-annotated {@code User} present in the {@link ExecutionContext execution context}:
  * <pre>
- * public class UserStatsProvider extends AbstractRimorProvider&lt;UserStats> {
+ * public class UserStatsProvider extends AbstractExecutionContextProvider&lt;UserStats> {
  *
  *     private final UserService userService = ...;
  *
@@ -48,24 +48,24 @@ import java.util.stream.Stream;
  * }
  * </pre>
  */
-public abstract class AbstractRimorProvider<T>
-        extends DinamicallyAnnotated<AbstractRimorProvider<T>>
-        implements RimorProvider<T> {
+public abstract class AbstractExecutionContextProvider<T>
+        extends DinamicallyAnnotated<AbstractExecutionContextProvider<T>>
+        implements ExecutionContextProvider<T> {
 
     private final Collection<Type> providedTypes;
 
     @SafeVarargs
-    protected AbstractRimorProvider(Class<? extends T> providedType, Class<? extends T>... otherTypes) {
+    protected AbstractExecutionContextProvider(Class<? extends T> providedType, Class<? extends T>... otherTypes) {
         this(Stream.concat(Stream.of(providedType), Arrays.stream(ArrayUtils.add(otherTypes, providedType)))
                 .map(ClassUtils::primitiveToWrapper)
                 .collect(Collectors.toList()));
     }
 
-    protected AbstractRimorProvider(Type providedType, Type... otherTypes) {
+    protected AbstractExecutionContextProvider(Type providedType, Type... otherTypes) {
         this(Stream.concat(Stream.of(providedType), Arrays.stream(otherTypes)).collect(Collectors.toList()));
     }
 
-    private AbstractRimorProvider(Collection<Type> providedTypes) {
+    private AbstractExecutionContextProvider(Collection<Type> providedTypes) {
         this.addPresentAnnotations();
         this.providedTypes = providedTypes;
     }

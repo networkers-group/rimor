@@ -1,4 +1,4 @@
-package st.networkers.rimor.inject;
+package st.networkers.rimor.context;
 
 import st.networkers.rimor.util.MatchingMap;
 

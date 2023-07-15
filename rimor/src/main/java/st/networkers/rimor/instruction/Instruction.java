@@ -1,7 +1,7 @@
 package st.networkers.rimor.instruction;
 
 import st.networkers.rimor.execute.Executable;
-import st.networkers.rimor.inject.ExecutionContext;
+import st.networkers.rimor.context.ExecutionContext;
 
 import java.util.Collection;
 

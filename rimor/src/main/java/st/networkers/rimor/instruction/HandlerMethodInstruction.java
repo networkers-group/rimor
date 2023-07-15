@@ -1,7 +1,7 @@
 package st.networkers.rimor.instruction;
 
-import st.networkers.rimor.inject.ExecutionContext;
-import st.networkers.rimor.inject.RimorInjector;
+import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.context.ExecutionContextService;
 import st.networkers.rimor.reflect.CachedMethod;
 
 import java.lang.reflect.Method;
@@ -14,14 +14,15 @@ public class HandlerMethodInstruction implements Instruction {
         return new Builder();
     }
 
-    private final RimorInjector injector;
+    private final ExecutionContextService executionContextService;
 
     private final Object bean;
     private final CachedMethod method;
     private final Collection<String> identifiers;
 
-    public HandlerMethodInstruction(RimorInjector injector, Object bean, CachedMethod method, Collection<String> identifiers) {
-        this.injector = injector;
+    public HandlerMethodInstruction(ExecutionContextService executionContextService, Object bean, CachedMethod method,
+                                    Collection<String> identifiers) {
+        this.executionContextService = executionContextService;
         this.bean = bean;
         this.method = method;
         this.identifiers = identifiers;
@@ -29,7 +30,7 @@ public class HandlerMethodInstruction implements Instruction {
 
     @Override
     public Object run(ExecutionContext executionContext) {
-        return injector.invokeMethod(method, bean, executionContext);
+        return executionContextService.invokeMethod(method, bean, executionContext);
     }
 
     public Object getBean() {
@@ -59,13 +60,13 @@ public class HandlerMethodInstruction implements Instruction {
     }
 
     public static class Builder {
-        private RimorInjector injector;
+        private ExecutionContextService executionContextService;
         private Object bean;
         private Method method;
         private Collection<String> identifiers;
 
-        public Builder injector(RimorInjector injector) {
-            this.injector = injector;
+        public Builder setExecutionContextService(ExecutionContextService executionContextService) {
+            this.executionContextService = executionContextService;
             return this;
         }
 
@@ -85,7 +86,7 @@ public class HandlerMethodInstruction implements Instruction {
         }
 
         public HandlerMethodInstruction create() {
-            return new HandlerMethodInstruction(injector, bean, CachedMethod.build(method), identifiers);
+            return new HandlerMethodInstruction(executionContextService, bean, CachedMethod.build(method), identifiers);
         }
     }
 }

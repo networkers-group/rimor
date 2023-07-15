@@ -1,6 +1,6 @@
 package st.networkers.rimor.instruction;
 
-import st.networkers.rimor.inject.RimorInjector;
+import st.networkers.rimor.context.ExecutionContextService;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -10,10 +10,10 @@ import java.util.*;
  */
 public class InstructionResolver {
 
-    private final RimorInjector injector;
+    private final ExecutionContextService executionContextService;
 
-    public InstructionResolver(RimorInjector injector) {
-        this.injector = injector;
+    public InstructionResolver(ExecutionContextService executionContextService) {
+        this.executionContextService = executionContextService;
     }
 
     public InstructionResolutionResults resolveInstructions(Object bean) {
@@ -39,7 +39,7 @@ public class InstructionResolver {
                                                "in " + method.getName());
 
         return HandlerMethodInstruction.builder()
-                .injector(injector)
+                .setExecutionContextService(executionContextService)
                 .bean(bean)
                 .method(method)
                 .identifiers(this.resolveIdentifiers(method))

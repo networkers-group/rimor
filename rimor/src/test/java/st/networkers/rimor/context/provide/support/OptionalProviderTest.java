@@ -1,12 +1,13 @@
-package st.networkers.rimor.inject.provide.support;
+package st.networkers.rimor.context.provide.support;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import st.networkers.rimor.FooAnnotation;
 import st.networkers.rimor.FooAnnotationImpl;
-import st.networkers.rimor.inject.ExecutionContext;
-import st.networkers.rimor.inject.Token;
-import st.networkers.rimor.inject.RimorInjectorImpl;
+import st.networkers.rimor.context.ExecutionContext;
+import st.networkers.rimor.context.Token;
+import st.networkers.rimor.context.ExecutionContextServiceImpl;
+import st.networkers.rimor.context.provide.ExecutionContextProviderRegistry;
 
 import java.util.Optional;
 
@@ -18,7 +19,7 @@ class OptionalProviderTest {
 
     @BeforeAll
     static void setUp() {
-        provider = new OptionalProvider(new RimorInjectorImpl());
+        provider = new OptionalProvider(new ExecutionContextServiceImpl(null, new ExecutionContextProviderRegistry()));
     }
 
     @Test

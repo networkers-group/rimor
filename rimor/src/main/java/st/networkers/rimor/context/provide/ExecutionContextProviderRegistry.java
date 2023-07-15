@@ -1,6 +1,6 @@
-package st.networkers.rimor.inject.provide;
+package st.networkers.rimor.context.provide;
 
-import st.networkers.rimor.inject.Token;
+import st.networkers.rimor.context.Token;
 import st.networkers.rimor.util.MatchingMap;
 import st.networkers.rimor.util.OptionalUtils;
 
@@ -8,17 +8,17 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class ProviderRegistry implements Cloneable {
+public class ExecutionContextProviderRegistry implements Cloneable {
 
     // TODO cache
-    private MatchingMap<Token<?>, RimorProvider<?>> providers = new MatchingMap<>();
+    private MatchingMap<Token<?>, ExecutionContextProvider<?>> providers = new MatchingMap<>();
 
     /**
-     * Registers the given {@link RimorProvider}s.
+     * Registers the given {@link ExecutionContextProvider}s.
      *
      * @param provider the provider to register
      */
-    public void register(RimorProvider<?> provider) {
+    public void register(ExecutionContextProvider<?> provider) {
         for (Type type : provider.getProvidedTypes()) {
             Token<?> token = Token.of(type, provider.getAnnotationsMap(), provider.getRequiredAnnotations());
             this.providers.put(token, provider); // TODO throw if key already present?
@@ -26,28 +26,28 @@ public class ProviderRegistry implements Cloneable {
     }
 
     /**
-     * Finds the {@link RimorProvider} bound to the given {@link Token} or, if there are no bindings for it,
+     * Finds the {@link ExecutionContextProvider} bound to the given {@link Token} or, if there are no bindings for it,
      * finds any suitable provider for its type and annotations, if able.
      *
      * @param token the token to get its bound (or a suitable) provider
      * @return an optional containing the found provider, or empty if none was found
      */
     @SuppressWarnings("unchecked")
-    public <T> Optional<RimorProvider<T>> findFor(Token<? super T> token) {
+    public <T> Optional<ExecutionContextProvider<T>> findFor(Token<? super T> token) {
         return OptionalUtils.firstPresent(
                         this.getFor(token),
                         () -> this.findAnySuitable(token)
                 )
-                .map(provider -> (RimorProvider<T>) provider);
+                .map(provider -> (ExecutionContextProvider<T>) provider);
     }
 
-    private Optional<RimorProvider<?>> getFor(Token<?> token) {
+    private Optional<ExecutionContextProvider<?>> getFor(Token<?> token) {
         return Optional.ofNullable(this.providers.get(token));
     }
 
-    private Optional<RimorProvider<?>> findAnySuitable(Token<?> token) {
-        for (Entry<Integer, List<Entry<Token<?>, RimorProvider<?>>>> matchingTokenEntry : this.providers.getDelegate().entrySet()) {
-            for (Entry<Token<?>, RimorProvider<?>> entry : matchingTokenEntry.getValue()) {
+    private Optional<ExecutionContextProvider<?>> findAnySuitable(Token<?> token) {
+        for (Entry<Integer, List<Entry<Token<?>, ExecutionContextProvider<?>>>> matchingTokenEntry : this.providers.getDelegate().entrySet()) {
+            for (Entry<Token<?>, ExecutionContextProvider<?>> entry : matchingTokenEntry.getValue()) {
                 if (token.isAssignableFrom(entry.getKey()))
                     return Optional.ofNullable(entry.getValue());
             }
@@ -58,8 +58,8 @@ public class ProviderRegistry implements Cloneable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ProviderRegistry)) return false;
-        ProviderRegistry that = (ProviderRegistry) o;
+        if (!(o instanceof ExecutionContextProviderRegistry)) return false;
+        ExecutionContextProviderRegistry that = (ExecutionContextProviderRegistry) o;
         return Objects.equals(providers, that.providers);
     }
 
@@ -69,9 +69,9 @@ public class ProviderRegistry implements Cloneable {
     }
 
     @Override
-    public ProviderRegistry clone() {
+    public ExecutionContextProviderRegistry clone() {
         try {
-            ProviderRegistry clone = (ProviderRegistry) super.clone();
+            ExecutionContextProviderRegistry clone = (ExecutionContextProviderRegistry) super.clone();
             clone.providers = new MatchingMap<>(this.providers);
             return clone;
         } catch (CloneNotSupportedException e) {
