@@ -9,15 +9,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Method parameters with this annotation are injected with the corresponding command parameter.
+ * Instruction handler method parameters with this annotation are injected with the corresponding command parameter.
  *
- * <p>If the index of the command parameter is not manually specified in this annotation, it is automatically
- * detected by the position of this parameter relative to all the method's {@code @Param}-annotated parameters.
+ * <p>If the index of the parameter is not manually specified in this annotation, it is automatically
+ * detected by the position of this parameter relative to all the method's {@code @InstructionParam}-annotated parameters.
  *
- * <p>The injected object will be {@code null} if the index is greater than the command parameter size.
+ * <p>The injected object will be {@code null} if the index is greater or equal than the number of command parameters.
  *
  * <p>If the type of the method parameter matches the type of the command parameter, it is directly injected. Also,
- * the object can be parsed and injected into, for example, a Boolean or Enum parameter, following the registered {@link InstructionParamParser}s.
+ * the object can be parsed and injected into, for example, a Boolean or Enum method parameter from a String command
+ * parameter, following the registered {@link InstructionParamParser instruction param parsers}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
