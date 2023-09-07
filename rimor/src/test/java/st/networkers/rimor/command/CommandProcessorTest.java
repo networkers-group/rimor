@@ -1,28 +1,34 @@
 package st.networkers.rimor.command;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoSettings;
+import st.networkers.rimor.bean.BeanProcessor;
 import st.networkers.rimor.instruction.HandlerMethodInstruction;
 import st.networkers.rimor.instruction.InstructionMapping;
 import st.networkers.rimor.instruction.InstructionResolver;
 import st.networkers.rimor.instruction.MainInstructionMapping;
 import st.networkers.rimor.reflect.CachedMethod;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 @MockitoSettings
 @SuppressWarnings("InnerClassMayBeStatic")
 class CommandProcessorTest {
 
-    InstructionResolver instructionResolver = new InstructionResolver(null);
-
     @Mock CommandRegistry commandRegistry;
-    @Spy CommandProcessor commandProcessor = new CommandProcessor(commandRegistry, instructionResolver);
+    @Mock BeanProcessor beanProcessor;
+    CommandProcessor commandProcessor;
+
+    @BeforeEach
+    void beforeAll() {
+        commandProcessor = spy(new CommandProcessor(beanProcessor, commandRegistry, new InstructionResolver(null)));
+    }
 
     @Command({"foo", "bar"})
     static class TwoIdentifiersCommand {
@@ -30,7 +36,7 @@ class CommandProcessorTest {
 
     @Test
     void whenResolvingCommand_identifiersAreFooAndBarInOrder() {
-        MappedCommand command = commandProcessor.resolve(new TwoIdentifiersCommand());
+        MappedCommand command = commandProcessor.resolve(new TwoIdentifiersCommand(), false);
         assertThat(command.getIdentifiers()).containsExactly("foo", "bar");
     }
 
@@ -39,7 +45,7 @@ class CommandProcessorTest {
 
     @Test
     void whenResolvingNoIdentifierCommand_throwsIllegalArgumentException() {
-        assertThatThrownBy(() -> commandProcessor.resolve(new NoIdentifierCommand())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> commandProcessor.resolve(new NoIdentifierCommand(), false)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Command("foo")
@@ -51,7 +57,7 @@ class CommandProcessorTest {
 
     @Test
     void whenResolvingCommandWithDefaultInstruction_mainInstructionIsResolved() throws NoSuchMethodException {
-        MappedCommand command = commandProcessor.resolve(new CommandWithDefaultInstruction());
+        MappedCommand command = commandProcessor.resolve(new CommandWithDefaultInstruction(), false);
         assertThat(command.getMainInstruction())
                 .map(instruction -> (HandlerMethodInstruction) instruction)
                 .map(HandlerMethodInstruction::getMethod)
@@ -68,7 +74,7 @@ class CommandProcessorTest {
 
     @Test
     void whenResolvingCommandWithInstruction_barInstructionIsResolved() throws NoSuchMethodException {
-        MappedCommand command = commandProcessor.resolve(new CommandWithInstruction());
+        MappedCommand command = commandProcessor.resolve(new CommandWithInstruction(), false);
         assertThat(command.getInstruction("bar"))
                 .map(instruction -> (HandlerMethodInstruction) instruction)
                 .map(HandlerMethodInstruction::getMethod)
@@ -88,9 +94,9 @@ class CommandProcessorTest {
 
     @Test
     void whenResolvingCommandWithDeclaredStaticSubcommand_barSubcommandIsResolvedAndRegistered() {
-        MappedCommand command = commandProcessor.resolve(new CommandWithDeclaredStaticSubcommand());
+        MappedCommand command = commandProcessor.resolve(new CommandWithDeclaredStaticSubcommand(), false);
 
-        verify(commandProcessor).resolve(any(CommandWithDeclaredStaticSubcommand.BarSubcommand.class));
+        verify(commandProcessor).resolve(any(CommandWithDeclaredStaticSubcommand.BarSubcommand.class), eq(true));
         assertThat(command.getSubcommand("bar")).isPresent();
     }
 
@@ -103,9 +109,9 @@ class CommandProcessorTest {
 
     @Test
     void whenResolvingCommandWithDeclaredNonStaticSubcommand_barSubcommandIsResolvedAndRegistered() {
-        MappedCommand command = commandProcessor.resolve(new CommandWithDeclaredNonStaticSubcommand());
+        MappedCommand command = commandProcessor.resolve(new CommandWithDeclaredNonStaticSubcommand(), false);
 
-        verify(commandProcessor).resolve(any(CommandWithDeclaredNonStaticSubcommand.BarSubcommand.class));
+        verify(commandProcessor).resolve(any(CommandWithDeclaredNonStaticSubcommand.BarSubcommand.class), eq(true));
         assertThat(command.getSubcommand("bar")).isPresent();
     }
 
@@ -116,7 +122,11 @@ class CommandProcessorTest {
         }
 
         @Command("bar")
-        static class BarSubcommand {
+        public static class BarSubcommand {
+            public BarSubcommand() {
+                throw new IllegalStateException("this class should not be constructed automatically!");
+            }
+
             private BarSubcommand(int i) {
             }
         }
@@ -124,9 +134,16 @@ class CommandProcessorTest {
 
     @Test
     void whenResolvingCommandWithRegisteredSubcommand_barSubcommandIsResolvedAndRegistered() {
-        MappedCommand command = commandProcessor.resolve(new CommandWithRegisteredInnerSubcommandDefinition());
+        MappedCommand command = commandProcessor.resolve(new CommandWithRegisteredInnerSubcommandDefinition(), false);
 
-        verify(commandProcessor).resolve(any(CommandWithRegisteredInnerSubcommandDefinition.BarSubcommand.class));
+        verify(commandProcessor).resolve(any(CommandWithRegisteredInnerSubcommandDefinition.BarSubcommand.class), eq(true));
         assertThat(command.getSubcommand("bar")).isPresent();
+    }
+
+    @Test
+    void whenResolvingCommandWithRegisteredInnerSubcommand_barSubcommandMustNotBeInstantiatedByProcessor() {
+        assertThatCode(() -> {
+            commandProcessor.resolveDeclaredSubcommands(new CommandWithRegisteredInnerSubcommandDefinition());
+        }).doesNotThrowAnyException();
     }
 }

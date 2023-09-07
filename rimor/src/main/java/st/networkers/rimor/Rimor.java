@@ -1,6 +1,7 @@
 package st.networkers.rimor;
 
 import st.networkers.rimor.bean.BeanManager;
+import st.networkers.rimor.bean.BeanProcessor;
 import st.networkers.rimor.command.CommandRegistry;
 import st.networkers.rimor.execute.CommandExecutor;
 import st.networkers.rimor.extension.ExtensionManager;
@@ -14,6 +15,7 @@ import st.networkers.rimor.resolve.PathResolver;
 public class Rimor {
 
     private final BeanManager beanManager;
+    private final BeanProcessor beanProcessor;
     private final CommandRegistry commandRegistry;
     private final CommandExecutor commandExecutor;
     private final ExecutionContextProviderRegistry executionContextProviderRegistry;
@@ -21,10 +23,11 @@ public class Rimor {
     private final ExtensionManager extensionManager;
     private final PathResolver pathResolver;
 
-    public Rimor(BeanManager beanManager, CommandRegistry commandRegistry, CommandExecutor commandExecutor,
+    public Rimor(BeanManager beanManager, BeanProcessor beanProcessor, CommandRegistry commandRegistry, CommandExecutor commandExecutor,
                  ExtensionManager extensionManager, ExecutionContextProviderRegistry executionContextProviderRegistry, PathResolver pathResolver,
                  ExecutionContextService executionContextService) {
         this.beanManager = beanManager;
+        this.beanProcessor = beanProcessor;
         this.commandRegistry = commandRegistry;
         this.commandExecutor = commandExecutor;
         this.extensionManager = extensionManager;
@@ -89,6 +92,10 @@ public class Rimor {
 
     public BeanManager getBeanManager() {
         return beanManager;
+    }
+
+    public BeanProcessor getBeanProcessor() {
+        return beanProcessor;
     }
 
     public CommandRegistry getCommandRegistry() {

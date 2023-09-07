@@ -16,8 +16,8 @@ public class InstructionResolver {
         this.executionContextService = executionContextService;
     }
 
-    public InstructionResolutionResults resolveInstructions(Object bean) {
-        InstructionResolutionResults instructionResolutionResults = new InstructionResolutionResults();
+    public InstructionResolution resolveInstructions(Object bean) {
+        InstructionResolution instructionResolution = new InstructionResolution();
 
         for (Method method : bean.getClass().getMethods()) {
             if (!method.isAnnotationPresent(MainInstructionMapping.class) && !method.isAnnotationPresent(InstructionMapping.class))
@@ -25,12 +25,12 @@ public class InstructionResolver {
 
             HandlerMethodInstruction instruction = this.resolveInstruction(bean, method);
             if (method.isAnnotationPresent(MainInstructionMapping.class))
-                instructionResolutionResults.setMainInstruction(instruction);
+                instructionResolution.setMainInstruction(instruction);
 
             if (method.isAnnotationPresent(InstructionMapping.class))
-                instructionResolutionResults.addInstruction(instruction);
+                instructionResolution.addInstruction(instruction);
         }
-        return instructionResolutionResults;
+        return instructionResolution;
     }
 
     public HandlerMethodInstruction resolveInstruction(Object bean, Method method) {
@@ -58,7 +58,7 @@ public class InstructionResolver {
         return identifiers;
     }
 
-    public static class InstructionResolutionResults {
+    public static class InstructionResolution {
         private HandlerMethodInstruction mainInstruction = null;
         private final Collection<HandlerMethodInstruction> instructions = new ArrayList<>();
 

@@ -2,7 +2,7 @@ package st.networkers.rimor.instruction;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import st.networkers.rimor.instruction.InstructionResolver.InstructionResolutionResults;
+import st.networkers.rimor.instruction.InstructionResolver.InstructionResolution;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -45,7 +45,7 @@ class InstructionResolverTest {
 
     @Test
     void whenResolvingFooCommandInstructions_instructionsAreResolved() throws NoSuchMethodException {
-        InstructionResolutionResults instructions = instructionResolver.resolveInstructions(new FooCommand());
+        InstructionResolution instructions = instructionResolver.resolveInstructions(new FooCommand());
         assertThat(instructions.getMainInstruction())
                 .isNotNull()
                 .extracting(instruction -> instruction.getMethod().getMethod())

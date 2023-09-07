@@ -20,8 +20,9 @@ public class SupportExtension implements RimorExtension {
 
     private void registerSupportBeanProcessors() {
         BeanManager beanManager = rimor.getBeanManager();
+        InstructionResolver instructionResolver = new InstructionResolver(rimor.getExecutionContextService());
 
-        CommandProcessor commandProcessor = new CommandProcessor(rimor.getCommandRegistry(), new InstructionResolver(rimor.getExecutionContextService()));
+        CommandProcessor commandProcessor = new CommandProcessor(rimor.getBeanProcessor(), rimor.getCommandRegistry(), instructionResolver);
         beanManager.registerBeanProcessor(commandProcessor);
     }
 
