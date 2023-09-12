@@ -6,12 +6,12 @@ import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Map;
 
-public class CachedClass extends CachedAnnotatedElement {
+public class CachedClass extends CachedQualifiedElement {
 
     public static CachedClass build(Class<?> clazz) {
         return new CachedClass(clazz,
-                ReflectionUtils.getMappedAnnotations(clazz),
-                ReflectionUtils.getRequiredAnnotations(clazz)
+                ReflectionUtils.getMappedQualifiers(clazz),
+                ReflectionUtils.getRequiredQualifiers(clazz)
         );
     }
 

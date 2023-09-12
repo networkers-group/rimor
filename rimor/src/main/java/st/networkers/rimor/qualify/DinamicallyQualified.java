@@ -1,23 +1,23 @@
-package st.networkers.rimor.annotation;
+package st.networkers.rimor.qualify;
 
-import st.networkers.rimor.reflect.CachedAnnotatedElement;
+import st.networkers.rimor.reflect.CachedQualifiedElement;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
 
 /**
- * Abstract class to allow adding annotations to elements at runtime.
+ * Abstract class to allow adding {@link RimorQualifier qualifier} annotations to elements at runtime.
  */
-public abstract class DinamicallyAnnotated<T extends DinamicallyAnnotated<T>> implements Annotated {
+public abstract class DinamicallyQualified<T extends DinamicallyQualified<T>> implements Qualified {
 
     protected final Map<Class<? extends Annotation>, Annotation> annotations;
     protected final Collection<Class<? extends Annotation>> requiredAnnotations;
 
-    protected DinamicallyAnnotated() {
+    protected DinamicallyQualified() {
         this(new HashMap<>(), new ArrayList<>());
     }
 
-    protected DinamicallyAnnotated(Map<Class<? extends Annotation>, Annotation> annotations,
+    protected DinamicallyQualified(Map<Class<? extends Annotation>, Annotation> annotations,
                                    Collection<Class<? extends Annotation>> requiredAnnotations) {
         this.annotations = annotations;
         this.requiredAnnotations = requiredAnnotations;
@@ -43,7 +43,7 @@ public abstract class DinamicallyAnnotated<T extends DinamicallyAnnotated<T>> im
         return this.casted();
     }
 
-    public T withAnnotationsOf(CachedAnnotatedElement element) {
+    public T withAnnotationsOf(CachedQualifiedElement element) {
         this.withAnnotations(element.getAnnotationsMap());
         this.withRequiredAnnotations(element.getRequiredAnnotations());
         return this.casted();
@@ -67,8 +67,8 @@ public abstract class DinamicallyAnnotated<T extends DinamicallyAnnotated<T>> im
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DinamicallyAnnotated)) return false;
-        DinamicallyAnnotated<?> that = (DinamicallyAnnotated<?>) o;
+        if (!(o instanceof DinamicallyQualified)) return false;
+        DinamicallyQualified<?> that = (DinamicallyQualified<?>) o;
         return Objects.equals(annotations, that.annotations) && Objects.equals(requiredAnnotations, that.requiredAnnotations);
     }
 

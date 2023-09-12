@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import st.networkers.rimor.FooAnnotation;
 import st.networkers.rimor.FooAnnotationImpl;
-import st.networkers.rimor.annotation.RequireQualifiers;
+import st.networkers.rimor.qualify.RequireQualifiers;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.context.Token;
 
@@ -75,15 +75,15 @@ class ExecutionContextProviderRegistryTest {
     }
 
     @Test
-    void givenAStringTokenAnnotatedWithFooAnnotationWithValueSetToBar_whenFindingProvider_findsFooAnnotationWithValueSetToBarProvider() {
+    void givenAnIntTokenAnnotatedWithFooAnnotationWithValueSetToBar_whenFindingProvider_findsFooAnnotationWithValueSetToBarProvider() {
         Token<Integer> token = Token.of(int.class).annotatedWith(new FooAnnotationImpl("bar"));
         assertThat(executionContextProviderRegistry.findFor(token)).containsInstanceOf(fooAnnotationWithValueSetToBarProvider.getClass());
     }
 
     @Test
-    void givenAnIntTokenAnnotatedWithFooAnnotationWithValueSetToBar_whenFindingProvider_findsFooAnnotationWithValueSetToBarProvider() {
-        Token<Integer> token = Token.of(int.class).annotatedWith(new FooAnnotationImpl("bar"));
-        assertThat(executionContextProviderRegistry.findFor(token)).containsInstanceOf(fooAnnotationWithValueSetToBarProvider.getClass());
+    void givenAnIntTokenAnnotatedWithFooAnnotationWithValueSetToBaz_whenFindingProvider_findsNothing() {
+        Token<Integer> token = Token.of(int.class).annotatedWith(new FooAnnotationImpl("baz"));
+        assertThat(executionContextProviderRegistry.findFor(token)).isEmpty();
     }
 
     @Test

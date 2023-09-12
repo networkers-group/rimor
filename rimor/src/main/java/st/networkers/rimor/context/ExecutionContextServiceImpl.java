@@ -7,23 +7,27 @@ import st.networkers.rimor.reflect.CachedParameter;
 import st.networkers.rimor.util.OptionalUtils;
 import st.networkers.rimor.util.ReflectionUtils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class ExecutionContextServiceImpl implements ExecutionContextService {
 
     private final BeanManager beanManager;
-    private final ExecutionContextProviderRegistry globalExecutionContextProviderRegistry;
 
-    public ExecutionContextServiceImpl(BeanManager beanManager, ExecutionContextProviderRegistry globalExecutionContextProviderRegistry) {
+    private final ExecutionContextProviderRegistry globalProviderRegistry;
+    private final Map<Object, ExecutionContextProviderRegistry> beanProviderRegistries = new HashMap<>();
+
+    public ExecutionContextServiceImpl(BeanManager beanManager, ExecutionContextProviderRegistry globalProviderRegistry) {
         this.beanManager = beanManager;
-        this.globalExecutionContextProviderRegistry = globalExecutionContextProviderRegistry;
+        this.globalProviderRegistry = globalProviderRegistry;
     }
 
     @Override
     public <T> Optional<T> get(Token<T> token, ExecutionContext context) {
         return OptionalUtils.firstPresent(
                 context.get(token),
-                () -> this.fromProviderRegistry(globalExecutionContextProviderRegistry, token, context)
+                () -> this.fromProviderRegistry(globalProviderRegistry, token, context)
         );
     }
 
@@ -31,8 +35,8 @@ public class ExecutionContextServiceImpl implements ExecutionContextService {
     public <T> Optional<T> get(Token<T> token, ExecutionContext context, Object bean) {
         return OptionalUtils.firstPresent(
                 context.get(token),
-                () -> this.fromProviderRegistry(beanManager.getProviderRegistry(bean), token, context),
-                () -> this.fromProviderRegistry(globalExecutionContextProviderRegistry, token, context)
+                () -> this.fromProviderRegistry(beanProviderRegistries.get(bean), token, context),
+                () -> this.fromProviderRegistry(globalProviderRegistry, token, context)
         );
     }
 

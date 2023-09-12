@@ -1,6 +1,6 @@
 package st.networkers.rimor.context.provide;
 
-import st.networkers.rimor.annotation.Annotated;
+import st.networkers.rimor.qualify.Qualified;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.context.Token;
 
@@ -12,7 +12,7 @@ import java.util.Collection;
  *
  * @see AbstractExecutionContextProvider
  */
-public interface ExecutionContextProvider<T> extends Annotated {
+public interface ExecutionContextProvider<T> extends Qualified {
 
     Collection<Type> getProvidedTypes();
 

@@ -6,7 +6,7 @@ import st.networkers.rimor.reflect.CachedMethod;
 import java.util.Optional;
 
 /**
- * Provides an instance bound to a given {@link Token} from an {@link ExecutionContext} or a registered provider.
+ * Provides an object bound to a given {@link Token} from an {@link ExecutionContext} or a registered provider.
  */
 public interface ExecutionContextService {
 

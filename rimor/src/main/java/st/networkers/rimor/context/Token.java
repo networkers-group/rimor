@@ -2,7 +2,7 @@ package st.networkers.rimor.context;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.TypeUtils;
-import st.networkers.rimor.annotation.DinamicallyAnnotated;
+import st.networkers.rimor.qualify.DinamicallyQualified;
 import st.networkers.rimor.util.MatchingKey;
 import st.networkers.rimor.util.ReflectionUtils;
 
@@ -22,7 +22,7 @@ import java.util.*;
  * new Token&lt;List&lt;String>>() {}.annotatedWith(MyAnnotation.class);
  * </pre>
  */
-public class Token<T> extends DinamicallyAnnotated<Token<T>> implements MatchingKey {
+public class Token<T> extends DinamicallyQualified<Token<T>> implements MatchingKey {
 
     /**
      * Builds a Token for the provided type.

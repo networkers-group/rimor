@@ -2,11 +2,11 @@ package st.networkers.rimor.context.provide;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
-import st.networkers.rimor.annotation.DinamicallyAnnotated;
+import st.networkers.rimor.qualify.DinamicallyQualified;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.context.Token;
+import st.networkers.rimor.reflect.CachedClass;
 import st.networkers.rimor.reflect.CachedMethod;
-import st.networkers.rimor.util.ReflectionUtils;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -49,7 +49,7 @@ import java.util.stream.Stream;
  * </pre>
  */
 public abstract class AbstractExecutionContextProvider<T>
-        extends DinamicallyAnnotated<AbstractExecutionContextProvider<T>>
+        extends DinamicallyQualified<AbstractExecutionContextProvider<T>>
         implements ExecutionContextProvider<T> {
 
     private final Collection<Type> providedTypes;
@@ -78,8 +78,7 @@ public abstract class AbstractExecutionContextProvider<T>
     private void addPresentAnnotations() {
         try {
             this.withAnnotationsOf(CachedMethod.build(this.getClass().getMethod("get", Token.class, ExecutionContext.class)))
-                    .withRequiredAnnotations(ReflectionUtils.getRequiredAnnotations(this.getClass()))
-                    .withAnnotations(ReflectionUtils.getMappedAnnotations(this.getClass()));
+                    .withAnnotationsOf(CachedClass.build(this.getClass()));
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }

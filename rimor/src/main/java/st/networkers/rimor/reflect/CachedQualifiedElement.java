@@ -1,16 +1,16 @@
 package st.networkers.rimor.reflect;
 
-import st.networkers.rimor.annotation.Annotated;
+import st.networkers.rimor.qualify.Qualified;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
 
-public class CachedAnnotatedElement implements Annotated {
+public class CachedQualifiedElement implements Qualified {
 
     private final Map<Class<? extends Annotation>, Annotation> annotations;
     private final Collection<Class<? extends Annotation>> requiredAnnotations;
 
-    public CachedAnnotatedElement(Map<Class<? extends Annotation>, Annotation> annotations,
+    public CachedQualifiedElement(Map<Class<? extends Annotation>, Annotation> annotations,
                                   Collection<Class<? extends Annotation>> requiredAnnotations) {
         this.annotations = annotations;
         this.requiredAnnotations = requiredAnnotations;

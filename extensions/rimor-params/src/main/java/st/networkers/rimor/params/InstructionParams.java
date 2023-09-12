@@ -1,6 +1,6 @@
 package st.networkers.rimor.params;
 
-import st.networkers.rimor.annotation.RimorQualifier;
+import st.networkers.rimor.qualify.RimorQualifier;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

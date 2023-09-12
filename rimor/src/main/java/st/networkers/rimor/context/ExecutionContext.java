@@ -14,6 +14,8 @@ public class ExecutionContext {
         return new Builder();
     }
 
+    // not a simple map because there may be components bound to tokens with required qualifier types,
+    // and we have to provide them to parameters with instances of them
     private final MatchingMap<Token<?>, Object> components;
 
     public ExecutionContext(MatchingMap<Token<?>, Object> components) {

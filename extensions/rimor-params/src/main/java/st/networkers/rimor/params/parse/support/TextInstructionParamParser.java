@@ -1,7 +1,7 @@
 package st.networkers.rimor.params.parse.support;
 
 import org.apache.commons.lang3.StringUtils;
-import st.networkers.rimor.annotation.RequireQualifiers;
+import st.networkers.rimor.qualify.RequireQualifiers;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.context.Token;
 import st.networkers.rimor.params.InstructionParam;

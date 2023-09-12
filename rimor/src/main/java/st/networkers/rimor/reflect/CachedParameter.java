@@ -8,14 +8,14 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
 
-public class CachedParameter extends CachedAnnotatedElement {
+public class CachedParameter extends CachedQualifiedElement {
 
     public static CachedParameter build(Parameter parameter) {
         return new CachedParameter(
                 parameter,
                 parameter.getParameterizedType(),
-                ReflectionUtils.getMappedAnnotations(parameter),
-                ReflectionUtils.getRequiredAnnotations(parameter)
+                ReflectionUtils.getMappedQualifiers(parameter),
+                ReflectionUtils.getRequiredQualifiers(parameter)
         );
     }
 

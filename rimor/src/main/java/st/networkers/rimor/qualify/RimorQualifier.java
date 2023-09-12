@@ -1,4 +1,4 @@
-package st.networkers.rimor.annotation;
+package st.networkers.rimor.qualify;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

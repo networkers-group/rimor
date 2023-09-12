@@ -7,12 +7,12 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CachedMethod extends CachedAnnotatedElement {
+public class CachedMethod extends CachedQualifiedElement {
 
     public static CachedMethod build(Method method) {
         return new CachedMethod(method,
-                ReflectionUtils.getMappedAnnotations(method),
-                ReflectionUtils.getRequiredAnnotations(method),
+                ReflectionUtils.getMappedQualifiers(method),
+                ReflectionUtils.getRequiredQualifiers(method),
                 Arrays.stream(method.getParameters())
                         .map(CachedParameter::build)
                         .collect(Collectors.toList())

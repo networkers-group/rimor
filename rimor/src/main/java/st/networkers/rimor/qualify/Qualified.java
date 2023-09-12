@@ -1,12 +1,12 @@
-package st.networkers.rimor.annotation;
+package st.networkers.rimor.qualify;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
 
 /**
- * Represents a type that has annotation instances and required annotation types.
+ * Represents a type that has {@link RimorQualifier qualifier} annotation instances and types.
  */
-public interface Annotated {
+public interface Qualified {
 
     Map<Class<? extends Annotation>, Annotation> getAnnotationsMap();
 
@@ -67,7 +67,7 @@ public interface Annotated {
      *                       or if both have the exact same annotation types
      * @return {@code true} if this {@code Annotated} matches the annotations of {@code other}, {@code false} otherwise
      */
-    default boolean containsAllAnnotationsOf(Annotated other, AssignCriteria assignCriteria) {
+    default boolean containsAllAnnotationsOf(Qualified other, AssignCriteria assignCriteria) {
         return this.containsAllAnnotationTypesOf(other, assignCriteria) && this.containsAllAnnotationInstancesOf(other);
     }
 
@@ -82,7 +82,7 @@ public interface Annotated {
      *                       or if both have the exact same annotation types
      * @return {@code true} if this {@code Annotated} matches the annotation types of {@code other}, {@code false} otherwise
      */
-    default boolean containsAllAnnotationTypesOf(Annotated other, AssignCriteria assignCriteria) {
+    default boolean containsAllAnnotationTypesOf(Qualified other, AssignCriteria assignCriteria) {
         Set<Class<? extends Annotation>> thisAnnotationTypes = new HashSet<>(this.getRequiredAnnotations());
         thisAnnotationTypes.addAll(this.getAnnotationsMap().keySet());
 
@@ -102,7 +102,7 @@ public interface Annotated {
      * @param other the {@code Annotated} to check whether this {@code Annotated} matches its annotation instances
      * @return {@code true} if this {@code Annotated} matches the annotation instances of {@code other}, {@code false} otherwise
      */
-    default boolean containsAllAnnotationInstancesOf(Annotated other) {
+    default boolean containsAllAnnotationInstancesOf(Qualified other) {
         Set<Annotation> thisAnnotations = new HashSet<>(this.getAnnotations());
         return thisAnnotations.containsAll(other.getAnnotations());
     }

@@ -2,8 +2,8 @@ package st.networkers.rimor.util;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.TypeUtils;
-import st.networkers.rimor.annotation.RequireQualifiers;
-import st.networkers.rimor.annotation.RimorQualifier;
+import st.networkers.rimor.qualify.RequireQualifiers;
+import st.networkers.rimor.qualify.RimorQualifier;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
@@ -16,13 +16,13 @@ public final class ReflectionUtils {
     private ReflectionUtils() {
     }
 
-    public static Map<Class<? extends Annotation>, Annotation> getMappedAnnotations(AnnotatedElement element) {
-        List<Annotation> annotations = new ArrayList<>(Arrays.asList(element.getAnnotations()));
-        annotations.removeIf(annotation -> !annotation.annotationType().isAnnotationPresent(RimorQualifier.class));
-        return annotations.stream().collect(Collectors.toMap(Annotation::annotationType, Function.identity()));
+    public static Map<Class<? extends Annotation>, Annotation> getMappedQualifiers(AnnotatedElement element) {
+        return Arrays.stream(element.getAnnotations())
+                .filter(annotation -> annotation.annotationType().isAnnotationPresent(RimorQualifier.class))
+                .collect(Collectors.toMap(Annotation::annotationType, Function.identity()));
     }
 
-    public static Collection<Class<? extends Annotation>> getRequiredAnnotations(AnnotatedElement element) {
+    public static Collection<Class<? extends Annotation>> getRequiredQualifiers(AnnotatedElement element) {
         return Optional.ofNullable(element.getAnnotation(RequireQualifiers.class))
                 .map(requireQualifiers -> Arrays.asList(requireQualifiers.value()))
                 .orElseGet(Collections::emptyList);
@@ -32,6 +32,7 @@ public final class ReflectionUtils {
         return primitiveType instanceof Class<?> ? ClassUtils.primitiveToWrapper((Class<?>) primitiveType) : primitiveType;
     }
 
+    @SuppressWarnings("rawtypes")
     public static Type unwrapOptional(Type optionalType) {
         TypeVariable<Class<Optional>> T = Optional.class.getTypeParameters()[0];
 
