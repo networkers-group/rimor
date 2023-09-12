@@ -23,9 +23,12 @@ public final class ReflectionUtils {
     }
 
     public static Collection<Class<? extends Annotation>> getRequiredQualifiers(AnnotatedElement element) {
-        return Optional.ofNullable(element.getAnnotation(RequireQualifiers.class))
-                .map(requireQualifiers -> Arrays.asList(requireQualifiers.value()))
-                .orElseGet(Collections::emptyList);
+        if (!element.isAnnotationPresent(RequireQualifiers.class))
+            return Collections.emptyList();
+
+        return Arrays.stream(element.getAnnotation(RequireQualifiers.class).value())
+                .filter(annotationType -> annotationType.isAnnotationPresent(RimorQualifier.class))
+                .collect(Collectors.toList());
     }
 
     public static Type wrapPrimitive(Type primitiveType) {
