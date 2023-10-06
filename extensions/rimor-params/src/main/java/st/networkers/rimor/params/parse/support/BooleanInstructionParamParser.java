@@ -42,7 +42,7 @@ public class BooleanInstructionParamParser extends AbstractInstructionParamParse
         if (Boolean.parseBoolean(parameter) || this.trueAliases.contains(parameter.toLowerCase()))
             return true;
 
-        TrueValues trueValues = token.getAnnotation(TrueValues.class);
+        TrueValues trueValues = token.getQualifier(TrueValues.class);
         return trueValues != null && ArrayUtils.contains(trueValues.value(), parameter);
     }
 }

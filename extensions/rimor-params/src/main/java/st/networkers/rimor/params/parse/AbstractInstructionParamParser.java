@@ -7,8 +7,8 @@ import st.networkers.rimor.context.provide.AbstractExecutionContextProvider;
 import st.networkers.rimor.params.InstructionParam;
 import st.networkers.rimor.params.InstructionParams;
 import st.networkers.rimor.params.parse.support.StringInstructionParamParser;
-import st.networkers.rimor.reflect.CachedMethod;
-import st.networkers.rimor.reflect.CachedParameter;
+import st.networkers.rimor.qualify.reflect.QualifiedMethod;
+import st.networkers.rimor.qualify.reflect.QualifiedParameter;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public abstract class AbstractInstructionParamParser<T> extends AbstractExecutio
     }
 
     protected static int getIndex(Token<?> token, ExecutionContext context) {
-        InstructionParam param = token.getAnnotation(InstructionParam.class);
+        InstructionParam param = token.getQualifier(InstructionParam.class);
 
         // if index is given, just return it
         if (param.index() > -1)
@@ -53,17 +53,17 @@ public abstract class AbstractInstructionParamParser<T> extends AbstractExecutio
 
         if (token instanceof ParameterToken) {
             ParameterToken<?> parameterToken = (ParameterToken<?>) token;
-            return getPositionFromParameter(parameterToken.getMethod(), parameterToken.getParameter());
+            return getPositionFromParameter(parameterToken.getQualifiedMethod(), parameterToken.getQualifiedParameter());
         }
 
         return -1;
     }
 
-    protected static int getPositionFromParameter(CachedMethod method, CachedParameter parameter) {
+    protected static int getPositionFromParameter(QualifiedMethod method, QualifiedParameter parameter) {
         // TODO cache
-        List<CachedParameter> parameters = new ArrayList<>(method.getParameters());
-        parameters.removeIf(p -> !p.isAnnotationPresent(InstructionParam.class)
-                                 || p.getAnnotation(InstructionParam.class).index() > -1);
+        List<QualifiedParameter> parameters = new ArrayList<>(method.getQualifiedParameters());
+        parameters.removeIf(p -> !p.isQualifierPresent(InstructionParam.class)
+                                 || p.getQualifier(InstructionParam.class).index() > -1);
 
         return parameters.indexOf(parameter);
     }

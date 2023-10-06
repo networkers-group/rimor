@@ -2,7 +2,7 @@ package st.networkers.rimor.instruction;
 
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.context.ExecutionContextService;
-import st.networkers.rimor.reflect.CachedMethod;
+import st.networkers.rimor.qualify.reflect.QualifiedMethod;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -17,28 +17,28 @@ public class HandlerMethodInstruction implements Instruction {
     private final ExecutionContextService executionContextService;
 
     private final Object bean;
-    private final CachedMethod method;
+    private final QualifiedMethod qualifiedMethod;
     private final Collection<String> identifiers;
 
-    public HandlerMethodInstruction(ExecutionContextService executionContextService, Object bean, CachedMethod method,
-                                    Collection<String> identifiers) {
+    public HandlerMethodInstruction(ExecutionContextService executionContextService, Object bean,
+                                    QualifiedMethod qualifiedMethod, Collection<String> identifiers) {
         this.executionContextService = executionContextService;
         this.bean = bean;
-        this.method = method;
+        this.qualifiedMethod = qualifiedMethod;
         this.identifiers = identifiers;
     }
 
     @Override
     public Object run(ExecutionContext executionContext) {
-        return executionContextService.invokeMethod(method, bean, executionContext);
+        return executionContextService.invokeMethod(qualifiedMethod, bean, executionContext);
     }
 
     public Object getBean() {
         return bean;
     }
 
-    public CachedMethod getMethod() {
-        return method;
+    public QualifiedMethod getQualifiedMethod() {
+        return qualifiedMethod;
     }
 
     @Override
@@ -51,12 +51,12 @@ public class HandlerMethodInstruction implements Instruction {
         if (this == o) return true;
         if (!(o instanceof HandlerMethodInstruction)) return false;
         HandlerMethodInstruction that = (HandlerMethodInstruction) o;
-        return Objects.equals(bean, that.bean) && Objects.equals(method, that.method) && Objects.equals(identifiers, that.identifiers);
+        return Objects.equals(bean, that.bean) && Objects.equals(qualifiedMethod, that.qualifiedMethod) && Objects.equals(identifiers, that.identifiers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bean, method, identifiers);
+        return Objects.hash(bean, qualifiedMethod, identifiers);
     }
 
     public static class Builder {
@@ -86,7 +86,7 @@ public class HandlerMethodInstruction implements Instruction {
         }
 
         public HandlerMethodInstruction create() {
-            return new HandlerMethodInstruction(executionContextService, bean, CachedMethod.build(method), identifiers);
+            return new HandlerMethodInstruction(executionContextService, bean, QualifiedMethod.build(method), identifiers);
         }
     }
 }

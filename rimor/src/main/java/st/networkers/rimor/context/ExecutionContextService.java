@@ -1,7 +1,7 @@
 package st.networkers.rimor.context;
 
 import st.networkers.rimor.context.provide.ExecutionContextProvider;
-import st.networkers.rimor.reflect.CachedMethod;
+import st.networkers.rimor.qualify.reflect.QualifiedMethod;
 
 import java.util.Optional;
 
@@ -17,7 +17,7 @@ public interface ExecutionContextService {
      * given {@code Token}.
      *
      * @param token   the token to get its bound object
-     * @param context the context of a command execution
+     * @param context the context of the command execution
      * @return an {@link Optional} wrapping the object bound to the token, or empty
      */
     <T> Optional<T> get(Token<T> token, ExecutionContext context);
@@ -29,19 +29,19 @@ public interface ExecutionContextService {
      * given {@code Token}.
      *
      * @param token   the token to get its bound object
-     * @param context the context of a command execution
      * @param bean    the bean to use its local providers
+     * @param context the context of the command execution
      * @return an {@link Optional} wrapping the object bound to the token, or empty
      */
-    <T> Optional<T> get(Token<T> token, ExecutionContext context, Object bean);
+    <T> Optional<T> get(Token<T> token, Object bean, ExecutionContext context);
 
     /**
      * Invokes the given method injecting all its parameters following {@link #get(Token, ExecutionContext)}
      *
-     * @param cachedMethod the method to invoke
-     * @param instance     an instance of the method's class to invoke it on, or {@code null} if static
-     * @param context      the context of a command execution
+     * @param qualifiedMethod the method to invoke
+     * @param instance        an instance of the method's class to invoke it on, or {@code null} if static
+     * @param context         the context of the command execution
      * @return the result of executing the method
      */
-    Object invokeMethod(CachedMethod cachedMethod, Object instance, ExecutionContext context);
+    Object invokeMethod(QualifiedMethod qualifiedMethod, Object instance, ExecutionContext context);
 }

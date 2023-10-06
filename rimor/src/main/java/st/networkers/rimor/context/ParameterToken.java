@@ -1,7 +1,7 @@
 package st.networkers.rimor.context;
 
-import st.networkers.rimor.reflect.CachedMethod;
-import st.networkers.rimor.reflect.CachedParameter;
+import st.networkers.rimor.qualify.reflect.QualifiedMethod;
+import st.networkers.rimor.qualify.reflect.QualifiedParameter;
 
 import java.util.Objects;
 
@@ -10,24 +10,24 @@ import java.util.Objects;
  */
 public class ParameterToken<T> extends Token<T> {
 
-    public static ParameterToken<?> build(CachedMethod method, CachedParameter parameter) {
+    public static ParameterToken<?> build(QualifiedMethod method, QualifiedParameter parameter) {
         return new ParameterToken<>(method, parameter);
     }
 
-    private final CachedMethod method;
-    private final CachedParameter parameter;
+    private final QualifiedMethod method;
+    private final QualifiedParameter parameter;
 
-    private ParameterToken(CachedMethod method, CachedParameter parameter) {
-        super(parameter.getType(), parameter.getAnnotationsMap(), parameter.getRequiredAnnotations());
+    private ParameterToken(QualifiedMethod method, QualifiedParameter parameter) {
+        super(parameter.getType(), parameter.getQualifiersMap(), parameter.getRequiredQualifiers());
         this.method = method;
         this.parameter = parameter;
     }
 
-    public CachedMethod getMethod() {
+    public QualifiedMethod getQualifiedMethod() {
         return method;
     }
 
-    public CachedParameter getParameter() {
+    public QualifiedParameter getQualifiedParameter() {
         return parameter;
     }
 

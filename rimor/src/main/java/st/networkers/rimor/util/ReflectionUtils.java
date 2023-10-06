@@ -2,33 +2,13 @@ package st.networkers.rimor.util;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.TypeUtils;
-import st.networkers.rimor.qualify.RequireQualifiers;
-import st.networkers.rimor.qualify.RimorQualifier;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 public final class ReflectionUtils {
 
     private ReflectionUtils() {
-    }
-
-    public static Map<Class<? extends Annotation>, Annotation> getMappedQualifiers(AnnotatedElement element) {
-        return Arrays.stream(element.getAnnotations())
-                .filter(annotation -> annotation.annotationType().isAnnotationPresent(RimorQualifier.class))
-                .collect(Collectors.toMap(Annotation::annotationType, Function.identity()));
-    }
-
-    public static Collection<Class<? extends Annotation>> getRequiredQualifiers(AnnotatedElement element) {
-        if (!element.isAnnotationPresent(RequireQualifiers.class))
-            return Collections.emptyList();
-
-        return Arrays.stream(element.getAnnotation(RequireQualifiers.class).value())
-                .filter(annotationType -> annotationType.isAnnotationPresent(RimorQualifier.class))
-                .collect(Collectors.toList());
     }
 
     public static Type wrapPrimitive(Type primitiveType) {

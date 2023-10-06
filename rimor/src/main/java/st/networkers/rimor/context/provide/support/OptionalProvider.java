@@ -28,7 +28,7 @@ public class OptionalProvider extends AbstractExecutionContextProvider<Optional<
         Type wrappedType = ReflectionUtils.unwrapOptional(token.getType());
 
         // a token associated with the type and the same annotations of the optional
-        Token<?> wrappedToken = Token.of(wrappedType, token.getAnnotationsMap(), token.getRequiredAnnotations());
+        Token<?> wrappedToken = Token.of(wrappedType, token.getQualifiersMap(), token.getRequiredQualifiers());
 
         return executionContextService.get(wrappedToken, context);
     }

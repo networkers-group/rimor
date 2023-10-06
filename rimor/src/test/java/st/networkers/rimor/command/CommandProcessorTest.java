@@ -9,7 +9,7 @@ import st.networkers.rimor.instruction.HandlerMethodInstruction;
 import st.networkers.rimor.instruction.InstructionMapping;
 import st.networkers.rimor.instruction.InstructionResolver;
 import st.networkers.rimor.instruction.MainInstructionMapping;
-import st.networkers.rimor.reflect.CachedMethod;
+import st.networkers.rimor.qualify.reflect.QualifiedMethod;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -60,8 +60,8 @@ class CommandProcessorTest {
         MappedCommand command = commandProcessor.resolve(new CommandWithDefaultInstruction(), false);
         assertThat(command.getMainInstruction())
                 .map(instruction -> (HandlerMethodInstruction) instruction)
-                .map(HandlerMethodInstruction::getMethod)
-                .map(CachedMethod::getMethod)
+                .map(HandlerMethodInstruction::getQualifiedMethod)
+                .map(QualifiedMethod::getMethod)
                 .contains(CommandWithDefaultInstruction.class.getMethod("defaultInstruction"));
     }
 
@@ -77,8 +77,8 @@ class CommandProcessorTest {
         MappedCommand command = commandProcessor.resolve(new CommandWithInstruction(), false);
         assertThat(command.getInstruction("bar"))
                 .map(instruction -> (HandlerMethodInstruction) instruction)
-                .map(HandlerMethodInstruction::getMethod)
-                .map(CachedMethod::getMethod)
+                .map(HandlerMethodInstruction::getQualifiedMethod)
+                .map(QualifiedMethod::getMethod)
                 .contains(CommandWithInstruction.class.getMethod("barInstruction"));
     }
 

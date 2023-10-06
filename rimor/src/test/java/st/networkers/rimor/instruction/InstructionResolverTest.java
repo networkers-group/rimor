@@ -48,7 +48,7 @@ class InstructionResolverTest {
         InstructionResolution instructions = instructionResolver.resolveInstructions(new FooCommand());
         assertThat(instructions.getMainInstruction())
                 .isNotNull()
-                .extracting(instruction -> instruction.getMethod().getMethod())
+                .extracting(instruction -> instruction.getQualifiedMethod().getMethod())
                 .isEqualTo(FooCommand.class.getMethod("defaultInstruction"));
         assertThat(instructions.getInstructions()).hasSize(3);
     }

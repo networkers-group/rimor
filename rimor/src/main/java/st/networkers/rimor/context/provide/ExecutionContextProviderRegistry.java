@@ -20,7 +20,7 @@ public class ExecutionContextProviderRegistry implements Cloneable {
      */
     public void register(ExecutionContextProvider<?> provider) {
         for (Type type : provider.getProvidedTypes()) {
-            Token<?> token = Token.of(type, provider.getAnnotationsMap(), provider.getRequiredAnnotations());
+            Token<?> token = Token.of(type, provider.getQualifiersMap(), provider.getRequiredQualifiers());
             this.providers.put(token, provider); // TODO throw if key already present?
         }
     }

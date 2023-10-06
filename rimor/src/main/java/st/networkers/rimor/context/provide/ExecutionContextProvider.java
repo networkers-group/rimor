@@ -8,8 +8,9 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 
 /**
- * Provides objects at runtime.
+ * Provides context to executions.
  *
+ * @see ProvidesContext
  * @see AbstractExecutionContextProvider
  */
 public interface ExecutionContextProvider<T> extends Qualified {

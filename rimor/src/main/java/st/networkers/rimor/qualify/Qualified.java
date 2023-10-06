@@ -8,86 +8,86 @@ import java.util.*;
  */
 public interface Qualified {
 
-    Map<Class<? extends Annotation>, Annotation> getAnnotationsMap();
+    Map<Class<? extends Annotation>, Annotation> getQualifiersMap();
 
     /**
-     * The required annotation types of this element.
+     * The required qualifier types of this element.
      */
-    Collection<Class<? extends Annotation>> getRequiredAnnotations();
+    Collection<Class<? extends Annotation>> getRequiredQualifiers();
 
     /**
-     * The annotations of this element.
+     * The qualifiers of this element.
      */
-    default Collection<Annotation> getAnnotations() {
-        return this.getAnnotationsMap().values();
+    default Collection<Annotation> getQualifiers() {
+        return this.getQualifiersMap().values();
     }
 
     /**
-     * Gets the annotation instance present in this {@code Annotated} for the given {@link Annotation} type.
+     * Gets the qualifier instance present in this {@code Qualified} for the given {@link Annotation} type.
      *
      * @param annotationClass class of the annotation to get
-     * @return the annotation present in this {@code Annotated}, or {@code null} if not present.
+     * @return the annotation present in this {@code Qualified}, or {@code null} if not present.
      */
     @SuppressWarnings("unchecked")
-    default <A extends Annotation> A getAnnotation(Class<A> annotationClass) {
-        return (A) this.getAnnotationsMap().get(annotationClass);
+    default <A extends Annotation> A getQualifier(Class<A> annotationClass) {
+        return (A) this.getQualifiersMap().get(annotationClass);
     }
 
     /**
-     * Whether this {@code Annotated} contains the given {@link Annotation} instance, so that both annotations are
+     * Whether this {@code Qualified} contains the given qualifier {@link Annotation} instance, so that both qualifiers are
      * {@link Annotation#equals(Object) equal}.
      *
      * @param annotation the annotation to check
-     * @return if this {@code Annotated} contains the given {@link Annotation}
+     * @return if this {@code Qualified} contains the given {@link Annotation}
      */
-    default boolean isAnnotationPresent(Annotation annotation) {
-        return this.getAnnotations().contains(annotation);
+    default boolean isQualifierPresent(Annotation annotation) {
+        return this.getQualifiers().contains(annotation);
     }
 
     /**
-     * Whether this {@code Annotated} contains an instance of the given {@link Annotation} type, or contains the given
-     * {@link Annotation} type as a required annotation
+     * Whether this {@code Qualified} contains an instance of the given qualifier {@link Annotation} type, or contains
+     * the given {@link Annotation} type as a required qualifier
      *
-     * @param annotationClass the annotation type to check
-     * @return if this {@code Annotated} contains the given {@link Annotation}
+     * @param annotationClass the qualifier type to check
+     * @return if this {@code Qualified} contains the given {@link Annotation}
      */
-    default boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
-        return this.getAnnotationsMap().containsKey(annotationClass) || this.getRequiredAnnotations().contains(annotationClass);
+    default boolean isQualifierPresent(Class<? extends Annotation> annotationClass) {
+        return this.getQualifiersMap().containsKey(annotationClass) || this.getRequiredQualifiers().contains(annotationClass);
     }
 
     /**
-     * Checks whether this {@code Annotated} is assignable from given {@code Annotated}, i.e. if this {@code Annotated}
-     * contains all the annotation types and the same annotation instances of the specified {@code Annotated}.
+     * Checks whether this {@code Qualified} is assignable from given {@code Qualified}, i.e. if this {@code Qualified}
+     * contains all the qualifier types and the same qualifier instances of the specified {@code Qualified}.
      *
-     * <p>The annotation types of an {@code Annotated} are composed of the types of its annotation instances + its
-     * required annotation types.
+     * <p>The qualifier types of an {@code Qualified} are composed of the types of its qualifier instances + its
+     * required qualifier types.
      *
-     * @param other          the {@code Annotated} be assigned to {@code this}
-     * @param assignCriteria whether to check if {@code this} just contains all the annotation types of {@code other},
-     *                       or if both have the exact same annotation types
-     * @return {@code true} if this {@code Annotated} matches the annotations of {@code other}, {@code false} otherwise
+     * @param other          the {@code Qualified} be assigned to {@code this}
+     * @param assignCriteria whether to check if {@code this} just contains all the qualifier types of {@code other},
+     *                       or if both have the exact same qualifier types
+     * @return {@code true} if this {@code Qualified} matches the qualifiers of {@code other}, {@code false} otherwise
      */
     default boolean containsAllAnnotationsOf(Qualified other, AssignCriteria assignCriteria) {
         return this.containsAllAnnotationTypesOf(other, assignCriteria) && this.containsAllAnnotationInstancesOf(other);
     }
 
     /**
-     * Checks whether this {@code Annotated} contains all the annotation types of the given {@code Annotated}.
+     * Checks whether this {@code Qualified} contains all the qualifier types of the given {@code Qualified}.
      *
-     * <p>The annotation types of an {@code Annotated} are composed of the types of its annotation instances + its
-     * required annotation types.
+     * <p>The qualifier types of an {@code Qualified} are composed of the types of its qualifier instances + its
+     * required qualifier types.
      *
-     * @param other          the {@code Annotated} to check whether this {@code Annotated} matches its annotation types
-     * @param assignCriteria whether to check if {@code this} just contains all the annotation types of {@code other},
-     *                       or if both have the exact same annotation types
-     * @return {@code true} if this {@code Annotated} matches the annotation types of {@code other}, {@code false} otherwise
+     * @param other          the {@code Qualified} to check whether this {@code Qualified} matches its qualifier types
+     * @param assignCriteria whether to check if {@code this} just contains all the qualifier types of {@code other},
+     *                       or if both have the exact same qualifier types
+     * @return {@code true} if this {@code Qualified} matches the qualifier types of {@code other}, {@code false} otherwise
      */
     default boolean containsAllAnnotationTypesOf(Qualified other, AssignCriteria assignCriteria) {
-        Set<Class<? extends Annotation>> thisAnnotationTypes = new HashSet<>(this.getRequiredAnnotations());
-        thisAnnotationTypes.addAll(this.getAnnotationsMap().keySet());
+        Set<Class<? extends Annotation>> thisAnnotationTypes = new HashSet<>(this.getRequiredQualifiers());
+        thisAnnotationTypes.addAll(this.getQualifiersMap().keySet());
 
-        Set<Class<? extends Annotation>> otherAnnotationTypes = new HashSet<>(other.getRequiredAnnotations());
-        otherAnnotationTypes.addAll(other.getAnnotationsMap().keySet());
+        Set<Class<? extends Annotation>> otherAnnotationTypes = new HashSet<>(other.getRequiredQualifiers());
+        otherAnnotationTypes.addAll(other.getQualifiersMap().keySet());
 
         return assignCriteria == AssignCriteria.CONTAINS
                 ? thisAnnotationTypes.containsAll(otherAnnotationTypes)
@@ -95,16 +95,16 @@ public interface Qualified {
     }
 
     /**
-     * Checks whether this {@code Annotated} contains all the annotation instances of the given {@code Annotated},
-     * such that every annotation of the provided {@code Annotated} matches {@link Annotation#equals(Object)} with one
-     * of this {@code Annotated}.
+     * Checks whether this {@code Qualified} contains all the qualifier instances of the given {@code Qualified},
+     * such that every qualifier of the provided {@code Qualified} matches {@link Annotation#equals(Object)} with one
+     * of this {@code Qualified}.
      *
-     * @param other the {@code Annotated} to check whether this {@code Annotated} matches its annotation instances
-     * @return {@code true} if this {@code Annotated} matches the annotation instances of {@code other}, {@code false} otherwise
+     * @param other the {@code Qualified} to check whether this {@code Qualified} matches its qualifier instances
+     * @return {@code true} if this {@code Qualified} matches the qualifier instances of {@code other}, {@code false} otherwise
      */
     default boolean containsAllAnnotationInstancesOf(Qualified other) {
-        Set<Annotation> thisAnnotations = new HashSet<>(this.getAnnotations());
-        return thisAnnotations.containsAll(other.getAnnotations());
+        Set<Annotation> thisAnnotations = new HashSet<>(this.getQualifiers());
+        return thisAnnotations.containsAll(other.getQualifiers());
     }
 
     enum AssignCriteria {CONTAINS, EQUALS}

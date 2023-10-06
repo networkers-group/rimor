@@ -1,6 +1,6 @@
 package st.networkers.rimor.qualify;
 
-import st.networkers.rimor.reflect.CachedQualifiedElement;
+import st.networkers.rimor.qualify.reflect.QualifiedElement;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -43,19 +43,19 @@ public abstract class DinamicallyQualified<T extends DinamicallyQualified<T>> im
         return this.casted();
     }
 
-    public T withAnnotationsOf(CachedQualifiedElement element) {
-        this.withAnnotations(element.getAnnotationsMap());
-        this.withRequiredAnnotations(element.getRequiredAnnotations());
+    public T withAnnotationsOf(QualifiedElement element) {
+        this.withAnnotations(element.getQualifiersMap());
+        this.withRequiredAnnotations(element.getRequiredQualifiers());
         return this.casted();
     }
 
     @Override
-    public Map<Class<? extends Annotation>, Annotation> getAnnotationsMap() {
+    public Map<Class<? extends Annotation>, Annotation> getQualifiersMap() {
         return annotations;
     }
 
     @Override
-    public Collection<Class<? extends Annotation>> getRequiredAnnotations() {
+    public Collection<Class<? extends Annotation>> getRequiredQualifiers() {
         return requiredAnnotations;
     }
 

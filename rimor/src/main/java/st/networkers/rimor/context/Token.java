@@ -92,8 +92,8 @@ public class Token<T> extends DinamicallyQualified<Token<T>> implements Matching
 
     @Override
     public int matchingHashCode() {
-        Set<Class<? extends Annotation>> annotationTypes = new HashSet<>(this.getRequiredAnnotations());
-        annotationTypes.addAll(this.getAnnotationsMap().keySet());
+        Set<Class<? extends Annotation>> annotationTypes = new HashSet<>(this.getRequiredQualifiers());
+        annotationTypes.addAll(this.getQualifiersMap().keySet());
 
         return Objects.hash(this.type, annotationTypes);
     }

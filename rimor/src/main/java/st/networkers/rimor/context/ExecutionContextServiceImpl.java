@@ -2,8 +2,8 @@ package st.networkers.rimor.context;
 
 import st.networkers.rimor.bean.BeanManager;
 import st.networkers.rimor.context.provide.ExecutionContextProviderRegistry;
-import st.networkers.rimor.reflect.CachedMethod;
-import st.networkers.rimor.reflect.CachedParameter;
+import st.networkers.rimor.qualify.reflect.QualifiedMethod;
+import st.networkers.rimor.qualify.reflect.QualifiedParameter;
 import st.networkers.rimor.util.OptionalUtils;
 import st.networkers.rimor.util.ReflectionUtils;
 
@@ -32,7 +32,7 @@ public class ExecutionContextServiceImpl implements ExecutionContextService {
     }
 
     @Override
-    public <T> Optional<T> get(Token<T> token, ExecutionContext context, Object bean) {
+    public <T> Optional<T> get(Token<T> token, Object bean, ExecutionContext context) {
         return OptionalUtils.firstPresent(
                 context.get(token),
                 () -> this.fromProviderRegistry(beanProviderRegistries.get(bean), token, context),
@@ -45,16 +45,16 @@ public class ExecutionContextServiceImpl implements ExecutionContextService {
     }
 
     @Override
-    public Object invokeMethod(CachedMethod method, Object instance, ExecutionContext context) {
-        return ReflectionUtils.invoke(method.getMethod(), instance, resolveParameters(method, context));
+    public Object invokeMethod(QualifiedMethod method, Object bean, ExecutionContext context) {
+        return ReflectionUtils.invoke(method.getMethod(), bean, resolveParameters(method, bean, context));
     }
 
-    private Object[] resolveParameters(CachedMethod method, ExecutionContext context) {
-        Object[] parameters = new Object[method.getParameters().size()];
+    private Object[] resolveParameters(QualifiedMethod method, Object bean, ExecutionContext context) {
+        Object[] parameters = new Object[method.getQualifiedParameters().size()];
 
         int i = 0;
-        for (CachedParameter parameter : method.getParameters()) {
-            parameters[i++] = this.get(ParameterToken.build(method, parameter), context).orElse(null);
+        for (QualifiedParameter parameter : method.getQualifiedParameters()) {
+            parameters[i++] = this.get(ParameterToken.build(method, parameter), bean, context).orElse(null);
         }
 
         return parameters;

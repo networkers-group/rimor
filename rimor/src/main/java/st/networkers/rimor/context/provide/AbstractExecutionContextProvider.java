@@ -5,8 +5,8 @@ import org.apache.commons.lang3.ClassUtils;
 import st.networkers.rimor.qualify.DinamicallyQualified;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.context.Token;
-import st.networkers.rimor.reflect.CachedClass;
-import st.networkers.rimor.reflect.CachedMethod;
+import st.networkers.rimor.qualify.reflect.QualifiedClass;
+import st.networkers.rimor.qualify.reflect.QualifiedMethod;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -77,8 +77,8 @@ public abstract class AbstractExecutionContextProvider<T>
 
     private void addPresentAnnotations() {
         try {
-            this.withAnnotationsOf(CachedMethod.build(this.getClass().getMethod("get", Token.class, ExecutionContext.class)))
-                    .withAnnotationsOf(CachedClass.build(this.getClass()));
+            this.withAnnotationsOf(QualifiedMethod.build(this.getClass().getMethod("get", Token.class, ExecutionContext.class)))
+                    .withAnnotationsOf(QualifiedClass.build(this.getClass()));
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }

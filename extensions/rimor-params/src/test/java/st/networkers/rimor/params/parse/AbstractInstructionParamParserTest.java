@@ -12,8 +12,8 @@ import st.networkers.rimor.params.InstructionParam;
 import st.networkers.rimor.params.InstructionParamImpl;
 import st.networkers.rimor.params.InstructionParams;
 import st.networkers.rimor.params.parse.support.DefaultInstructionParamParser;
-import st.networkers.rimor.reflect.CachedMethod;
-import st.networkers.rimor.reflect.CachedParameter;
+import st.networkers.rimor.qualify.reflect.QualifiedMethod;
+import st.networkers.rimor.qualify.reflect.QualifiedParameter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,14 +32,14 @@ class AbstractInstructionParamParserTest {
              @InstructionParam Object param3) {
     }
 
-    static CachedMethod fooMethod;
+    static QualifiedMethod fooMethod;
     static ExecutionContext context;
 
     static List<Object> params = Arrays.asList("bar", true, -1, null, "baz");
 
     @BeforeAll
     static void beforeAll() throws NoSuchMethodException {
-        fooMethod = CachedMethod.build(AbstractInstructionParamParserTest.class.getDeclaredMethod("foo", Object.class, String.class, boolean.class, int.class, String.class, Object.class));
+        fooMethod = QualifiedMethod.build(AbstractInstructionParamParserTest.class.getDeclaredMethod("foo", Object.class, String.class, boolean.class, int.class, String.class, Object.class));
         context = ExecutionContext.builder()
                 .bind(new Token<List<Object>>() {}.annotatedWith(InstructionParams.class), params)
                 .build();
@@ -47,7 +47,7 @@ class AbstractInstructionParamParserTest {
 
     @Test
     void whenGettingInstructionParamByProvidedIndex_returnsInstructionParamByProvidedIndex() {
-        Token<Object> token = (Token<Object>) ParameterToken.build(fooMethod, fooMethod.getParameters().get(4));
+        Token<Object> token = (Token<Object>) ParameterToken.build(fooMethod, fooMethod.getQualifiedParameters().get(4));
         assertThat(new DefaultInstructionParamParser().get(token, context)).isEqualTo(params.get(4));
     }
 
@@ -61,17 +61,17 @@ class AbstractInstructionParamParserTest {
 
     @ParameterizedTest
     @MethodSource
-    void whenGettingInstructionParamByMethodParameterOrder_returnsInstructionParamByParameterOrder(CachedParameter parameter, Object expectedParameter) {
+    void whenGettingInstructionParamByMethodParameterOrder_returnsInstructionParamByParameterOrder(QualifiedParameter parameter, Object expectedParameter) {
         Token<Object> token = (Token<Object>) ParameterToken.build(fooMethod, parameter);
         assertThat(new DefaultInstructionParamParser().get(token, context)).isEqualTo(expectedParameter);
     }
 
     public static Stream<Arguments> whenGettingInstructionParamByMethodParameterOrder_returnsInstructionParamByParameterOrder() {
         return Stream.of(
-                Arguments.of(fooMethod.getParameters().get(1), params.get(0)),
-                Arguments.of(fooMethod.getParameters().get(2), params.get(1)),
-                Arguments.of(fooMethod.getParameters().get(3), params.get(2)),
-                Arguments.of(fooMethod.getParameters().get(5), params.get(3))
+                Arguments.of(fooMethod.getQualifiedParameters().get(1), params.get(0)),
+                Arguments.of(fooMethod.getQualifiedParameters().get(2), params.get(1)),
+                Arguments.of(fooMethod.getQualifiedParameters().get(3), params.get(2)),
+                Arguments.of(fooMethod.getQualifiedParameters().get(5), params.get(3))
         );
     }
 }

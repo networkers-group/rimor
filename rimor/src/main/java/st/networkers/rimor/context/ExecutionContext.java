@@ -11,7 +11,11 @@ import java.util.Optional;
 public class ExecutionContext {
 
     public static Builder builder() {
-        return new Builder();
+        return new Builder(new MatchingMap<>());
+    }
+
+    public static Builder builder(ExecutionContext context) {
+        return new Builder(new MatchingMap<>(context.components));
     }
 
     // not a simple map because there may be components bound to tokens with required qualifier types,
@@ -43,8 +47,8 @@ public class ExecutionContext {
     public static class Builder {
         private final MatchingMap<Token<?>, Object> components;
 
-        private Builder() {
-            this.components = new MatchingMap<>();
+        private Builder(MatchingMap<Token<?>, Object> components) {
+            this.components = components;
         }
 
         public <T> Builder bind(Class<? super T> type, T object) {
