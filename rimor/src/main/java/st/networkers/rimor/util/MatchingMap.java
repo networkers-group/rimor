@@ -47,6 +47,10 @@ public class MatchingMap<K extends MatchingKey, V> {
         return lastEntry == null ? null : lastEntry.getValue();
     }
 
+    public void putAll(MatchingMap<K, V> matchingMap) {
+        delegate.putAll(matchingMap.delegate);
+    }
+
     @SuppressWarnings("unchecked")
     public V get(Object key) {
         K givenKey = (K) key;

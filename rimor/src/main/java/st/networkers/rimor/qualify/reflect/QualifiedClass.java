@@ -3,6 +3,7 @@ package st.networkers.rimor.qualify.reflect;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 
 public class QualifiedClass extends QualifiedElement {
 
@@ -25,5 +26,19 @@ public class QualifiedClass extends QualifiedElement {
 
     public Class<?> getClazz() {
         return clazz;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof QualifiedClass)) return false;
+        if (!super.equals(o)) return false;
+        QualifiedClass that = (QualifiedClass) o;
+        return Objects.equals(clazz, that.clazz);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), clazz);
     }
 }

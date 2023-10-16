@@ -5,8 +5,10 @@ import st.networkers.rimor.util.MatchingMap;
 import st.networkers.rimor.util.OptionalUtils;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
 
 public class ExecutionContextProviderRegistry implements Cloneable {
 
@@ -21,7 +23,13 @@ public class ExecutionContextProviderRegistry implements Cloneable {
     public void register(ExecutionContextProvider<?> provider) {
         for (Type type : provider.getProvidedTypes()) {
             Token<?> token = Token.of(type, provider.getQualifiersMap(), provider.getRequiredQualifiers());
-            this.providers.put(token, provider); // TODO throw if key already present?
+
+            this.getFor(token).ifPresent(existingProvider -> {
+                String message = String.format("found several execution context providers with matching tokens " +
+                                               "at the same level: %s, %s", existingProvider, provider);
+                throw new IllegalStateException(message);
+            });
+            this.providers.put(token, provider);
         }
     }
 

@@ -36,6 +36,16 @@ public interface ExecutionContextService {
     <T> Optional<T> get(Token<T> token, Object bean, ExecutionContext context);
 
     /**
+     * Registers the given {@link ExecutionContextProvider} globally, for all Rimor beans.
+     */
+    void registerGlobalExecutionContextProvider(ExecutionContextProvider<?> executionContextProvider);
+
+    /**
+     * Registers the given {@link ExecutionContextProvider} locally for the given bean.
+     */
+    void registerExecutionContextProvider(ExecutionContextProvider<?> executionContextProvider, Object bean);
+
+    /**
      * Invokes the given method injecting all its parameters following {@link #get(Token, ExecutionContext)}
      *
      * @param qualifiedMethod the method to invoke
@@ -44,4 +54,5 @@ public interface ExecutionContextService {
      * @return the result of executing the method
      */
     Object invokeMethod(QualifiedMethod qualifiedMethod, Object instance, ExecutionContext context);
+
 }
