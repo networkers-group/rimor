@@ -2,20 +2,21 @@ package st.networkers.rimor.command;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoSettings;
+import st.networkers.rimor.bean.BeanProcessingException;
 import st.networkers.rimor.bean.BeanProcessor;
 import st.networkers.rimor.instruction.HandlerMethodInstruction;
-import st.networkers.rimor.instruction.InstructionMapping;
 import st.networkers.rimor.instruction.InstructionResolver;
-import st.networkers.rimor.instruction.MainInstructionMapping;
-import st.networkers.rimor.qualify.reflect.QualifiedMethod;
 
-import static org.assertj.core.api.Assertions.*;
+import java.util.Collections;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @MockitoSettings
 @SuppressWarnings("InnerClassMayBeStatic")
@@ -23,82 +24,95 @@ class CommandProcessorTest {
 
     @Mock CommandRegistry commandRegistry;
     @Mock BeanProcessor beanProcessor;
-    CommandProcessor commandProcessor;
+    @Mock InstructionResolver instructionResolver;
+
+    @InjectMocks @Spy CommandProcessor commandProcessor;
 
     @BeforeEach
-    void beforeAll() {
-        commandProcessor = spy(new CommandProcessor(beanProcessor, commandRegistry, new InstructionResolver(null)));
+    void setUp() {
+        lenient().when(instructionResolver.resolveInstructions(any()))
+                .thenReturn(new InstructionResolver.InstructionResolution());
     }
 
     @Command({"foo", "bar"})
-    static class TwoIdentifiersCommand {
+    static class FooCommand {
     }
 
     @Test
-    void whenResolvingCommand_identifiersAreFooAndBarInOrder() {
-        MappedCommand command = commandProcessor.resolve(new TwoIdentifiersCommand(), false);
+    void whenResolvingCommand_identifiersAreResolvedFromAnnotationInOrder() {
+        MappedCommand command = commandProcessor.resolve(new FooCommand());
         assertThat(command.getIdentifiers()).containsExactly("foo", "bar");
     }
+
+    @Mock HandlerMethodInstruction mockedHandlerMethodInstruction;
+
+    @Test
+    void whenResolvingCommand_resolvedMainInstructionIsRegistered() {
+        // make InstructionResolver return an InstructionResolution with a main instruction
+        InstructionResolver.InstructionResolution instructionResolution = new InstructionResolver.InstructionResolution();
+        instructionResolution.setMainInstruction(mockedHandlerMethodInstruction);
+        when(instructionResolver.resolveInstructions(any()))
+                .thenReturn(instructionResolution);
+
+        MappedCommand command = commandProcessor.resolve(new FooCommand());
+
+        // the main instruction is registered
+        assertThat(command.getMainInstruction()).contains(mockedHandlerMethodInstruction);
+    }
+
+    @Test
+    void whenResolvingCommand_resolvedInstructionIsRegistered() {
+        // make InstructionResolver return an InstructionResolution with an instruction "foo"
+        when(mockedHandlerMethodInstruction.getIdentifiers()).thenReturn(Collections.singleton("foo"));
+
+        InstructionResolver.InstructionResolution instructionResolution = new InstructionResolver.InstructionResolution();
+        instructionResolution.addInstruction(mockedHandlerMethodInstruction);
+
+        when(instructionResolver.resolveInstructions(any()))
+                .thenReturn(instructionResolution);
+
+        MappedCommand command = commandProcessor.resolve(new FooCommand());
+
+        // the instruction is registered
+        assertThat(command.getInstructions())
+                .hasSize(1)
+                .containsEntry("foo", mockedHandlerMethodInstruction);
+    }
+
 
     @Command("")
     static class NoIdentifierCommand {}
 
     @Test
-    void whenResolvingNoIdentifierCommand_throwsIllegalArgumentException() {
-        assertThatThrownBy(() -> commandProcessor.resolve(new NoIdentifierCommand(), false)).isInstanceOf(IllegalArgumentException.class);
+    void whenResolvingCommandWithEmptyIdentifiers_throwsBeanProcessingException() {
+        assertThatThrownBy(() -> commandProcessor.resolve(new NoIdentifierCommand()))
+                .isInstanceOf(BeanProcessingException.class)
+                .hasMessageContaining("the specified identifiers")
+                .hasMessageContaining("are empty");
     }
 
-    @Command("foo")
-    static class CommandWithDefaultInstruction {
-        @MainInstructionMapping
-        public void defaultInstruction() {
-        }
-    }
-
-    @Test
-    void whenResolvingCommandWithDefaultInstruction_mainInstructionIsResolved() throws NoSuchMethodException {
-        MappedCommand command = commandProcessor.resolve(new CommandWithDefaultInstruction(), false);
-        assertThat(command.getMainInstruction())
-                .map(instruction -> (HandlerMethodInstruction) instruction)
-                .map(HandlerMethodInstruction::getQualifiedMethod)
-                .map(QualifiedMethod::getMethod)
-                .contains(CommandWithDefaultInstruction.class.getMethod("defaultInstruction"));
-    }
-
-    @Command("foo")
-    static class CommandWithInstruction {
-        @InstructionMapping("bar")
-        public void barInstruction() {
-        }
-    }
-
-    @Test
-    void whenResolvingCommandWithInstruction_barInstructionIsResolved() throws NoSuchMethodException {
-        MappedCommand command = commandProcessor.resolve(new CommandWithInstruction(), false);
-        assertThat(command.getInstruction("bar"))
-                .map(instruction -> (HandlerMethodInstruction) instruction)
-                .map(HandlerMethodInstruction::getQualifiedMethod)
-                .map(QualifiedMethod::getMethod)
-                .contains(CommandWithInstruction.class.getMethod("barInstruction"));
-    }
 
     @Command("foo")
     static class CommandWithDeclaredStaticSubcommand {
         @Command("bar")
         public static class BarSubcommand {
-            @MainInstructionMapping
-            public void defaultInstruction() {
-            }
         }
     }
 
     @Test
-    void whenResolvingCommandWithDeclaredStaticSubcommand_barSubcommandIsResolvedAndRegistered() {
-        MappedCommand command = commandProcessor.resolve(new CommandWithDeclaredStaticSubcommand(), false);
+    void whenResolvingCommandWithDeclaredStaticSubcommand_subcommandBeanIsInstantiatedResolvedProcessedAndRegistered() {
+        MappedCommand command = commandProcessor.resolve(new CommandWithDeclaredStaticSubcommand());
 
-        verify(commandProcessor).resolve(any(CommandWithDeclaredStaticSubcommand.BarSubcommand.class), eq(true));
+        // the subcommand is resolved just like any parent command
+        verify(commandProcessor).resolve(any(CommandWithDeclaredStaticSubcommand.BarSubcommand.class));
+
+        // the new bean (instantiated by Rimor) is processed
+        verify(beanProcessor).process(any(CommandWithDeclaredStaticSubcommand.BarSubcommand.class));
+
+        // the subcommand is registered in the parent command
         assertThat(command.getSubcommand("bar")).isPresent();
     }
+
 
     @Command("foo")
     static class CommandWithDeclaredNonStaticSubcommand {
@@ -108,42 +122,58 @@ class CommandProcessorTest {
     }
 
     @Test
-    void whenResolvingCommandWithDeclaredNonStaticSubcommand_barSubcommandIsResolvedAndRegistered() {
-        MappedCommand command = commandProcessor.resolve(new CommandWithDeclaredNonStaticSubcommand(), false);
+    void whenResolvingCommandWithDeclaredNonStaticSubcommand_subcommandBeanIsInstantiatedResolvedProcessedAndRegistered() {
+        MappedCommand command = commandProcessor.resolve(new CommandWithDeclaredNonStaticSubcommand());
 
-        verify(commandProcessor).resolve(any(CommandWithDeclaredNonStaticSubcommand.BarSubcommand.class), eq(true));
+        // subcommand is resolved just like any parent command
+        verify(commandProcessor).resolve(any(CommandWithDeclaredNonStaticSubcommand.BarSubcommand.class));
+
+        // the new bean (instantiated by Rimor) is processed
+        verify(beanProcessor).process(any(CommandWithDeclaredNonStaticSubcommand.BarSubcommand.class));
+
+        // subcommand is registered in the parent command
         assertThat(command.getSubcommand("bar")).isPresent();
     }
 
+
     @Command("foo")
     static class CommandWithRegisteredInnerSubcommandDefinition extends AbstractCommandDefinition {
-        public CommandWithRegisteredInnerSubcommandDefinition() {
-            registerSubcommand(new BarSubcommand(0));
+        public CommandWithRegisteredInnerSubcommandDefinition(
+                CommandWithRegisteredInnerSubcommandDefinition.BarSubcommand subcommandInstance
+        ) {
+            registerSubcommand(subcommandInstance);
         }
 
         @Command("bar")
         public static class BarSubcommand {
-            public BarSubcommand() {
-                throw new IllegalStateException("this class should not be constructed automatically!");
-            }
-
-            private BarSubcommand(int i) {
-            }
         }
     }
 
     @Test
-    void whenResolvingCommandWithRegisteredSubcommand_barSubcommandIsResolvedAndRegistered() {
-        MappedCommand command = commandProcessor.resolve(new CommandWithRegisteredInnerSubcommandDefinition(), false);
+    void whenResolvingCommandWithRegisteredInnerSubcommand_subcommandMustNotBeInstantiatedByProcessor() {
+        CommandWithRegisteredInnerSubcommandDefinition.BarSubcommand subcommandInstance = new CommandWithRegisteredInnerSubcommandDefinition.BarSubcommand();
+        MappedCommand command = commandProcessor.resolve(new CommandWithRegisteredInnerSubcommandDefinition(subcommandInstance));
 
-        verify(commandProcessor).resolve(any(CommandWithRegisteredInnerSubcommandDefinition.BarSubcommand.class), eq(true));
-        assertThat(command.getSubcommand("bar")).isPresent();
+        // subcommand is only resolved once
+        verify(commandProcessor, times(1))
+                .resolve(any(CommandWithRegisteredInnerSubcommandDefinition.BarSubcommand.class));
+
+        // and the resolved instance is the given one, thus the subcommand is never instantiated by processor
+        verify(commandProcessor).resolve(subcommandInstance);
     }
 
     @Test
-    void whenResolvingCommandWithRegisteredInnerSubcommand_barSubcommandMustNotBeInstantiatedByProcessor() {
-        assertThatCode(() -> {
-            commandProcessor.resolveDeclaredSubcommands(new CommandWithRegisteredInnerSubcommandDefinition());
-        }).doesNotThrowAnyException();
+    void whenResolvingCommandWithRegisteredSubcommand_subcommandIsResolvedAndRegistered() {
+        CommandWithRegisteredInnerSubcommandDefinition.BarSubcommand subcommandInstance = new CommandWithRegisteredInnerSubcommandDefinition.BarSubcommand();
+        MappedCommand command = commandProcessor.resolve(new CommandWithRegisteredInnerSubcommandDefinition(subcommandInstance));
+
+        // subcommand is resolved
+        verify(commandProcessor).resolve(any(CommandWithRegisteredInnerSubcommandDefinition.BarSubcommand.class));
+
+        // subcommand bean is processed
+        verify(beanProcessor).process(any(CommandWithRegisteredInnerSubcommandDefinition.BarSubcommand.class));
+
+        // subcommand is registered
+        assertThat(command.getSubcommand("bar")).isPresent();
     }
 }
