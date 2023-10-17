@@ -1,25 +1,33 @@
 package st.networkers.rimor.context.provide.support;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoSettings;
 import st.networkers.rimor.FooAnnotation;
 import st.networkers.rimor.FooAnnotationImpl;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.context.Token;
 import st.networkers.rimor.context.ExecutionContextServiceImpl;
-import st.networkers.rimor.context.provide.ExecutionContextProviderRegistry;
+import st.networkers.rimor.context.Token;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
+@MockitoSettings
 class OptionalProviderTest {
 
-    static OptionalProvider provider;
+    @Mock ExecutionContextServiceImpl executionContextService;
+    @InjectMocks OptionalProvider provider;
 
-    @BeforeAll
-    static void setUp() {
-        provider = new OptionalProvider(new ExecutionContextServiceImpl(new ExecutionContextProviderRegistry()));
+    @BeforeEach
+    void setUp() {
+        when(executionContextService.get(any(), any())).thenCallRealMethod();
     }
 
     @Test
@@ -50,6 +58,26 @@ class OptionalProviderTest {
 
         Token<Optional<Integer>> token = new Token<Optional<Integer>>() {};
         assertThat(get(token, context)).contains(3);
+    }
+
+    @Test
+    void givenContextWithListOfStringsComponent_whenGettingListOfStringsWrappedInOptional_optionalContainsGivenListOfStrings() {
+        ExecutionContext context = ExecutionContext.builder()
+                .bind(new Token<List<String>>() {}, Arrays.asList("foo", "bar"))
+                .build();
+
+        Token<Optional<List<String>>> token = new Token<Optional<List<String>>>() {};
+        assertThat(get(token, context)).contains(Arrays.asList("foo", "bar"));
+    }
+
+    @Test
+    void givenContextWithListOfStringsComponent_whenGettingListOfIntegersWrappedInOptional_optionalIsEmpty() {
+        ExecutionContext context = ExecutionContext.builder()
+                .bind(new Token<List<String>>() {}, Arrays.asList("foo", "bar"))
+                .build();
+
+        Token<Optional<List<Integer>>> token = new Token<Optional<List<Integer>>>() {};
+        assertThat(get(token, context)).isEmpty();
     }
 
     @Test
