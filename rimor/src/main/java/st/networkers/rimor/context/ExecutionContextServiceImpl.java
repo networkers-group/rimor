@@ -41,7 +41,7 @@ public class ExecutionContextServiceImpl implements ExecutionContextService {
         );
     }
 
-    private <T> Optional<T> fromProviderRegistry(ExecutionContextProviderRegistry executionContextProviderRegistry, Token<T> token, ExecutionContext context) {
+    public <T> Optional<T> fromProviderRegistry(ExecutionContextProviderRegistry executionContextProviderRegistry, Token<T> token, ExecutionContext context) {
         return executionContextProviderRegistry.findFor(token).map(provider -> provider.get(token, context));
     }
 
