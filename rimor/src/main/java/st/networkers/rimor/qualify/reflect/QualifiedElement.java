@@ -45,4 +45,17 @@ public class QualifiedElement implements Qualified {
     public Map<Class<? extends Annotation>, Annotation> getQualifiersMap() {
         return Collections.unmodifiableMap(this.qualifiers);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof QualifiedElement)) return false;
+        QualifiedElement that = (QualifiedElement) o;
+        return Objects.equals(qualifiers, that.qualifiers) && Objects.equals(requiredQualifiers, that.requiredQualifiers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(qualifiers, requiredQualifiers);
+    }
 }

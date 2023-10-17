@@ -11,16 +11,12 @@ import java.util.Optional;
 public class ExecutionContext {
 
     public static Builder builder() {
-        return new Builder(new MatchingMap<>());
-    }
-
-    public static Builder builder(ExecutionContext context) {
-        return new Builder(new MatchingMap<>(context.components));
+        return new Builder();
     }
 
     // not a simple map because there may be components bound to tokens with required qualifier types,
     // and we have to provide them to parameters with instances of them
-    private final MatchingMap<Token<?>, Object> components;
+    final MatchingMap<Token<?>, Object> components;
 
     public ExecutionContext(MatchingMap<Token<?>, Object> components) {
         this.components = components;
@@ -47,8 +43,8 @@ public class ExecutionContext {
     public static class Builder {
         private final MatchingMap<Token<?>, Object> components;
 
-        private Builder(MatchingMap<Token<?>, Object> components) {
-            this.components = components;
+        private Builder() {
+            this.components = new MatchingMap<>();
         }
 
         public <T> Builder bind(Class<? super T> type, T object) {
@@ -58,6 +54,11 @@ public class ExecutionContext {
 
         public <T> Builder bind(Token<? super T> token, T object) {
             this.components.put(token, object);
+            return this;
+        }
+
+        public Builder copy(ExecutionContext context) {
+            this.components.putAll(context.components);
             return this;
         }
 

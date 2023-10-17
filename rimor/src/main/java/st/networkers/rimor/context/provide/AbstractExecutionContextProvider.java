@@ -1,10 +1,9 @@
 package st.networkers.rimor.context.provide;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
-import st.networkers.rimor.qualify.DinamicallyQualified;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.context.Token;
+import st.networkers.rimor.qualify.DinamicallyQualified;
 import st.networkers.rimor.qualify.reflect.QualifiedClass;
 import st.networkers.rimor.qualify.reflect.QualifiedMethod;
 
@@ -16,6 +15,8 @@ import java.util.stream.Stream;
 
 /**
  * Useful abstract class to implement {@link ExecutionContextProvider}s.
+ *
+ * <p>Check {@link ProvidesContext} for annotation-based execution context providers (recommended for most cases).
  *
  * <p>For example, this is the provider for an imaginary {@code @Stats}-annotated {@code UserStats}, obtained from an
  * imaginary {@code @Sender}-annotated {@code User} present in the {@link ExecutionContext execution context}:
@@ -56,13 +57,14 @@ public abstract class AbstractExecutionContextProvider<T>
 
     @SafeVarargs
     protected AbstractExecutionContextProvider(Class<? extends T> providedType, Class<? extends T>... otherTypes) {
-        this(Stream.concat(Stream.of(providedType), Arrays.stream(ArrayUtils.add(otherTypes, providedType)))
+        this(Stream.concat(Stream.of(providedType), Arrays.stream(otherTypes))
                 .map(ClassUtils::primitiveToWrapper)
                 .collect(Collectors.toList()));
     }
 
     protected AbstractExecutionContextProvider(Type providedType, Type... otherTypes) {
-        this(Stream.concat(Stream.of(providedType), Arrays.stream(otherTypes)).collect(Collectors.toList()));
+        this(Stream.concat(Stream.of(providedType), Arrays.stream(otherTypes))
+                .collect(Collectors.toList()));
     }
 
     private AbstractExecutionContextProvider(Collection<Type> providedTypes) {
@@ -82,5 +84,14 @@ public abstract class AbstractExecutionContextProvider<T>
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{" +
+               "providedTypes=" + providedTypes +
+               ", annotations=" + annotations +
+               ", requiredAnnotations=" + requiredAnnotations +
+               '}';
     }
 }

@@ -1,5 +1,6 @@
 package st.networkers.rimor.command;
 
+import st.networkers.rimor.bean.BeanProcessingException;
 import st.networkers.rimor.bean.BeanProcessor;
 import st.networkers.rimor.instruction.InstructionResolver;
 import st.networkers.rimor.instruction.InstructionResolver.InstructionResolution;
@@ -30,7 +31,7 @@ public class CommandProcessor implements BeanProcessor {
         if (!bean.getClass().isAnnotationPresent(Command.class) || isSubcommand(bean))
             return;
 
-        MappedCommand command = this.resolve(bean, false);
+        MappedCommand command = this.resolve(bean);
         command.getIdentifiers().forEach(identifier -> commandRegistry.register(identifier, command));
     }
 
@@ -38,7 +39,13 @@ public class CommandProcessor implements BeanProcessor {
         return bean.getClass().isMemberClass() && bean.getClass().getDeclaringClass().isAnnotationPresent(Command.class);
     }
 
-    public MappedCommand resolve(Object bean, boolean processBean) {
+    private MappedCommand resolveAndProcessCommandBean(Object bean) {
+        MappedCommand subcommand = this.resolve(bean);
+        beanProcessor.process(bean);
+        return subcommand;
+    }
+
+    public MappedCommand resolve(Object bean) {
         if (this.resolvedCommands.containsKey(bean)) {
             return this.resolvedCommands.get(bean);
         }
@@ -55,11 +62,6 @@ public class CommandProcessor implements BeanProcessor {
                 .create();
 
         this.resolvedCommands.put(bean, command);
-
-        if (processBean) {
-            beanProcessor.process(bean);
-        }
-
         return command;
     }
 
@@ -72,7 +74,7 @@ public class CommandProcessor implements BeanProcessor {
                 .collect(Collectors.toList());
 
         if (identifiers.isEmpty())
-            throw new IllegalArgumentException("the specified identifiers for " + bean.getClass().getSimpleName() + " are empty");
+            throw new BeanProcessingException(bean, "the specified identifiers for " + bean.getClass().getName() + " are empty");
 
         return identifiers;
     }
@@ -90,12 +92,11 @@ public class CommandProcessor implements BeanProcessor {
 
     private Collection<MappedCommand> resolveRegisteredSubcommands(CommandDefinition bean) {
         return bean.getSubcommands().stream()
-                .map(subcommandBean -> this.resolve(subcommandBean, true))
+                .map(this::resolveAndProcessCommandBean)
                 .collect(Collectors.toList());
     }
 
-    // package-private for testing purposes
-    Collection<MappedCommand> resolveDeclaredSubcommands(Object bean) {
+    private Collection<MappedCommand> resolveDeclaredSubcommands(Object bean) {
         Collection<Class<?>> classesToIgnore = new ArrayList<>();
 
         if (bean instanceof CommandDefinition) {
@@ -109,7 +110,7 @@ public class CommandProcessor implements BeanProcessor {
                 .filter(subcommandClass -> subcommandClass.isAnnotationPresent(Command.class))
                 .filter(subcommandClass -> !classesToIgnore.contains(subcommandClass))
                 .map(subcommandClass -> ReflectionUtils.instantiateInnerClass(bean, subcommandClass))
-                .map(subcommandBean -> this.resolve(subcommandBean, true))
+                .map(this::resolveAndProcessCommandBean)
                 .collect(Collectors.toList());
     }
 }

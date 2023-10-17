@@ -37,4 +37,18 @@ public class QualifiedMethod extends QualifiedElement {
     public Method getMethod() {
         return method;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof QualifiedMethod)) return false;
+        if (!super.equals(o)) return false;
+        QualifiedMethod that = (QualifiedMethod) o;
+        return Objects.equals(method, that.method) && Objects.equals(qualifiedParameters, that.qualifiedParameters);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), method, qualifiedParameters);
+    }
 }

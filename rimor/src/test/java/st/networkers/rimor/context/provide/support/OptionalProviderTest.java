@@ -19,7 +19,7 @@ class OptionalProviderTest {
 
     @BeforeAll
     static void setUp() {
-        provider = new OptionalProvider(new ExecutionContextServiceImpl(null, new ExecutionContextProviderRegistry()));
+        provider = new OptionalProvider(new ExecutionContextServiceImpl(new ExecutionContextProviderRegistry()));
     }
 
     @Test

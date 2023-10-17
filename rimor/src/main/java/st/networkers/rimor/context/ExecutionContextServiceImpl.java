@@ -1,6 +1,6 @@
 package st.networkers.rimor.context;
 
-import st.networkers.rimor.bean.BeanManager;
+import st.networkers.rimor.context.provide.ExecutionContextProvider;
 import st.networkers.rimor.context.provide.ExecutionContextProviderRegistry;
 import st.networkers.rimor.qualify.reflect.QualifiedMethod;
 import st.networkers.rimor.qualify.reflect.QualifiedParameter;
@@ -13,13 +13,10 @@ import java.util.Optional;
 
 public class ExecutionContextServiceImpl implements ExecutionContextService {
 
-    private final BeanManager beanManager;
-
     private final ExecutionContextProviderRegistry globalProviderRegistry;
     private final Map<Object, ExecutionContextProviderRegistry> beanProviderRegistries = new HashMap<>();
 
-    public ExecutionContextServiceImpl(BeanManager beanManager, ExecutionContextProviderRegistry globalProviderRegistry) {
-        this.beanManager = beanManager;
+    public ExecutionContextServiceImpl(ExecutionContextProviderRegistry globalProviderRegistry) {
         this.globalProviderRegistry = globalProviderRegistry;
     }
 
@@ -33,15 +30,30 @@ public class ExecutionContextServiceImpl implements ExecutionContextService {
 
     @Override
     public <T> Optional<T> get(Token<T> token, Object bean, ExecutionContext context) {
+        ExecutionContextProviderRegistry beanProviderRegistry = beanProviderRegistries.get(bean);
+        if (beanProviderRegistry == null)
+            return this.get(token, context);
+
         return OptionalUtils.firstPresent(
                 context.get(token),
-                () -> this.fromProviderRegistry(beanProviderRegistries.get(bean), token, context),
+                () -> this.fromProviderRegistry(beanProviderRegistry, token, context),
                 () -> this.fromProviderRegistry(globalProviderRegistry, token, context)
         );
     }
 
     private <T> Optional<T> fromProviderRegistry(ExecutionContextProviderRegistry executionContextProviderRegistry, Token<T> token, ExecutionContext context) {
         return executionContextProviderRegistry.findFor(token).map(provider -> provider.get(token, context));
+    }
+
+    @Override
+    public void registerGlobalExecutionContextProvider(ExecutionContextProvider<?> executionContextProvider) {
+        this.globalProviderRegistry.register(executionContextProvider);
+    }
+
+    @Override
+    public void registerExecutionContextProvider(ExecutionContextProvider<?> executionContextProvider, Object bean) {
+        this.beanProviderRegistries.computeIfAbsent(bean, b -> new ExecutionContextProviderRegistry())
+                .register(executionContextProvider);
     }
 
     @Override
