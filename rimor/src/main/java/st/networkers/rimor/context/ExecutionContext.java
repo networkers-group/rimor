@@ -59,6 +59,9 @@ public class ExecutionContext {
         }
 
         public Builder bind(Token token, Object object) {
+            if (!TypeUtils.isAssignable(object.getClass(), token.getType())) {
+                throw new IllegalArgumentException("trying to bind " + object + " to a token with not assignable type " + token.getType());
+            }
 
             this.components.put(token, object);
             return this;
