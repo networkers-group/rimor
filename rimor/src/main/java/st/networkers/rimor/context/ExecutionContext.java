@@ -1,7 +1,10 @@
 package st.networkers.rimor.context;
 
+import org.apache.commons.lang3.reflect.TypeUtils;
+import st.networkers.rimor.qualify.Token;
 import st.networkers.rimor.util.MatchingMap;
 
+import java.lang.reflect.Type;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -16,14 +19,14 @@ public class ExecutionContext {
 
     // not a simple map because there may be components bound to tokens with required qualifier types,
     // and we have to provide them to parameters with instances of them
-    final MatchingMap<Token<?>, Object> components;
+    final MatchingMap<Token, Object> components;
 
-    public ExecutionContext(MatchingMap<Token<?>, Object> components) {
+    public ExecutionContext(MatchingMap<Token, Object> components) {
         this.components = components;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Optional<T> get(Token<T> token) {
+    public <T> Optional<T> get(Token token) {
         return (Optional<T>) Optional.ofNullable(components.get(token));
     }
 
@@ -41,23 +44,27 @@ public class ExecutionContext {
     }
 
     public static class Builder {
-        private final MatchingMap<Token<?>, Object> components;
+        private final MatchingMap<Token, Object> components;
 
         private Builder() {
             this.components = new MatchingMap<>();
         }
 
         public <T> Builder bind(Class<? super T> type, T object) {
-            this.components.put(Token.of(type), object);
-            return this;
+            return this.bind(Token.of(type), object);
         }
 
-        public <T> Builder bind(Token<? super T> token, T object) {
+        public Builder bind(Type type, Object object) {
+            return this.bind(Token.of(type), object);
+        }
+
+        public Builder bind(Token token, Object object) {
+
             this.components.put(token, object);
             return this;
         }
 
-        public Builder copy(ExecutionContext context) {
+        public Builder withBindingsOf(ExecutionContext context) {
             this.components.putAll(context.components);
             return this;
         }

@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * Instruction handler method parameters with this annotation are injected with the corresponding command parameter.
  *
  * <p>If the index of the parameter is not manually specified in this annotation, it is automatically
- * detected by the position of this parameter relative to all the method's {@code @InstructionParam}-annotated parameters.
+ * detected by the position of this parameter relative to all the method's {@code @InstructionParam}-qualified parameters.
  *
  * <p>The injected object will be {@code null} if the index is greater or equal than the number of command parameters.
  *

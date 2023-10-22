@@ -44,11 +44,11 @@ public class QualifiedParameter extends QualifiedElement {
         if (!(o instanceof QualifiedParameter)) return false;
         if (!super.equals(o)) return false;
         QualifiedParameter that = (QualifiedParameter) o;
-        return Objects.equals(parameter, that.parameter) && Objects.equals(type, that.type);
+        return Objects.equals(parameter, that.parameter);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), parameter, type);
+        return Objects.hash(super.hashCode(), parameter);
     }
 }

@@ -2,15 +2,29 @@ package st.networkers.rimor.context.provide;
 
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.context.ExecutionContextService;
-import st.networkers.rimor.context.Token;
+import st.networkers.rimor.qualify.ImmutableToken;
+import st.networkers.rimor.qualify.Token;
 import st.networkers.rimor.qualify.reflect.QualifiedMethod;
+import st.networkers.rimor.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HandlerMethodExecutionContextProvider implements ExecutionContextProvider<Object> {
+
+    public static HandlerMethodExecutionContextProvider build(ExecutionContextService executionContextService,
+                                                              Object bean, QualifiedMethod qualifiedMethod,
+                                                              Collection<Type> providedTypes) {
+        List<Type> curatedProvidedTypes = providedTypes.stream()
+                .map(ReflectionUtils::wrapPrimitive)
+                .collect(Collectors.toList());
+
+        return new HandlerMethodExecutionContextProvider(executionContextService, bean, qualifiedMethod, curatedProvidedTypes);
+    }
 
     private final ExecutionContextService executionContextService;
 
@@ -18,8 +32,8 @@ public class HandlerMethodExecutionContextProvider implements ExecutionContextPr
     private final QualifiedMethod method;
     private final Collection<Type> providedTypes;
 
-    public HandlerMethodExecutionContextProvider(ExecutionContextService executionContextService,
-                                                 Object bean, QualifiedMethod method, Collection<Type> providedTypes) {
+    private HandlerMethodExecutionContextProvider(ExecutionContextService executionContextService,
+                                                  Object bean, QualifiedMethod method, Collection<Type> providedTypes) {
         this.executionContextService = executionContextService;
         this.bean = bean;
         this.method = method;
@@ -27,17 +41,16 @@ public class HandlerMethodExecutionContextProvider implements ExecutionContextPr
     }
 
     @Override
-    public Object get(Token<Object> token, ExecutionContext context) {
-        // first, create a context copy with the token and annotations present in this method to make it possible to inject them:
-        ExecutionContext.Builder contextWithToken = ExecutionContext.builder()
-                .copy(context)
-                .bind(new Token<Token<?>>() {}, token);
+    public Object get(Token token, ExecutionContext context) {
+        // first, create a context copy with the token and annotations present in the handler method to make it possible
+        // to inject them:
+        ExecutionContext.Builder executionContextBuilder = ExecutionContext.builder()
+                .withBindingsOf(context)
+                .bind(Token.class, ImmutableToken.copyOf(token));
+        token.getQualifiersMap().forEach(executionContextBuilder::bind);
 
-        for (Map.Entry<Class<? extends Annotation>, Annotation> entry : token.getQualifiersMap().entrySet()) {
-            contextWithToken.bind(Token.of((Type) entry.getKey()), entry.getValue());
-        }
-
-        return executionContextService.invokeMethod(method, bean, contextWithToken.build());
+        ExecutionContext executionContext = executionContextBuilder.build();
+        return executionContextService.invokeMethod(method, bean, executionContext);
     }
 
     public Object getBean() {

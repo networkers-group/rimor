@@ -23,36 +23,36 @@ public interface Qualified {
     }
 
     /**
-     * Gets the qualifier instance present in this {@code Qualified} for the given {@link Annotation} type.
+     * Gets the qualifier instance present in this {@code Qualified} for the given qualifier type.
      *
-     * @param annotationClass class of the annotation to get
+     * @param qualifierType the type of the qualifier to get
      * @return the annotation present in this {@code Qualified}, or {@code null} if not present.
      */
     @SuppressWarnings("unchecked")
-    default <A extends Annotation> A getQualifier(Class<A> annotationClass) {
-        return (A) this.getQualifiersMap().get(annotationClass);
+    default <A extends Annotation> A getQualifier(Class<A> qualifierType) {
+        return (A) this.getQualifiersMap().get(qualifierType);
     }
 
     /**
      * Whether this {@code Qualified} contains the given qualifier {@link Annotation} instance, so that both qualifiers are
      * {@link Annotation#equals(Object) equal}.
      *
-     * @param annotation the annotation to check
+     * @param qualifier the qualifier to check
      * @return if this {@code Qualified} contains the given {@link Annotation}
      */
-    default boolean isQualifierPresent(Annotation annotation) {
-        return this.getQualifiers().contains(annotation);
+    default boolean isQualifierPresent(Annotation qualifier) {
+        return this.getQualifiers().contains(qualifier);
     }
 
     /**
      * Whether this {@code Qualified} contains an instance of the given qualifier {@link Annotation} type, or contains
      * the given {@link Annotation} type as a required qualifier
      *
-     * @param annotationClass the qualifier type to check
+     * @param qualifierType the qualifier type to check
      * @return if this {@code Qualified} contains the given {@link Annotation}
      */
-    default boolean isQualifierPresent(Class<? extends Annotation> annotationClass) {
-        return this.getQualifiersMap().containsKey(annotationClass) || this.getRequiredQualifiers().contains(annotationClass);
+    default boolean isQualifierPresent(Class<? extends Annotation> qualifierType) {
+        return this.getQualifiersMap().containsKey(qualifierType) || this.getRequiredQualifiers().contains(qualifierType);
     }
 
     /**
@@ -67,8 +67,8 @@ public interface Qualified {
      *                       or if both have the exact same qualifier types
      * @return {@code true} if this {@code Qualified} matches the qualifiers of {@code other}, {@code false} otherwise
      */
-    default boolean containsAllAnnotationsOf(Qualified other, AssignCriteria assignCriteria) {
-        return this.containsAllAnnotationTypesOf(other, assignCriteria) && this.containsAllAnnotationInstancesOf(other);
+    default boolean containsAllQualifiersOf(Qualified other, AssignCriteria assignCriteria) {
+        return this.containsAllRequiredQualifierTypesOf(other, assignCriteria) && this.containsAllQualifierInstancesOf(other);
     }
 
     /**
@@ -82,7 +82,7 @@ public interface Qualified {
      *                       or if both have the exact same qualifier types
      * @return {@code true} if this {@code Qualified} matches the qualifier types of {@code other}, {@code false} otherwise
      */
-    default boolean containsAllAnnotationTypesOf(Qualified other, AssignCriteria assignCriteria) {
+    default boolean containsAllRequiredQualifierTypesOf(Qualified other, AssignCriteria assignCriteria) {
         Set<Class<? extends Annotation>> thisAnnotationTypes = new HashSet<>(this.getRequiredQualifiers());
         thisAnnotationTypes.addAll(this.getQualifiersMap().keySet());
 
@@ -102,10 +102,23 @@ public interface Qualified {
      * @param other the {@code Qualified} to check whether this {@code Qualified} matches its qualifier instances
      * @return {@code true} if this {@code Qualified} matches the qualifier instances of {@code other}, {@code false} otherwise
      */
-    default boolean containsAllAnnotationInstancesOf(Qualified other) {
+    default boolean containsAllQualifierInstancesOf(Qualified other) {
         Set<Annotation> thisAnnotations = new HashSet<>(this.getQualifiers());
         return thisAnnotations.containsAll(other.getQualifiers());
     }
 
     enum AssignCriteria {CONTAINS, EQUALS}
+
+    static <T extends Annotation> T checkQualifierAnnotation(T annotation) {
+        checkQualifierAnnotation(annotation.annotationType());
+        return annotation;
+    }
+
+    static <T extends Annotation> Class<T> checkQualifierAnnotation(Class<T> annotationClass) {
+        if (!annotationClass.isAnnotationPresent(RimorQualifier.class)) {
+            throw new IllegalArgumentException("annotation " + annotationClass.getSimpleName() + " is not annotated " +
+                                               "with the RimorQualifier meta-annotation, so it cannot be trated as a qualifier.");
+        }
+        return annotationClass;
+    }
 }

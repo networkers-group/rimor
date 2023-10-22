@@ -2,6 +2,8 @@ package st.networkers.rimor.context;
 
 import st.networkers.rimor.context.provide.ExecutionContextProvider;
 import st.networkers.rimor.context.provide.ExecutionContextProviderRegistry;
+import st.networkers.rimor.qualify.ParameterToken;
+import st.networkers.rimor.qualify.Token;
 import st.networkers.rimor.qualify.reflect.QualifiedMethod;
 import st.networkers.rimor.qualify.reflect.QualifiedParameter;
 import st.networkers.rimor.util.OptionalUtils;
@@ -21,7 +23,7 @@ public class ExecutionContextServiceImpl implements ExecutionContextService {
     }
 
     @Override
-    public <T> Optional<T> get(Token<T> token, ExecutionContext context) {
+    public <T> Optional<T> get(Token token, ExecutionContext context) {
         return OptionalUtils.firstPresent(
                 context.get(token),
                 () -> this.fromProviderRegistry(globalProviderRegistry, token, context)
@@ -29,7 +31,7 @@ public class ExecutionContextServiceImpl implements ExecutionContextService {
     }
 
     @Override
-    public <T> Optional<T> get(Token<T> token, Object bean, ExecutionContext context) {
+    public <T> Optional<T> get(Token token, Object bean, ExecutionContext context) {
         ExecutionContextProviderRegistry beanProviderRegistry = beanProviderRegistries.get(bean);
         if (beanProviderRegistry == null)
             return this.get(token, context);
@@ -41,8 +43,9 @@ public class ExecutionContextServiceImpl implements ExecutionContextService {
         );
     }
 
-    public <T> Optional<T> fromProviderRegistry(ExecutionContextProviderRegistry executionContextProviderRegistry, Token<T> token, ExecutionContext context) {
-        return executionContextProviderRegistry.findFor(token).map(provider -> provider.get(token, context));
+    @SuppressWarnings("unchecked")
+    public <T> Optional<T> fromProviderRegistry(ExecutionContextProviderRegistry executionContextProviderRegistry, Token token, ExecutionContext context) {
+        return (Optional<T>) executionContextProviderRegistry.findFor(token).map(provider -> provider.get(token, context));
     }
 
     @Override

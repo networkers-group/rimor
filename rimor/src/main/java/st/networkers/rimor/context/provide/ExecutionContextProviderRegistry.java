@@ -1,6 +1,6 @@
 package st.networkers.rimor.context.provide;
 
-import st.networkers.rimor.context.Token;
+import st.networkers.rimor.qualify.Token;
 import st.networkers.rimor.util.MatchingMap;
 import st.networkers.rimor.util.OptionalUtils;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
 public class ExecutionContextProviderRegistry implements Cloneable {
 
     // TODO cache
-    private MatchingMap<Token<?>, ExecutionContextProvider<?>> providers = new MatchingMap<>();
+    private MatchingMap<Token, ExecutionContextProvider<?>> providers = new MatchingMap<>();
 
     /**
      * Registers the given {@link ExecutionContextProvider}s.
@@ -22,7 +22,7 @@ public class ExecutionContextProviderRegistry implements Cloneable {
      */
     public void register(ExecutionContextProvider<?> provider) {
         for (Type type : provider.getProvidedTypes()) {
-            Token<?> token = Token.of(type, provider.getQualifiersMap(), provider.getRequiredQualifiers());
+            Token token = Token.of(type, provider.getQualifiersMap(), provider.getRequiredQualifiers());
 
             this.getFor(token).ifPresent(existingProvider -> {
                 String message = String.format("found several execution context providers with matching tokens " +
@@ -41,7 +41,7 @@ public class ExecutionContextProviderRegistry implements Cloneable {
      * @return an optional containing the found provider, or empty if none was found
      */
     @SuppressWarnings("unchecked")
-    public <T> Optional<ExecutionContextProvider<T>> findFor(Token<? super T> token) {
+    public <T> Optional<ExecutionContextProvider<T>> findFor(Token token) {
         return OptionalUtils.firstPresent(
                         this.getFor(token),
                         () -> this.findAnySuitable(token)
@@ -49,13 +49,13 @@ public class ExecutionContextProviderRegistry implements Cloneable {
                 .map(provider -> (ExecutionContextProvider<T>) provider);
     }
 
-    private Optional<ExecutionContextProvider<?>> getFor(Token<?> token) {
+    private Optional<ExecutionContextProvider<?>> getFor(Token token) {
         return Optional.ofNullable(this.providers.get(token));
     }
 
-    private Optional<ExecutionContextProvider<?>> findAnySuitable(Token<?> token) {
-        for (Entry<Integer, List<Entry<Token<?>, ExecutionContextProvider<?>>>> matchingTokenEntry : this.providers.getDelegate().entrySet()) {
-            for (Entry<Token<?>, ExecutionContextProvider<?>> entry : matchingTokenEntry.getValue()) {
+    private Optional<ExecutionContextProvider<?>> findAnySuitable(Token token) {
+        for (Entry<Integer, List<Entry<Token, ExecutionContextProvider<?>>>> matchingTokenEntry : this.providers.getDelegate().entrySet()) {
+            for (Entry<Token, ExecutionContextProvider<?>> entry : matchingTokenEntry.getValue()) {
                 if (token.isAssignableFrom(entry.getKey()))
                     return Optional.ofNullable(entry.getValue());
             }

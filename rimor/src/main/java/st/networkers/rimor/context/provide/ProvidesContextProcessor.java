@@ -40,15 +40,17 @@ public class ProvidesContextProcessor implements BeanProcessor {
 
         for (Type providedType : providedTypes) {
             if (providedType.equals(Void.TYPE)) {
-                throw new BeanProcessingException(bean, "execution context provider handler method " + method + " cannot provide void!");
+                throw new BeanProcessingException(bean, "execution context provider handler method " + qualifiedMethod +
+                                                        " cannot provide void!");
             }
 
             if (!TypeUtils.isAssignable(methodReturnType, providedType)) {
-                throw new BeanProcessingException(bean, method + "'s return type is not compatible with provided type " + providedType);
+                throw new BeanProcessingException(bean, qualifiedMethod + "'s return type is not compatible with " +
+                                                        "provided type " + providedType);
             }
         }
 
-        return new HandlerMethodExecutionContextProvider(executionContextService, bean, qualifiedMethod, providedTypes);
+        return HandlerMethodExecutionContextProvider.build(executionContextService, bean, qualifiedMethod, providedTypes);
     }
 
     // package-private for testing purposes

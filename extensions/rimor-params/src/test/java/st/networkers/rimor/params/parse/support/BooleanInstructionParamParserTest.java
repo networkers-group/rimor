@@ -2,18 +2,18 @@ package st.networkers.rimor.params.parse.support;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import st.networkers.rimor.context.Token;
+import st.networkers.rimor.qualify.Token;
 import st.networkers.rimor.params.InstructionParam;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class BooleanInstructionParamParserTest {
 
-    Token<Boolean> booleanToken;
+    Token booleanToken;
 
     @BeforeEach
     void setUp() {
-        booleanToken = Token.of(boolean.class).annotatedWith(InstructionParam.class);
+        booleanToken = Token.of(boolean.class).qualifiedWith(InstructionParam.class);
     }
 
     @Test
@@ -43,7 +43,7 @@ class BooleanInstructionParamParserTest {
     @Test
     void givenValuePresentInTrueValuesAnnotationInToken_whenParsing_returnsTrue() {
         BooleanInstructionParamParser parser = new BooleanInstructionParamParser();
-        booleanToken = booleanToken.annotatedWith(new TrueValuesImpl("yes"));
+        booleanToken = booleanToken.qualifiedWith(new TrueValuesImpl("yes"));
 
         assertThat(parser.parse("yes", booleanToken, null)).isTrue();
         assertThat(parser.parse("yes!", booleanToken, null)).isFalse();

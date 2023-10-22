@@ -1,9 +1,6 @@
 package st.networkers.rimor.qualify;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Marks an annotation to be a qualifier annotation, i.e. an annotation that is used to distinguish between
@@ -17,4 +14,5 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)
+@Inherited
 public @interface RimorQualifier {}

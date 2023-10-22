@@ -2,7 +2,7 @@ package st.networkers.rimor.params.parse.support;
 
 import org.junit.jupiter.api.Test;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.context.Token;
+import st.networkers.rimor.qualify.Token;
 import st.networkers.rimor.params.InstructionParamImpl;
 import st.networkers.rimor.params.parse.AbstractInstructionParamParser;
 
@@ -16,9 +16,9 @@ class TextInstructionParamParserTest {
 
     @Test
     void givenTextParameterOfIndex0_whenGettingText_containsAllParams() {
-        Token<String> token = Token.of(String.class)
-                .annotatedWith(new InstructionParamImpl(null, null, 0))
-                .annotatedWith(Text.class);
+        Token token = Token.of(String.class)
+                .qualifiedWith(new InstructionParamImpl(null, null, 0))
+                .qualifiedWith(Text.class);
 
         ExecutionContext context = ExecutionContext.builder()
                 .bind(AbstractInstructionParamParser.PARAMS_TOKEN, Arrays.asList("foo", "bar", "baz", "qux", "quux"))
@@ -29,9 +29,9 @@ class TextInstructionParamParserTest {
 
     @Test
     void givenTextParameterOfIndex2_whenGettingText_containsAllButFirstTwoParams() {
-        Token<String> token = Token.of(String.class)
-                .annotatedWith(new InstructionParamImpl(null, null, 2))
-                .annotatedWith(Text.class);
+        Token token = Token.of(String.class)
+                .qualifiedWith(new InstructionParamImpl(null, null, 2))
+                .qualifiedWith(Text.class);
 
         ExecutionContext context = ExecutionContext.builder()
                 .bind(AbstractInstructionParamParser.PARAMS_TOKEN, Arrays.asList("foo", "bar", "baz", "qux", "quux"))
@@ -42,9 +42,9 @@ class TextInstructionParamParserTest {
 
     @Test
     void givenTextParameterOfIndexOutOfBounds_whenGettingText_returnsNull() {
-        Token<String> token = Token.of(String.class)
-                .annotatedWith(new InstructionParamImpl(null, null, 2))
-                .annotatedWith(Text.class);
+        Token token = Token.of(String.class)
+                .qualifiedWith(new InstructionParamImpl(null, null, 2))
+                .qualifiedWith(Text.class);
 
         ExecutionContext context = ExecutionContext.builder()
                 .bind(AbstractInstructionParamParser.PARAMS_TOKEN, Arrays.asList("foo", "bar"))
@@ -58,9 +58,9 @@ class TextInstructionParamParserTest {
         Object mockedObject = mock(Object.class);
         when(mockedObject.toString()).thenReturn("baz");
 
-        Token<String> token = Token.of(String.class)
-                .annotatedWith(new InstructionParamImpl(null, null, 0))
-                .annotatedWith(Text.class);
+        Token token = Token.of(String.class)
+                .qualifiedWith(new InstructionParamImpl(null, null, 0))
+                .qualifiedWith(Text.class);
 
         ExecutionContext context = ExecutionContext.builder()
                 .bind(AbstractInstructionParamParser.PARAMS_TOKEN, Arrays.asList("foo", "bar", mockedObject))

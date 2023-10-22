@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import st.networkers.rimor.FooAnnotation;
 import st.networkers.rimor.FooAnnotationImpl;
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.context.Token;
+import st.networkers.rimor.qualify.Token;
 import st.networkers.rimor.qualify.RequireQualifiers;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,7 +21,7 @@ class ExecutionContextProviderRegistryTest {
         }
 
         @Override
-        public String get(Token<String> token, ExecutionContext context) {
+        public String get(Token token, ExecutionContext context) {
             return "test";
         }
     }
@@ -33,7 +33,7 @@ class ExecutionContextProviderRegistryTest {
         }
 
         @Override
-        public String get(Token<String> token, ExecutionContext context) {
+        public String get(Token token, ExecutionContext context) {
             return "foo";
         }
     }
@@ -45,7 +45,7 @@ class ExecutionContextProviderRegistryTest {
         }
 
         @Override
-        public String get(Token<String> token, ExecutionContext context) {
+        public String get(Token token, ExecutionContext context) {
             return "bar";
         }
     }
@@ -57,7 +57,7 @@ class ExecutionContextProviderRegistryTest {
         }
 
         @Override
-        public Integer get(Token<Integer> token, ExecutionContext context) {
+        public Integer get(Token token, ExecutionContext context) {
             return Integer.MAX_VALUE;
         }
     }
@@ -82,13 +82,13 @@ class ExecutionContextProviderRegistryTest {
 
     @Test
     void givenAStringToken_whenFindingProvider_findsSimpleProvider() {
-        Token<String> token = Token.of(String.class);
+        Token token = Token.of(String.class);
         assertThat(registry.findFor(token)).containsInstanceOf(SimpleProvider.class);
     }
 
     @Test
     void givenAStringSuperclassToken_whenFindingProvider_findsSimpleProvider() {
-        Token<CharSequence> token = Token.of(CharSequence.class);
+        Token token = Token.of(CharSequence.class);
 
         // CharSequence is not directly mapped to any provider, ExecutionContextProviderRegistry#findAnySuitable should do its job
         assertThat(registry.findFor(token)).containsInstanceOf(SimpleProvider.class);
@@ -98,13 +98,13 @@ class ExecutionContextProviderRegistryTest {
 
     @Test
     void givenAStringTokenAnnotatedWithFooAnnotation_whenFindingProvider_findsAnyFooAnnotationProvider() {
-        Token<String> token = Token.of(String.class).annotatedWith(FooAnnotation.class);
+        Token token = Token.of(String.class).qualifiedWith(FooAnnotation.class);
         assertThat(registry.findFor(token)).containsInstanceOf(AnyFooAnnotationProvider.class);
     }
 
     @Test
     void givenAStringSuperclassTokenAnnotatedWithFooAnnotation_whenFindingProvider_findsAnyFooAnnotationProvider() {
-        Token<CharSequence> token = Token.of(CharSequence.class).annotatedWith(FooAnnotation.class);
+        Token token = Token.of(CharSequence.class).qualifiedWith(FooAnnotation.class);
 
         // CharSequence is not directly mapped to any provider, ExecutionContextProviderRegistry#findAnySuitable should do its job
         assertThat(registry.findFor(token)).containsInstanceOf(AnyFooAnnotationProvider.class);
@@ -112,13 +112,13 @@ class ExecutionContextProviderRegistryTest {
 
     @Test
     void givenAStringTokenAnnotatedWithFooAnnotationImplementation_whenFindingProvider_findsAnyFooAnnotationProvider() {
-        Token<String> token = Token.of(String.class).annotatedWith(new FooAnnotationImpl("bar"));
+        Token token = Token.of(String.class).qualifiedWith(new FooAnnotationImpl("bar"));
         assertThat(registry.findFor(token)).containsInstanceOf(AnyFooAnnotationProvider.class);
     }
 
     @Test
     void givenAStringSuperclassTokenAnnotatedWithFooAnnotationImplementation_whenFindingProvider_findsAnyFooAnnotationProvider() {
-        Token<CharSequence> token = Token.of(CharSequence.class).annotatedWith(new FooAnnotationImpl("bar"));
+        Token token = Token.of(CharSequence.class).qualifiedWith(new FooAnnotationImpl("bar"));
 
         // CharSequence is not directly mapped to any provider, ExecutionContextProviderRegistry#findAnySuitable should do its job
         assertThat(registry.findFor(token)).containsInstanceOf(AnyFooAnnotationProvider.class);
@@ -128,13 +128,13 @@ class ExecutionContextProviderRegistryTest {
 
     @Test
     void givenAnIntTokenAnnotatedWithFooAnnotationWithValueSetToBar_whenFindingProvider_findsFooAnnotationWithValueSetToBarIntProvider() {
-        Token<Integer> token = Token.of(int.class).annotatedWith(new FooAnnotationImpl("bar"));
+        Token token = Token.of(int.class).qualifiedWith(new FooAnnotationImpl("bar"));
         assertThat(registry.findFor(token)).containsInstanceOf(FooAnnotationWithValueSetToBarIntProvider.class);
     }
 
     @Test
     void givenAnIntSuperclassTokenAnnotatedWithFooAnnotationWithValueSetToBar_whenFindingProvider_findsFooAnnotationWithValueSetToBarIntProvider() {
-        Token<Number> token = Token.of(Number.class).annotatedWith(new FooAnnotationImpl("bar"));
+        Token token = Token.of(Number.class).qualifiedWith(new FooAnnotationImpl("bar"));
 
         // Number is not directly mapped to any provider, ExecutionContextProviderRegistry#findAnySuitable should do its job
         assertThat(registry.findFor(token)).containsInstanceOf(FooAnnotationWithValueSetToBarIntProvider.class);
@@ -144,13 +144,13 @@ class ExecutionContextProviderRegistryTest {
 
     @Test
     void givenAnIntTokenAnnotatedWithFooAnnotationWithValueSetToBaz_whenFindingProvider_findsNothing() {
-        Token<Integer> token = Token.of(int.class).annotatedWith(new FooAnnotationImpl("baz"));
+        Token token = Token.of(int.class).qualifiedWith(new FooAnnotationImpl("baz"));
         assertThat(registry.findFor(token)).isEmpty();
     }
 
     @Test
     void givenAnIntToken_whenFindingProvider_findsNothing() {
-        Token<Integer> token = Token.of(int.class);
+        Token token = Token.of(int.class);
         assertThat(registry.findFor(token)).isEmpty();
     }
 }

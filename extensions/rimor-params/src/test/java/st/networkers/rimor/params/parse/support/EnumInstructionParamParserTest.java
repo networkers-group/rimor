@@ -1,7 +1,7 @@
 package st.networkers.rimor.params.parse.support;
 
 import org.junit.jupiter.api.Test;
-import st.networkers.rimor.context.Token;
+import st.networkers.rimor.qualify.Token;
 import st.networkers.rimor.params.InstructionParam;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,7 +12,7 @@ class EnumInstructionParamParserTest {
         FOO, BAR
     }
 
-    static Token<FooEnum> fooEnumToken = Token.of(FooEnum.class).annotatedWith(InstructionParam.class);
+    static Token fooEnumToken = Token.of(FooEnum.class).qualifiedWith(InstructionParam.class);
 
     @Test
     void givenEnumConstant_whenParsing_resultEqualsGivenConstant() {
@@ -34,8 +34,7 @@ class EnumInstructionParamParserTest {
         assertThat(parse("QUX", fooEnumToken)).isNull();
     }
 
-    @SuppressWarnings("unchecked")
-    static Enum<?> parse(Object parameter, Token<?> token) {
-        return new EnumInstructionParamParser().parse(parameter, (Token<Enum<?>>) token, null);
+    static Enum<?> parse(Object parameter, Token token) {
+        return new EnumInstructionParamParser().parse(parameter, token, null);
     }
 }

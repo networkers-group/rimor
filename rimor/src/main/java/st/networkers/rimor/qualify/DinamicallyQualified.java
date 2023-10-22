@@ -6,61 +6,113 @@ import java.lang.annotation.Annotation;
 import java.util.*;
 
 /**
- * Abstract class to allow adding {@link RimorQualifier qualifier} annotations to elements at runtime.
+ * Abstract class to allow adding {@link RimorQualifier qualifier annotations} to elements at runtime.
  */
 public abstract class DinamicallyQualified<T extends DinamicallyQualified<T>> implements Qualified {
 
-    protected final Map<Class<? extends Annotation>, Annotation> annotations;
-    protected final Collection<Class<? extends Annotation>> requiredAnnotations;
+    protected final Map<Class<? extends Annotation>, Annotation> qualifiers;
+    protected final Collection<Class<? extends Annotation>> requiredQualifiers;
 
     protected DinamicallyQualified() {
         this(new HashMap<>(), new ArrayList<>());
     }
 
-    protected DinamicallyQualified(Map<Class<? extends Annotation>, Annotation> annotations,
-                                   Collection<Class<? extends Annotation>> requiredAnnotations) {
-        this.annotations = annotations;
-        this.requiredAnnotations = requiredAnnotations;
+    protected DinamicallyQualified(Map<Class<? extends Annotation>, Annotation> qualifiers,
+                                   Collection<Class<? extends Annotation>> requiredQualifiers) {
+        this.qualifiers = qualifiers;
+        this.requiredQualifiers = requiredQualifiers;
     }
 
-    public T annotatedWith(Annotation annotation) {
-        this.annotations.put(annotation.annotationType(), annotation);
+    /**
+     * Adds the given qualifier instance to this element.
+     * This method differs from {@link #addQualifier(Annotation)} in that it returns {@code this} same element to call
+     * more methods in chain, as if it was a builder.
+     *
+     * @param qualifierAnnotation the qualifier instance to add
+     */
+    public T qualifiedWith(Annotation qualifierAnnotation) {
+        this.addQualifier(qualifierAnnotation);
         return this.casted();
     }
 
-    public T annotatedWith(Class<? extends Annotation> requiredAnnotation) {
-        this.requiredAnnotations.add(requiredAnnotation);
+    /**
+     * Adds the given qualifier instance to this element.
+     *
+     * @param qualifierAnnotation the qualifier instance to add
+     */
+    public void addQualifier(Annotation qualifierAnnotation) {
+        Qualified.checkQualifierAnnotation(qualifierAnnotation);
+        this.qualifiers.put(qualifierAnnotation.annotationType(), qualifierAnnotation);
+    }
+
+    /**
+     * Adds the given required qualifier type to this element. This has the same effect as annotating a qualified element
+     * with {@link RequireQualifiers}.
+     * This method differs from {@link #addQualifier(Annotation)} in that it returns {@code this} same element to call
+     * more methods in chain, as if it was a builder.
+     *
+     * <p>Check {@link RequireQualifiers} for more information on required qualifier types.
+     *
+     * @param qualifierType the required qualifier type to add
+     */
+    public T qualifiedWith(Class<? extends Annotation> qualifierType) {
+        this.addRequiredQualifier(qualifierType);
         return this.casted();
     }
 
-    public T withAnnotations(Map<Class<? extends Annotation>, Annotation>  annotations) {
-        this.annotations.putAll(annotations);
+    /**
+     * Adds the given required qualifier type to this element. This has the same effect as annotating a qualified element
+     * with {@link RequireQualifiers}.
+     *
+     * <p>Check {@link RequireQualifiers} for more information on required qualifier types.
+     *
+     * @param qualifierType the required qualifier type to add
+     */
+    public void addRequiredQualifier(Class<? extends Annotation> qualifierType) {
+        Qualified.checkQualifierAnnotation(qualifierType);
+        this.requiredQualifiers.add(qualifierType);
+    }
+
+    public T withQualifiers(Map<Class<? extends Annotation>, Annotation> qualifiers) {
+        this.addQualifiers(qualifiers);
         return this.casted();
     }
 
-    public T withRequiredAnnotations(Collection<Class<? extends Annotation>> requiredAnnotations) {
-        this.requiredAnnotations.addAll(requiredAnnotations);
+    public void addQualifiers(Map<Class<? extends Annotation>, Annotation> qualifiers) {
+        this.qualifiers.putAll(qualifiers);
+    }
+
+    public T withRequiredQualifiers(Collection<Class<? extends Annotation>> qualifierTypes) {
+        this.addRequiredQualifiers(qualifierTypes);
         return this.casted();
     }
 
-    public T withAnnotationsOf(QualifiedElement element) {
-        this.withAnnotations(element.getQualifiersMap());
-        this.withRequiredAnnotations(element.getRequiredQualifiers());
+    public void addRequiredQualifiers(Collection<Class<? extends Annotation>> qualifierTypes) {
+        this.requiredQualifiers.addAll(qualifierTypes);
+    }
+
+    public T withQualifiersOf(QualifiedElement element) {
+        this.addQualifiersOf(element);
         return this.casted();
+    }
+
+    public void addQualifiersOf(QualifiedElement element) {
+        this.addQualifiers(element.getQualifiersMap());
+        this.addRequiredQualifiers(element.getRequiredQualifiers());
     }
 
     @Override
     public Map<Class<? extends Annotation>, Annotation> getQualifiersMap() {
-        return annotations;
+        return qualifiers;
     }
 
     @Override
     public Collection<Class<? extends Annotation>> getRequiredQualifiers() {
-        return requiredAnnotations;
+        return requiredQualifiers;
     }
 
     @SuppressWarnings("unchecked")
-    public T casted() {
+    private T casted() {
         return (T) this;
     }
 
@@ -69,11 +121,11 @@ public abstract class DinamicallyQualified<T extends DinamicallyQualified<T>> im
         if (this == o) return true;
         if (!(o instanceof DinamicallyQualified)) return false;
         DinamicallyQualified<?> that = (DinamicallyQualified<?>) o;
-        return Objects.equals(annotations, that.annotations) && Objects.equals(requiredAnnotations, that.requiredAnnotations);
+        return Objects.equals(qualifiers, that.qualifiers) && Objects.equals(requiredQualifiers, that.requiredQualifiers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(annotations, requiredAnnotations);
+        return Objects.hash(qualifiers, requiredQualifiers);
     }
 }

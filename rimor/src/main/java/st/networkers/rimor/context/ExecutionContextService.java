@@ -1,6 +1,7 @@
 package st.networkers.rimor.context;
 
 import st.networkers.rimor.context.provide.ExecutionContextProvider;
+import st.networkers.rimor.qualify.Token;
 import st.networkers.rimor.qualify.reflect.QualifiedMethod;
 
 import java.util.Optional;
@@ -20,7 +21,7 @@ public interface ExecutionContextService {
      * @param context the context of the command execution
      * @return an {@link Optional} wrapping the object bound to the token, or empty
      */
-    <T> Optional<T> get(Token<T> token, ExecutionContext context);
+    <T> Optional<T> get(Token token, ExecutionContext context);
 
     /**
      * Gets an {@link Optional} wrapping the object bound to the given {@link Token} from the given
@@ -33,7 +34,7 @@ public interface ExecutionContextService {
      * @param context the context of the command execution
      * @return an {@link Optional} wrapping the object bound to the token, or empty
      */
-    <T> Optional<T> get(Token<T> token, Object bean, ExecutionContext context);
+    <T> Optional<T> get(Token token, Object bean, ExecutionContext context);
 
     /**
      * Registers the given {@link ExecutionContextProvider} globally, for all Rimor beans.

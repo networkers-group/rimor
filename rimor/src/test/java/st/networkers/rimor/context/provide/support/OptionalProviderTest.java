@@ -9,7 +9,8 @@ import st.networkers.rimor.FooAnnotation;
 import st.networkers.rimor.FooAnnotationImpl;
 import st.networkers.rimor.context.ExecutionContext;
 import st.networkers.rimor.context.ExecutionContextServiceImpl;
-import st.networkers.rimor.context.Token;
+import st.networkers.rimor.qualify.ParameterizedToken;
+import st.networkers.rimor.qualify.Token;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,18 +37,18 @@ class OptionalProviderTest {
                 .bind(String.class, "foo")
                 .build();
 
-        Token<Optional<String>> token = new Token<Optional<String>>() {};
-        assertThat(get(token, context)).contains("foo");
+        Token token = new ParameterizedToken<Optional<String>>() {};
+        assertThat(provider.get(token, context)).contains("foo");
     }
 
     @Test
     void givenContextWithStringAnnotatedWithFooAnnotation_whenGettingStringWrappedInOptionalAnnotatedWithFooAnnotation_optionalContainsGivenString() {
         ExecutionContext context = ExecutionContext.builder()
-                .bind(Token.of(String.class).annotatedWith(FooAnnotation.class), "foo")
+                .bind(Token.of(String.class).qualifiedWith(FooAnnotation.class), "foo")
                 .build();
 
-        Token<Optional<String>> token = new Token<Optional<String>>() {}.annotatedWith(new FooAnnotationImpl("bar"));
-        assertThat(get(token, context)).contains("foo");
+        Token token = new ParameterizedToken<Optional<String>>() {}.qualifiedWith(new FooAnnotationImpl("bar"));
+        assertThat(provider.get(token, context)).contains("foo");
     }
 
     @Test
@@ -56,28 +57,28 @@ class OptionalProviderTest {
                 .bind(int.class, 3)
                 .build();
 
-        Token<Optional<Integer>> token = new Token<Optional<Integer>>() {};
-        assertThat(get(token, context)).contains(3);
+        Token token = new ParameterizedToken<Optional<Integer>>() {};
+        assertThat(provider.get(token, context)).contains(3);
     }
 
     @Test
     void givenContextWithListOfStringsComponent_whenGettingListOfStringsWrappedInOptional_optionalContainsGivenListOfStrings() {
         ExecutionContext context = ExecutionContext.builder()
-                .bind(new Token<List<String>>() {}, Arrays.asList("foo", "bar"))
+                .bind(new ParameterizedToken<List<String>>() {}, Arrays.asList("foo", "bar"))
                 .build();
 
-        Token<Optional<List<String>>> token = new Token<Optional<List<String>>>() {};
-        assertThat(get(token, context)).contains(Arrays.asList("foo", "bar"));
+        Token token = new ParameterizedToken<Optional<List<String>>>() {};
+        assertThat(provider.get(token, context)).contains(Arrays.asList("foo", "bar"));
     }
 
     @Test
     void givenContextWithListOfStringsComponent_whenGettingListOfIntegersWrappedInOptional_optionalIsEmpty() {
         ExecutionContext context = ExecutionContext.builder()
-                .bind(new Token<List<String>>() {}, Arrays.asList("foo", "bar"))
+                .bind(new ParameterizedToken<List<String>>() {}, Arrays.asList("foo", "bar"))
                 .build();
 
-        Token<Optional<List<Integer>>> token = new Token<Optional<List<Integer>>>() {};
-        assertThat(get(token, context)).isEmpty();
+        Token token = new ParameterizedToken<Optional<List<Integer>>>() {};
+        assertThat(provider.get(token, context)).isEmpty();
     }
 
     @Test
@@ -86,12 +87,7 @@ class OptionalProviderTest {
                 .bind(int.class, 3)
                 .build();
 
-        Token<Optional<String>> token = new Token<Optional<String>>() {};
-        assertThat(get(token, context)).isEmpty();
-    }
-
-    @SuppressWarnings("unchecked")
-    Optional<Object> get(Token<? extends Optional<?>> token, ExecutionContext context) {
-        return (Optional<Object>) provider.get((Token<Optional<?>>) token, context);
+        Token token = new ParameterizedToken<Optional<String>>() {};
+        assertThat(provider.get(token, context)).isEmpty();
     }
 }

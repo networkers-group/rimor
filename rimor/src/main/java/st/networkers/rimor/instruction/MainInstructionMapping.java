@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
  * public class GitCommand {
  *
  *     &#64;MainInstructionMapping
- *     public void displayGitInstructions(@InstructionParams {@literal List<Object>} params) {
+ *     public void displayGitInstructions(@InstructionParams List&lt;Object> params) {
  *         ...
  *     }
  *

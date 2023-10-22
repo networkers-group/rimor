@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Resolved command to use internally. To create commands, check {@link CommandDefinition}.
+ * Resolved command to use internally. To define commands, check {@link Command}.
  *
  * @see CommandDefinition
  * @see AbstractCommandDefinition

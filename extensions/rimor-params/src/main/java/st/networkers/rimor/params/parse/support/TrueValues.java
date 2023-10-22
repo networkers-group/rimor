@@ -1,6 +1,7 @@
 package st.networkers.rimor.params.parse.support;
 
 import st.networkers.rimor.params.InstructionParam;
+import st.networkers.rimor.qualify.RimorQualifier;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -13,6 +14,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
+@RimorQualifier
 public @interface TrueValues {
 
     /**

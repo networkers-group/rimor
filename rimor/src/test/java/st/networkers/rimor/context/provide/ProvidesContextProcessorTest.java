@@ -13,8 +13,7 @@ import st.networkers.rimor.qualify.reflect.QualifiedMethod;
 
 import java.lang.reflect.Method;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @MockitoSettings
@@ -85,9 +84,9 @@ class ProvidesContextProcessorTest {
                 .hasMessageContaining("cannot provide void");
     }
 
-    @ProvidesContext(Number.class)
-    public String contextProviderWithIncompatibleProvidedTypes() {
-        return "foo";
+    @ProvidesContext(int.class) // not providing the same type or a supertype of the method's return type, not possible
+    public Number contextProviderWithIncompatibleProvidedTypes() {
+        return -1;
     }
 
     @Test
@@ -96,7 +95,7 @@ class ProvidesContextProcessorTest {
 
         assertThatCode(() -> providesContextProcessor.processMethod(method, this))
                 .isInstanceOf(BeanProcessingException.class)
-                .hasMessageContaining("'s return type is not compatible with provided type " + Number.class);
+                .hasMessageContaining("'s return type is not compatible with provided type " + int.class);
     }
 
     @RimorConfiguration

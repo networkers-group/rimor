@@ -1,7 +1,7 @@
 package st.networkers.rimor.params.parse.support;
 
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.context.Token;
+import st.networkers.rimor.qualify.Token;
 import st.networkers.rimor.params.parse.AbstractInstructionParamParser;
 
 /**
@@ -14,7 +14,7 @@ public class DefaultInstructionParamParser extends AbstractInstructionParamParse
     }
 
     @Override
-    public Object parse(Object parameter, Token<Object> token, ExecutionContext context) {
+    public Object parse(Object parameter, Token token, ExecutionContext context) {
         return parameter;
     }
 }

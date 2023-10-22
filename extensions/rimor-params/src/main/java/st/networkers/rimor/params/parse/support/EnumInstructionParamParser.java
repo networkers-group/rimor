@@ -1,7 +1,7 @@
 package st.networkers.rimor.params.parse.support;
 
 import st.networkers.rimor.context.ExecutionContext;
-import st.networkers.rimor.context.Token;
+import st.networkers.rimor.qualify.Token;
 import st.networkers.rimor.params.parse.AbstractInstructionParamParser;
 
 /**
@@ -14,7 +14,7 @@ public class EnumInstructionParamParser extends AbstractInstructionParamParser<E
     }
 
     @Override
-    public Enum<?> parse(Object rawParameter, Token<Enum<?>> token, ExecutionContext context) {
+    public Enum<?> parse(Object rawParameter, Token token, ExecutionContext context) {
         if (rawParameter instanceof Enum<?>) {
             return (Enum<?>) rawParameter;
         }
@@ -28,7 +28,7 @@ public class EnumInstructionParamParser extends AbstractInstructionParamParser<E
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Enum<T>> T parse(String parameter, Token<? extends Enum<?>> token) {
+    private <T extends Enum<T>> T parse(String parameter, Token token) {
         try {
             return Enum.valueOf((Class<T>) token.getType(), parameter);
         } catch (IllegalArgumentException e) {
