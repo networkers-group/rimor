@@ -87,4 +87,17 @@ public class MatchingMap<K extends MatchingKey, V> {
     public void clear() {
         delegate.clear();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MatchingMap)) return false;
+        MatchingMap<?, ?> that = (MatchingMap<?, ?>) o;
+        return Objects.equals(delegate, that.delegate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(delegate);
+    }
 }
